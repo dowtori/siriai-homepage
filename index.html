@@ -1033,6 +1033,20 @@ html{scroll-behavior:smooth;scroll-padding-top:92px}
 .cvid-sub{font-family:var(--display);font-weight:400;font-size:clamp(14px,1.05vw,19px);line-height:1.5;color:var(--ink-2);margin-top:16px;word-break:keep-all}
 .cvid-media{width:100%;max-width:1240px;aspect-ratio:16/9;border-radius:clamp(20px,2.4vw,34px);overflow:hidden;background:#0d0b13}
 .cvid-media video{width:100%;height:100%;object-fit:cover;display:block}
+/* 크리에이터 협업 — 3분할 트립틱 (세로 릴스) */
+.cvid-media .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(5px,.5vw,9px);width:100%;height:100%;background:#0d0b13}
+.cvid-media .tri-lane{position:relative;overflow:hidden;background:#0d0b13}
+.cvid-media .tri-lane video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .9s var(--ease)}
+.cvid-media .tri-lane video.on{opacity:1}
+@media (max-width:760px){
+  .creator-vid .cvid-media{aspect-ratio:auto;max-width:none;width:100%;background:transparent;border-radius:0;overflow:visible}
+  .cvid-media .tri-row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    padding:2px max(20px,calc((100% - min(62vh,520px)*0.5625)/2)) 16px;scrollbar-width:none}
+  .cvid-media .tri-row::-webkit-scrollbar{display:none}
+  .cvid-media .tri-cell{position:relative;flex:0 0 auto;height:min(62vh,520px);aspect-ratio:9/16;
+    border-radius:clamp(18px,5vw,26px);overflow:hidden;background:#0d0b13;scroll-snap-align:center}
+  .cvid-media .tri-cell video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+}
 .creator-vid .pb-cap{text-align:center;margin-top:0;font-family:var(--display);font-weight:500;
   font-size:clamp(18px,1.9vw,27px);line-height:1.3;letter-spacing:-.022em;color:var(--ink-2);text-wrap:balance}
 .cv-head{transition:opacity .6s var(--ease)}
@@ -1275,15 +1289,17 @@ body.pb-immersive #bizcta{opacity:0!important;pointer-events:none!important}
     <h2 class="cvid-title">크리에이터 협업</h2>
     <p class="cvid-sub">가장 스마트한 콘텐츠 리터러시. 브랜드와 잠재고객을 크리에이터로 연결합니다.</p>
   </div>
-  <div class="cvid-media"><video autoplay muted loop playsinline preload="metadata" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback"><source src="assets/creator-collab.mp4" type="video/mp4"></video></div>
-  <p class="pb-cap">인사이트를 세상에 연결합니다.<br>컨셉부터 제품, 경험까지 — 모두의 것.</p>
+  <div class="cvid-media" id="creatorTri">
+    <video autoplay muted loop playsinline preload="metadata" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback"><source src="assets/creator-collab.mp4" type="video/mp4"></video>
+  </div>
+  <p class="pb-cap">브랜드를 세상에 연결합니다.<br>가장 사랑받는 사람들로 — 모두에게.</p>
 </section>
 
 
 <section class="trusted" data-screen-label="Trusted by">
     <div class="clients reveal r2">
       <span class="clients-k" style="font-family: &quot;Helvetica Neue&quot;; border-style: solid; font-size: 12px; font-weight: 500">Trusted by</span>
-      <div class="logo-marquee"><div class="logo-track"><span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span></div></div>
+      <div class="logo-marquee"><div class="logo-track"><span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>Neverust</span><span>QUADTHERA</span><span>TOOMUCHTAX</span><span>TOCOBO</span><span>HARIM</span><span>OJOS</span><span>GANGNEUNG CITY</span><span>NONGSHIM</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">Neverust</span><span aria-hidden="true">QUADTHERA</span><span aria-hidden="true">TOOMUCHTAX</span><span aria-hidden="true">TOCOBO</span><span aria-hidden="true">HARIM</span><span aria-hidden="true">OJOS</span><span aria-hidden="true">GANGNEUNG CITY</span><span aria-hidden="true">NONGSHIM</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span></div></div>
     </div>
   </section>
 
@@ -1842,6 +1858,7 @@ body.pb-immersive #bizcta{opacity:0!important;pointer-events:none!important}
   addEventListener('scroll',spy,{passive:true}); addEventListener('resize',spy); spy();
 })();
 </script>
+<script src="creator-triptych.js"></script>
 <script>
 /* autoplay — strictly in-view only (never decode/loop offscreen, which starves the hero) */
 (function(){
