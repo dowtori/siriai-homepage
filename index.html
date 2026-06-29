@@ -1435,6 +1435,44 @@ body.pb-immersive #bizcta{opacity:0!important;pointer-events:none!important}
 .arch-fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
 .arch-fig img.on{display:block}
 .arch-fig .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-3);font-family:var(--mono);font-size:12px;letter-spacing:.12em}
+
+/* ════════════════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATION PASS  (<= 760px) — desktop (>760px) is untouched.
+   Static-simplify heavy / scroll-jack sections, fix empty gaps, perf.
+   ════════════════════════════════════════════════════════════════════ */
+@media (max-width:760px){
+  /* perf: pointer-only cursor glow is useless + costly on touch */
+  .cursor-glow{display:none!important}
+
+  /* Creator video — kill the full-viewport empty gap (was min-height:100vh, centered) */
+  .creator-vid{min-height:auto;justify-content:flex-start;gap:clamp(18px,3.5vh,28px);
+    padding:clamp(72px,13vh,104px) 20px clamp(56px,10vh,84px)}
+
+  /* Architecting — replace pinned scrollytelling with a static stacked layout
+     (.arch-mstack is injected by the controller; .arch-flow summary is superseded) */
+  .arch-scrolly{display:none}
+  .arch-flow{display:none}
+  .arch-mstack{display:flex;flex-direction:column;gap:clamp(18px,3.6vh,26px);
+    padding:clamp(6px,1.6vh,14px) 20px clamp(60px,11vh,90px)}
+  .arch-mitem{display:flex;flex-direction:column;gap:13px;background:#fff;
+    border:1px solid var(--line);border-radius:20px;padding:22px}
+  .arch-mitem img{width:62px;height:auto}
+  .arch-mitem h3{font-family:var(--display);font-weight:600;font-size:20px;
+    letter-spacing:-.02em;color:var(--ink);line-height:1.18}
+  .arch-mitem h3 .st-ix{font-family:var(--mono);font-size:.64em;font-weight:500;
+    margin-right:.6em;color:var(--ink-3)}
+  .arch-mitem p{font-size:14.5px;line-height:1.62;color:var(--ink-2);word-break:keep-all}
+
+  /* pb-stage cinematic -> static resolved state (pb-reveal.js routes mobile via reduce path) */
+  .pb-stage{height:100svh!important}
+  .pb-dark{opacity:0!important}
+
+  /* software-engineering cards -> single column */
+  .se-cards{grid-template-columns:1fr;gap:26px}
+
+  /* comfortable tap targets */
+  .btn,.se-hero-cta,.region-btn,.bizcta{min-height:44px}
+}
 </style>
 </section>
 
@@ -1719,6 +1757,17 @@ body.pb-immersive #bizcta{opacity:0!important;pointer-events:none!important}
     {ix:'02',nm:'계획 설계',d:'IT, 제조, 아트, 패션, 뷰티 분야를 아우르는 넓은 네트워킹을 기반으로, 실행 가능한 구체적인 계획을 제시합니다.',img:'assets/arch/stage-02-plan.png'},
     {ix:'03',nm:'실행 \u0026 팔로업',d:'고객사의 실행을 서포트하거나, 필요한 경우 직접 실행합니다. 결과에 따라 다시 단계를 반복하거나 새로운 방안을 제시합니다.',img:'assets/arch/stage-03-loop.png'}
   ];
+  /* MOBILE (<=760px): static-simplify — render all stages stacked, skip pinned scrollytelling */
+  if(matchMedia('(max-width:760px)').matches){
+    const stack=document.createElement('div'); stack.className='arch-mstack';
+    STAGES.forEach(s=>{
+      const it=document.createElement('div'); it.className='arch-mitem';
+      it.innerHTML='<img src="'+s.img+'" alt=""><h3><span class="st-ix">'+s.ix+'</span>'+s.nm+'</h3><p>'+s.d+'</p>';
+      stack.appendChild(it);
+    });
+    if(scrolly && scrolly.parentNode) scrolly.parentNode.insertBefore(stack, scrolly);
+    return;
+  }
   const title=document.getElementById('stTitle'),desc=document.getElementById('stDesc'),list=document.getElementById('stList'),fig=document.getElementById('archFig');
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   // one persistent <img> per stage — toggle visibility by index, never mutate src (no load lag, never stuck)

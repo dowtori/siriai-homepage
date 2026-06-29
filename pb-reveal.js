@@ -21,7 +21,9 @@
   const sec    = document.getElementById('pb');
   if(!stage || !pin || !dark || !canvas || !sec) return;
   const ctx = canvas.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  // On mobile (<=760px) skip the heavy pinned cinematic and route through the
+  // reduced-motion path: reveal the resolved state directly (static-simplify).
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches || matchMedia('(max-width:760px)').matches;
 
   /* ── tunables ─────────────────────────────────────────────────────────── */
   const CFG = {
