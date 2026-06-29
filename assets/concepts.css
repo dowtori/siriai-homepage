@@ -1,0 +1,244 @@
+/* concepts.css — per-concept scene styling */
+
+/* ====================================================
+   CONCEPT I — APERTURE
+   ==================================================== */
+.ap-scene { position: absolute; inset: 0; }
+
+.ap-core-wrap {
+  position: absolute; left: 50%; top: 45%;
+  transform: translate(-50%, -50%);
+  width: min(900px, 78vw); height: min(900px, 78vw);
+  display: grid; place-items: center;
+  will-change: transform;
+}
+.ap-halo {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(240,210,155,0.42) 0%,
+    rgba(199,146,87,0.30) 18%,
+    rgba(150,100,50,0.14) 36%,
+    rgba(91,63,30,0.05) 55%,
+    transparent 72%);
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  animation: apBreath 9s var(--ease-soft) infinite;
+}
+.ap-core {
+  position: absolute;
+  width: 19%; height: 19%;
+  background: radial-gradient(circle at 50% 48%,
+    #fff6e6 0%, var(--amber-bright) 26%, var(--amber) 52%, rgba(185,128,63,0.2) 78%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  animation: apCore 7s var(--ease-soft) infinite;
+}
+.ap-ring {
+  position: absolute;
+  width: 56%; height: 56%;
+  border-radius: 50%;
+  border: 1px solid rgba(199,146,87,0.16);
+  box-shadow: inset 0 0 60px rgba(199,146,87,0.06);
+  animation: apSpin 80s linear infinite;
+}
+.ap-ring::after {
+  content: ''; position: absolute; inset: 14%;
+  border-radius: 50%;
+  border: 1px solid rgba(199,146,87,0.08);
+}
+@keyframes apBreath {
+  0%, 100% { transform: scale(1);    opacity: 0.82; }
+  50%      { transform: scale(1.07); opacity: 1;    }
+}
+@keyframes apCore {
+  0%, 100% { transform: scale(0.96); opacity: 0.85; }
+  50%      { transform: scale(1.08); opacity: 1;    }
+}
+@keyframes apSpin { to { transform: rotate(360deg); } }
+
+.ap-iris {
+  position: absolute; left: 50%; top: 45%; z-index: 50;
+  width: 62vmax; height: 62vmax; border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 90px 9999px var(--black);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 2.9s var(--ease-slow);
+  pointer-events: none;
+}
+.ap-iris.open { transform: translate(-50%, -50%) scale(1.5); }
+
+/* stack positioning now handled by base .hero-stack (product layout) */
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-halo, .ap-core, .ap-ring { animation: none; }
+  .ap-iris { transition: none; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* ====================================================
+   CONCEPT II — HORIZON
+   ==================================================== */
+.hz-scene { position: absolute; inset: 0; }
+
+.hz-sky {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 66%, rgba(120,80,38,0.14), transparent 60%),
+    linear-gradient(to bottom,
+      #050406 0%, #070609 44%, #0a0807 62%, #0c0a07 76%, #070505 100%);
+}
+.hz-stars {
+  position: absolute; inset: 0; opacity: 0.5;
+  background-image:
+    radial-gradient(1px 1px at 20% 24%, rgba(240,224,196,0.5), transparent),
+    radial-gradient(1px 1px at 68% 16%, rgba(240,224,196,0.35), transparent),
+    radial-gradient(1px 1px at 82% 32%, rgba(240,224,196,0.4), transparent),
+    radial-gradient(1px 1px at 38% 12%, rgba(240,224,196,0.3), transparent),
+    radial-gradient(1px 1px at 12% 40%, rgba(240,224,196,0.25), transparent),
+    radial-gradient(1px 1px at 54% 8%, rgba(240,224,196,0.3), transparent);
+}
+
+.hz-glow {
+  position: absolute; left: -10%; right: -10%; top: 66%; height: 64vh;
+  transform: translateY(-100%) scaleY(0.35);
+  transform-origin: 50% 100%;
+  background: radial-gradient(58% 100% at 50% 100%,
+    rgba(240,210,155,0.30), rgba(199,146,87,0.12) 42%, transparent 72%);
+  mix-blend-mode: screen; filter: blur(12px);
+  opacity: 0;
+  transition: opacity 2.3s var(--ease-slow), transform 2.7s var(--ease-slow);
+}
+.hz-scene.lit .hz-glow { opacity: 1; transform: translateY(-100%) scaleY(1); }
+
+.hz-sun-wrap {
+  position: absolute; left: 50%; top: 66%; transform: translate(-50%, -50%);
+  will-change: transform;
+}
+.hz-sun {
+  width: 48vw; height: 48vw; max-width: 760px; max-height: 760px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%,
+    #fff5e3 0%, var(--amber-bright) 14%, rgba(199,146,87,0.5) 32%, rgba(120,80,38,0.12) 52%, transparent 66%);
+  filter: blur(16px); mix-blend-mode: screen;
+  opacity: 0; transition: opacity 2.4s var(--ease-slow);
+  transform: scale(0.9);
+}
+.hz-scene.lit .hz-sun { opacity: 0.92; animation: hzBreath 8.5s var(--ease-soft) infinite; }
+@keyframes hzBreath {
+  0%, 100% { transform: scale(0.95); opacity: 0.78; }
+  50%      { transform: scale(1.06); opacity: 0.95; }
+}
+
+.hz-line {
+  position: absolute; left: 7%; right: 7%; top: 66%; height: 1.4px;
+  background: linear-gradient(to right,
+    transparent, rgba(240,210,155,0.85) 16%, #fff6e6 50%, rgba(240,210,155,0.85) 84%, transparent);
+  box-shadow: 0 0 24px 2px rgba(240,210,155,0.5);
+  transform: scaleX(0); transform-origin: 50% 50%;
+  transition: transform 1.7s var(--ease-slow);
+}
+.hz-line.draw { transform: scaleX(1); }
+
+/* hz-stack positioning handled by base .hero-stack */
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-glow, .hz-sun { transition: none; }
+  .hz-line { transition: none; transform: scaleX(1); }
+  .hz-scene.lit .hz-sun { animation: none; }
+}
+
+/* ====================================================
+   CONCEPT III — ECLIPSE
+   ==================================================== */
+.ec-scene { position: absolute; inset: 0; background:
+  radial-gradient(120% 110% at 88% 50%, rgba(60,40,18,0.10), transparent 55%), var(--black); }
+
+.ec-glow {
+  position: absolute; left: 88%; top: 50%;
+  width: min(1100px, 96vw); height: min(1100px, 96vw);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 50% 50%,
+    rgba(240,210,155,0.20), rgba(199,146,87,0.07) 36%, transparent 64%);
+  filter: blur(30px); mix-blend-mode: screen;
+  opacity: 0; transition: opacity 2.6s var(--ease-slow);
+}
+.ec-scene.lit .ec-glow { opacity: 1; animation: ecGlow 10s var(--ease-soft) infinite; }
+@keyframes ecGlow { 0%,100%{ opacity:0.78; } 50%{ opacity:1; } }
+
+.ec-orb-wrap {
+  position: absolute; left: 88%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 62vw); height: min(720px, 62vw);
+  display: grid; place-items: center;
+  will-change: transform;
+}
+.ec-orb { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.ec-orb > * { grid-area: 1 / 1; }
+
+.ec-corona {
+  width: 72%; height: 72%; border-radius: 50%;
+  box-shadow:
+    0 0 1px 1px rgba(255,246,230,0.55),
+    0 0 24px 5px rgba(240,210,155,0.30),
+    0 0 80px 26px rgba(199,146,87,0.15);
+  opacity: 0; transition: opacity 2.4s var(--ease-slow);
+}
+.ec-scene.lit .ec-corona { opacity: 1; animation: ecPulse 9s var(--ease-soft) infinite; }
+@keyframes ecPulse { 0%,100%{ transform: scale(0.99); } 50%{ transform: scale(1.025); } }
+
+.ec-arc {
+  width: 72%; height: 72%; border-radius: 50%;
+  background: conic-gradient(from -40deg,
+    transparent 0deg, rgba(255,250,238,0.95) 26deg, rgba(240,210,155,0.35) 54deg, transparent 96deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 65%, #000 76%, transparent 82%);
+  mask: radial-gradient(circle, transparent 60%, #000 65%, #000 76%, transparent 82%);
+  filter: blur(3px); mix-blend-mode: screen;
+  opacity: 0; transition: opacity 2.4s var(--ease-slow);
+}
+.ec-scene.lit .ec-arc { opacity: 0.95; animation: ecSpin 22s linear infinite; }
+@keyframes ecSpin { to { transform: rotate(360deg); } }
+
+.ec-disc {
+  width: 67%; height: 67%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 44%, #110b18 0%, #08070b 72%, #07060a 100%);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.7);
+  z-index: 2;
+}
+
+.ec-coord {
+  position: absolute; bottom: -34px; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  color: rgba(240,210,155,0.5); white-space: nowrap;
+  opacity: 0; transition: opacity 2s var(--ease-slow) 0.6s;
+  z-index: 3;
+}
+.ec-scene.lit .ec-coord { opacity: 1; }
+
+.ec-flare {
+  position: absolute; height: 1px; left: -10%; right: -10%;
+  background: linear-gradient(to right, transparent, rgba(240,210,155,0.4), transparent);
+  filter: blur(1px); mix-blend-mode: screen;
+  opacity: 0; transition: opacity 2.6s var(--ease-slow);
+}
+.ec-flare-1 { top: 38%; transform: rotate(-14deg); }
+.ec-flare-2 { top: 60%; transform: rotate(9deg); }
+.ec-scene.lit .ec-flare-1 { opacity: 0.5; animation: ecDrift1 26s var(--ease-soft) infinite; }
+.ec-scene.lit .ec-flare-2 { opacity: 0.35; animation: ecDrift2 32s var(--ease-soft) infinite; }
+@keyframes ecDrift1 { 0%,100%{ transform: rotate(-14deg) translateX(-3%);} 50%{ transform: rotate(-14deg) translateX(3%);} }
+@keyframes ecDrift2 { 0%,100%{ transform: rotate(9deg) translateX(2%);} 50%{ transform: rotate(9deg) translateX(-2%);} }
+
+/* ec-stack uses base .hero-stack product layout */
+
+@media (max-width: 900px) {
+  .ec-orb-wrap { left: 78%; opacity: 0.6; }
+  .ec-glow { left: 78%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ec-scene.lit .ec-glow, .ec-scene.lit .ec-corona,
+  .ec-scene.lit .ec-arc, .ec-scene.lit .ec-flare-1, .ec-scene.lit .ec-flare-2 { animation: none; }
+}
+
+/* ====================================================
+   CONCEPT III — ECLIPSE   (added next)
+   ==================================================== */

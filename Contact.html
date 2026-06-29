@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — SIRIAI</title>
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div class="wash"></div>
+<div class="grain"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="Siriai — 홈"><img class="wm" src="assets/siriai-word-ink.png" alt="Siriai"></a>
+  <nav class="nav-links">
+    <a href="index.html#biz">사업 소개</a>
+    <a href="Cases.html">포트폴리오</a>
+    <a class="nav-cta here" href="Contact.html">문의하기</a>
+  </nav>
+</header>
+
+<main data-screen-label="Contact">
+  <section class="phero">
+    <div class="crumb"><a href="index.html">홈</a><span class="sep">/</span><span>문의하기</span></div>
+    <span class="eyebrow">Start here</span>
+    <h1 class="ptitle">The first structure<br>is a <span class="em">conversation.</span></h1>
+    <p class="plede">Tell us what you're trying to decide. We'll read the signal, sketch the shape of an answer, and reply within two business days — no deck required to begin.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-in">
+      <div class="ct-grid">
+        <!-- form -->
+        <div>
+          <form id="ct-form" novalidate>
+            <div class="field">
+              <label for="f-name">Your name</label>
+              <input id="f-name" name="name" type="text" placeholder="Jane Park" required>
+            </div>
+            <div class="field">
+              <label for="f-email">Email</label>
+              <input id="f-email" name="email" type="email" placeholder="jane@company.com" required>
+            </div>
+            <div class="field">
+              <label for="f-org">Company / Organisation</label>
+              <input id="f-org" name="org" type="text" placeholder="Optional">
+            </div>
+            <div class="field">
+              <label>What's this about?</label>
+              <div class="chips" id="topics">
+                <span class="chip">Architecting</span>
+                <span class="chip">Visual Content</span>
+                <span class="chip">Software · sa:ai</span>
+                <span class="chip">Private Brand</span>
+                <span class="chip">Partnership</span>
+                <span class="chip">Something else</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-msg">The question on the table</label>
+              <textarea id="f-msg" name="message" placeholder="What decision are you facing, and what would a good answer change?"></textarea>
+            </div>
+            <button class="submit" type="submit">
+              Send it over
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="note">By sending this you agree to our <a href="Privacy.html" style="color:var(--ink);border-bottom:1px solid var(--line)">Privacy Policy</a>. We use your details only to reply — never for marketing lists.</p>
+          </form>
+
+          <div class="ok" id="ct-ok">
+            <div class="tick">✓</div>
+            <h3>Message received.</h3>
+            <p>Thank you — we've got it. Someone from the studio will read it properly and write back within two business days. In the meantime, the <a href="Cases.html" style="color:var(--accent)">case studies</a> are a good place to wander.</p>
+          </div>
+        </div>
+
+        <!-- aside -->
+        <aside class="ct-aside">
+          <div class="ct-block">
+            <h5>Write directly</h5>
+            <a class="big" href="mailto:sbsiriai@gmail.com">sbsiriai@gmail.com</a>
+          </div>
+          <div class="ct-block">
+            <h5>Studio</h5>
+            <p>By appointment. Mon–Fri, 10:00–19:00 KST.</p>
+          </div>
+          <div class="ct-block">
+            <h5>Elsewhere</h5>
+            <p>San Francisco &amp; Tokyo — remote collaboration across timezones, three clocks always running.</p>
+          </div>
+          <div class="ct-block">
+            <h5>Follow</h5>
+            <p><a href="#" style="color:var(--ink)">Instagram</a></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <footer class="foot">
+      <div class="foot-cols">
+        <img class="foot-logo" src="assets/siriai-word-ink.png" alt="Siriai">
+        <div class="foot-col"><h4>스튜디오</h4>
+          <a href="Cases.html">포트폴리오</a>
+          <a href="Contact.html">문의하기</a>
+        </div>
+        <div class="foot-col"><h4>약관</h4>
+          <a href="Terms.html">이용약관</a>
+          <a href="Privacy.html">개인정보처리방침</a>
+        </div>
+        <div class="foot-col"><h4>채널</h4>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+      <div class="foot-biz">
+        <p>상호 시리아이(SIRIAI) · 대표 김동현 · 사업자등록번호 405-23-02027 · 통신판매신고번호 제2024-서울용산-1589호</p>
+        <p>서울특별시 용산구 한강대로 293, 4층 A호 (갈월동, 성원빌딩) · 대표전화 070-7576-1944 · 개인정보보호책임자 박슬범 (<a href="mailto:sbsiriai@gmail.com">sbsiriai@gmail.com</a>)</p>
+      </div>
+      <div class="foot-copy"><span>© <span data-year>2026</span> 시리아이(SIRIAI) 공식 홈페이지. All rights reserved.</span><span>Signal · Structure · Decision</span></div>
+    </footer>
+  </section>
+</main>
+
+<script src="pages.js"></script>
+<script src="legal-modal.js"></script>
+</body>
+</html>
