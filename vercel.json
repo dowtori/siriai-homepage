@@ -2,26 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.siriai.co.kr" }],
-      "destination": "https://siriai.co.kr/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "siriai.kr" }],
-      "destination": "https://siriai.co.kr/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.siriai.kr" }],
-      "destination": "https://siriai.co.kr/:path*",
-      "permanent": true
-    }
-  ],
+  "_comment": "Canonical-domain redirects (www/siriai.kr -> siriai.co.kr, 308) are configured at the Vercel domain level, not here — they run at the platform edge before vercel.json.",
   "headers": [
     {
       "source": "/assets/(.*)",
