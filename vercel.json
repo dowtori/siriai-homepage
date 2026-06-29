@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
-  "_comment": "Canonical-domain redirects (www/siriai.kr -> siriai.co.kr, 308) are configured at the Vercel domain level, not here — they run at the platform edge before vercel.json.",
   "headers": [
     {
       "source": "/assets/(.*)",
