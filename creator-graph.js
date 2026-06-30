@@ -14,6 +14,8 @@
   if(!DATA || !sec || !stage || !canvas || !menu) return;
   const ctx    = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  /* mobile: hover/tap-to-enlarge ('handover') is dropped — the sphere only auto-enlarges on its timer (matches the CSS ≤760px breakpoint) */
+  const mqMobile = matchMedia('(max-width:760px)');
 
   const brands = DATA.brands;
   const byKey  = {}; brands.forEach(b=> byKey[b.key]=b);
@@ -232,7 +234,7 @@
     const h=hit(px,py);
     sphereHover=true;
     canvas.style.cursor=h?'pointer':'default';
-    if(!locked){ hoveredTile=h; const hb=h?h.brand:null; if(hb!==lastHover){ lastHover=hb; hoverTile=hb; applyFocus(); } }
+    if(!locked && !mqMobile.matches){ hoveredTile=h; const hb=h?h.brand:null; if(hb!==lastHover){ lastHover=hb; hoverTile=hb; applyFocus(); } }
   });
   canvas.addEventListener('pointerleave',()=>{ tgtVY=reduce?0:0.0014; tgtVX=0; sphereHover=false; hoveredTile=null; if(hoverTile){ hoverTile=null; lastHover=null; applyFocus(); } canvas.style.cursor='default'; });
   /* ── swipe tracking ── */
@@ -251,6 +253,7 @@
   });
   canvas.addEventListener('click',e=>{
     userPoke();
+    if(mqMobile.matches) return;   // mobile: taps don't enlarge — auto-enlarge timer handles it
     const r=canvas.getBoundingClientRect(); const px=e.clientX-r.left, py=e.clientY-r.top;
     if(featured && featBounds){
       const {x,y,w,h}=featBounds;
@@ -268,7 +271,7 @@
     else{ if(locked) locked=null; applyFocus(); }
   });
 
-  /* ── right brand list (index / navigation) ── */
+  /* ── right brand list (index / navigation) — desktop only; hidden on mobile via CSS ── */
   brands.forEach(b=>{
     const btn=document.createElement('button');
     btn.type='button'; btn.className='cv-brand'; btn.dataset.brand=b.key; btn.textContent=b.label;

@@ -1161,6 +1161,20 @@ body.pb-immersive #bizcta{opacity:0!important;pointer-events:none!important}
   .cv-desc.on{transform:none}
   .cv-cfcard{width:58vw;height:75.7vw}
 }
+/* ── mobile (≤760px): the side copy + index crowd the sphere — lift the copy to the top
+   of the sphere (centred) and drop the brand index; the sphere auto-enlarges on its own ── */
+@media (max-width:760px){
+  /* mobile is static (no cinematic fade) — the reveal transition would otherwise stay stuck at opacity:0
+     because the copy is parsed far offscreen and never paints, so force it visible with no transition */
+  .pb-resolved .cv-head{left:50%;right:auto;top:clamp(70px,10.5vh,116px);bottom:auto;
+    transform:translateX(-50%);max-width:86vw;text-align:center;opacity:1;transition:none}
+  .pb-resolved.pb-live .cv-head{opacity:1;transform:translateX(-50%);transition:none}
+  .pb-resolved.pb-live:has(#cvDesc.on) .cv-head{transform:translateX(-50%) translateY(-6px)}
+  .pb-resolved .cv-sub{max-width:none;text-align:center;margin-inline:auto}
+
+  /* brand index removed on mobile — hover/tap-to-focus doesn't suit touch */
+  .cv-brands{display:none}
+}
 /* ══════════ hero chapter index + top-bar section navigator ══════════ */
 .hero-nav{display:flex;flex-wrap:wrap;justify-content:center;margin-top:clamp(30px,4.4vh,50px);pointer-events:auto}
 .hero-nav .hn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-decoration:none;
