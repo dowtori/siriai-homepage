@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monopo saigon — home study (tile aurora)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   monopo.vn (monopo saigon) home — design training reproduction
+   with the tile/orb/swap effects ported from the london study.
+   (개인 훈련용. 원본: https://monopo.vn/)
+
+   base   : near-black hero, centred "hello saigon", aurora glow
+   ported : glass pixel tiles that surface only where colour hits,
+            aurora orb trails the pointer, invisible swap zone
+            crossfades EN -> Vietnamese with ghost echoes
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:#0b0a09;
+  color:#fff;
+  font-family:"Inter Tight",Helvetica,Arial,sans-serif;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  cursor:default;
+}
+:root{
+  --pad-x:40px;
+  --ink:#fff;
+  --ink-soft:rgba(255,255,255,.5);
+}
+
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block}
+
+/* ---------- header ---------- */
+.site-head{
+  position:fixed;top:0;left:0;right:0;z-index:10;
+  padding:22px var(--pad-x) 0;
+  display:flex;align-items:center;justify-content:space-between;
+  pointer-events:none;
+}
+.site-head a{pointer-events:auto}
+
+.logo{
+  display:flex;align-items:center;gap:12px;
+  color:var(--ink);text-decoration:none;user-select:none;
+}
+.logo .m{font-weight:700;font-size:15px;letter-spacing:.02em}
+.logo .bar{width:1px;height:16px;background:rgba(255,255,255,.4)}
+.logo .c{font-weight:300;font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.85)}
+
+.langs{display:flex;gap:22px}
+.langs a{
+  color:var(--ink);text-decoration:none;
+  font-size:12.5px;font-weight:500;letter-spacing:.05em;
+  opacity:.45;transition:opacity .25s;
+}
+.langs a.on,.langs a:hover{opacity:1}
+
+/* ---------- bottom captions (bilingual, site copy) ---------- */
+.captions{position:fixed;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
+.cap{position:absolute;bottom:0;line-height:1.35;font-size:14.5px}
+.cap b{display:block;font-weight:500;color:var(--ink)}
+.cap span{display:block;font-weight:400;color:var(--ink-soft)}
+.cap.left{left:var(--pad-x)}
+.cap.right{right:var(--pad-x);text-align:right}
+
+/* scroll hint, centre bottom */
+.scroll-hint{
+  position:fixed;left:50%;bottom:22px;margin-left:-6px;z-index:10;
+  width:12px;height:52px;overflow:hidden;pointer-events:none;
+}
+.scroll-hint svg{
+  display:block;width:12px;height:52px;
+  animation:hintLoop 2.4s cubic-bezier(.65,0,.35,1) infinite;
+}
+@keyframes hintLoop{
+  0%{transform:translateY(-100%)}
+  38%{transform:translateY(0)}
+  62%{transform:translateY(0)}
+  100%{transform:translateY(100%)}
+}
+
+/* ---------- intro loader ---------- */
+.loader{
+  position:fixed;inset:0;z-index:50;
+  background:#0a0908;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .7s ease;
+}
+.loader.hide{opacity:0;pointer-events:none}
+.loader .logo-lockup{display:flex;align-items:center;gap:14px;opacity:0;animation:loaderIn .8s ease forwards}
+.loader .m{font-weight:700;font-size:19px;letter-spacing:.02em;color:#fff}
+.loader .bar{width:1px;height:20px;background:rgba(255,255,255,.4)}
+.loader .c{font-weight:300;font-size:14px;color:rgba(255,255,255,.85)}
+@keyframes loaderIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(10px);transition:opacity .9s ease,transform .9s ease}
+body.ready .rv{opacity:1;transform:none}
+body.ready .rv.d1{transition-delay:.15s}
+body.ready .rv.d2{transition-delay:.3s}
+
+@media (max-width:700px){
+  :root{--pad-x:20px}
+  .cap.right{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+
+<header class="site-head">
+  <a class="logo rv" href="#">
+    <span class="m">monopo</span><span class="bar"></span><span class="c">saigon</span>
+  </a>
+  <nav class="langs rv d1">
+    <a href="#" class="on">EN</a>
+    <a href="#">VN</a>
+    <a href="#">中文</a>
+  </nav>
+</header>
+
+<div class="captions">
+  <div class="cap left rv d1"><b>United, Unbound</b><span>Hội tụ, Không giới hạn</span></div>
+  <div class="cap right rv d2"><b>Tokyo-born</b><span>digitally-driven creative studio</span></div>
+</div>
+
+<div class="scroll-hint rv d2">
+  <svg viewBox="0 0 12 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 0 V44 M1 39 L6 45 L11 39" stroke="#fff" stroke-width="1.1"/>
+  </svg>
+</div>
+
+<div class="loader" id="loader">
+  <div class="logo-lockup">
+    <span class="m">monopo</span><span class="bar"></span><span class="c">saigon</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   WebGL stage — monopo saigon base + ported effects
+   - near-black field, aurora crescent (orange -> teal) that
+     trails the pointer: this is the coloured orb of the study
+   - glass pixel tiles surface only where the aurora tints them
+   - invisible swap zone: "hello saigon" <-> "xin chào sài gòn"
+   ============================================================ */
+(function stage(){
+  const canvas = document.getElementById('stage');
+  const gl = canvas.getContext('webgl', {antialias:false, alpha:false});
+  if(!gl){ canvas.style.background = '#0b0a09'; return; }
+
+  const VERT = `
+attribute vec2 aPos;
+varying vec2 vUv;
+void main(){
+  vUv = aPos * 0.5 + 0.5;
+  gl_Position = vec4(aPos, 0.0, 1.0);
+}`;
+
+  const FRAG = `
+precision highp float;
+varying vec2 vUv;
+uniform vec2  uRes;
+uniform float uTime;
+uniform vec2  uLens;      // swap zone centre, px (y up)
+uniform float uLensR;     // swap zone half-size basis, px
+uniform float uReveal;    // 0..1 intro reveal
+uniform float uTile;      // tile size px
+uniform mat2  uStretchInv;// velocity fluid-stretch (inverse)
+uniform vec2  uMouse;     // eased pointer, uv (y up) — aurora orb
+uniform sampler2D uTextEn;
+uniform sampler2D uTextVn;
+
+float hash(vec2 p){
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+float noise(vec2 p){
+  vec2 i = floor(p), f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+float fbm(vec2 p){
+  float v = 0.0, a = 0.55;
+  mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
+  for(int i = 0; i < 3; i++){
+    v += a * noise(p);
+    p = rot * p * 1.9;
+    a *= 0.45;
+  }
+  return v;
+}
+
+/* --- monopo saigon field: warm near-black + aurora crescent
+       (orange top -> teal below) breathing around the pointer --- */
+const vec3 BASE = vec3(0.048, 0.045, 0.041);
+vec3 background(vec2 uv){
+  float aspect = uRes.x / uRes.y;
+  vec2 dv = (uv - uMouse) * vec2(aspect, 1.0);
+  float t = uTime * 0.06;
+
+  /* fbm warp so the aurora breathes and curls */
+  float n1 = fbm(dv * 2.1 + t);
+  float n2 = fbm(dv * 2.1 - t * 0.7 + 3.7);
+  vec2 w = dv + (vec2(n1, n2) - 0.5) * 0.22;
+
+  vec3 col = BASE;
+  col += 0.014 * fbm((uv - 0.5) * vec2(aspect, 1.0) * 1.4 + t * 0.3);
+
+  /* crescent: soft lobe minus offset carve */
+  float lobe  = exp(-pow(length(w) / 0.34, 2.0));
+  float carve = exp(-pow(length(w + vec2(-0.10, 0.07)) / 0.22, 2.0));
+  float arc = clamp(lobe - carve * 0.85, 0.0, 1.0);
+
+  /* hue along the arc: orange above, teal below */
+  float hueMix = smoothstep(-0.7, 1.1, sin(atan(w.y, w.x)));
+  vec3 aur = mix(vec3(0.26, 0.55, 0.43), vec3(0.98, 0.60, 0.18), hueMix);
+  col += aur * arc * 1.2;
+
+  /* small warm core */
+  col += vec3(0.9, 0.5, 0.2) * exp(-pow(length(w) / 0.10, 2.0)) * 0.30;
+  return col;
+}
+
+float rrect(vec2 p, vec2 b, float r){
+  vec2 q = abs(p) - b + r;
+  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+}
+
+float enA(vec2 uv){
+  if(uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return 0.0;
+  return texture2D(uTextEn, uv).a;
+}
+float vnA(vec2 uv){
+  if(uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return 0.0;
+  return texture2D(uTextVn, uv).a;
+}
+
+void main(){
+  vec2 fc = vUv * uRes;
+
+  /* ===== glass pixel tiles over the dark field =====
+     invisible on plain black — they surface where the aurora
+     pours colour into them */
+  float TS = uTile;
+  vec2 cell = floor(fc / TS);
+  vec2 cpx = (fract(fc / TS) - 0.5) * TS;
+  vec2 ccUv = (cell + 0.5) * TS / uRes;
+  float dt = rrect(cpx, vec2(TS * 0.5 - TS * 0.045), TS * 0.20);
+
+  vec3 fluidCell = background(ccUv);
+  vec3 fluidPix  = background(vUv);
+  vec3 tcol = mix(fluidCell, fluidPix, 0.30);
+
+  /* visibility = how far the tile colour sits from the dark base */
+  float str = clamp(length(tcol - BASE) * 2.2, 0.0, 1.0);
+
+  tcol = mix(tcol, vec3(1.0), 0.05 * str);                              // frost
+  tcol += vec3(0.06 * str) * smoothstep(-TS * 0.5, TS * 0.5, cpx.y);    // top-lit
+  float rimT = smoothstep(-3.0, -0.6, dt);
+  tcol += vec3(0.09 * str) * rimT * (0.35 + 0.65 * smoothstep(-TS * 0.2, TS * 0.35, cpx.y));
+  tcol -= vec3(0.05 * str) * rimT * smoothstep(TS * 0.1, -TS * 0.35, cpx.y);
+
+  vec3 grout = BASE * 0.75;
+  grout = mix(BASE, grout, str) * (1.0 - 0.10 * str * smoothstep(3.5, 0.0, dt));
+  float tileMask = 1.0 - smoothstep(-0.8, 0.8, dt);
+  vec3 col = mix(grout, tcol, tileMask);
+
+  /* headline reveal: rise + fade */
+  vec2 tuv = vec2(vUv.x, 1.0 - vUv.y);
+  tuv.y += (1.0 - uReveal) * 0.035;
+  float textAlpha = uReveal;
+
+  /* white english headline over everything */
+  float en = enA(tuv);
+  vec3 outsideCol = mix(col, vec3(0.97), en * textAlpha);
+
+  /* ===== invisible swap zone (function only) =====
+     inside the feathered region "hello saigon" crossfades into
+     "xin chào sài gòn"; zone fluid-stretches with velocity */
+  vec2 lp = uStretchInv * (fc - uLens);
+  float H = uLensR * 1.12;
+  float dBig = rrect(lp, vec2(H), H * 0.16);
+
+  vec3 finalCol = outsideCol;
+  if(dBig < 2.0){
+    float fm = 1.0 - smoothstep(-H * 0.45, 0.0, dBig);
+
+    float dl = length(lp);
+    vec2 dir = (dl > 0.5) ? lp / dl : vec2(0.0);
+    vec2 g1 = dir * 3.0 / uRes;
+    float j0 = vnA(tuv);
+    float j1 = vnA(tuv + g1);
+    float j2 = vnA(tuv - g1 * 0.6);
+    vec3 swapped = mix(col, vec3(0.97), j0 * textAlpha);
+    swapped = mix(swapped, vec3(0.60), j1 * (1.0 - j0) * 0.8 * textAlpha);
+    swapped = mix(swapped, vec3(0.38), j2 * (1.0 - j0) * 0.6 * textAlpha);
+
+    finalCol = mix(outsideCol, swapped, fm);
+  }
+  col = finalCol;
+
+  /* film grain */
+  float g = hash(fc + fract(uTime) * 100.0);
+  col += (g - 0.5) * 0.04;
+
+  /* intro: resolve from black */
+  col = mix(vec3(0.03), col, 0.25 + 0.75 * smoothstep(0.0, 0.6, uReveal));
+
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+  function compile(type, src){
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+      throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog, gl.LINK_STATUS))
+    throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  const locPos = gl.getAttribLocation(prog, 'aPos');
+  gl.enableVertexAttribArray(locPos);
+  gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 0, 0);
+
+  const U = {};
+  for(const n of ['uRes','uTime','uLens','uLensR','uReveal','uTile','uStretchInv','uMouse','uTextEn','uTextVn'])
+    U[n] = gl.getUniformLocation(prog, n);
+
+  /* ---------- text textures ---------- */
+  const texEn = gl.createTexture();
+  const texVn = gl.createTexture();
+  function setupTex(tex, unit){
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  }
+  setupTex(texEn, 0);
+  setupTex(texVn, 1);
+  gl.uniform1i(U.uTextEn, 0);
+  gl.uniform1i(U.uTextVn, 1);
+
+  /* headline — centred single line, italic "i" like the original.
+     segments: [text, italic?] */
+  const EN_LINE = { y:0.46, segs:[['hello sa',false],['i',true],['gon',false]] };
+  const VN_LINE = { y:0.46, segs:[['xin chào sà',false],['i',true],[' gòn',false]] };
+
+  const txtCanvas = document.createElement('canvas');
+  const txtCtx = txtCanvas.getContext('2d');
+
+  function paintText(line){
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    txtCanvas.width = Math.round(w * dpr);
+    txtCanvas.height = Math.round(h * dpr);
+    txtCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    txtCtx.clearRect(0, 0, w, h);
+    const size = Math.min(w * 0.038, h * 0.085);
+    const fam = '"Inter Tight",Helvetica,Arial,sans-serif';
+    txtCtx.textBaseline = 'middle';
+    if('letterSpacing' in txtCtx) txtCtx.letterSpacing = (-size * 0.01) + 'px';
+    /* measure total width, then draw centred */
+    let total = 0;
+    for(const [t, it] of line.segs){
+      txtCtx.font = (it ? 'italic ' : '') + `450 ${size}px ${fam}`;
+      total += txtCtx.measureText(t).width;
+    }
+    let x = (w - total) / 2;
+    for(const [t, it] of line.segs){
+      txtCtx.font = (it ? 'italic ' : '') + `450 ${size}px ${fam}`;
+      txtCtx.fillStyle = '#fff';
+      txtCtx.fillText(t, x, line.y * h);
+      x += txtCtx.measureText(t).width;
+    }
+  }
+
+  function uploadText(tex, unit, line){
+    paintText(line);
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, txtCanvas);
+  }
+
+  function refreshTextures(){
+    uploadText(texEn, 0, EN_LINE);
+    uploadText(texVn, 1, VN_LINE);
+  }
+
+  /* ---------- sizing ---------- */
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(canvas.clientWidth * dpr);
+    canvas.height = Math.round(canvas.clientHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    refreshTextures();
+  }
+  window.addEventListener('resize', resize);
+
+  /* ---------- pointer trackers ---------- */
+  const lens = {x:0.5, y:0.46, tx:0.5, ty:0.46};   // swap zone (faster)
+  const orb  = {x:0.5, y:0.52};                    // aurora (slower, trails)
+  let pointerActive = false;
+  window.addEventListener('pointermove', e => {
+    pointerActive = true;
+    lens.tx = e.clientX / window.innerWidth;
+    lens.ty = e.clientY / window.innerHeight;
+  });
+  window.addEventListener('pointerleave', () => {
+    pointerActive = false;
+    lens.tx = 0.5; lens.ty = 0.46;
+  });
+
+  /* ---------- loop ---------- */
+  let reveal = 0, revealAt = 0, start = performance.now();
+  let prevGx = 0, prevGy = 0, eSm = 0, aSm = 0;
+  window.__mono = { get reveal(){ return reveal; }, lens };
+  function frame(now){
+    const t = (now - start) / 1000;
+
+    let ax = lens.tx, ay = lens.ty;
+    if(!pointerActive){
+      ax += Math.sin(t * 0.5) * 0.012;
+      ay += Math.cos(t * 0.38) * 0.014;
+    }
+    lens.x += (ax - lens.x) * 0.055;
+    lens.y += (ay - lens.y) * 0.055;
+    orb.x  += (ax - orb.x) * 0.03;
+    orb.y  += (ay - orb.y) * 0.03;
+
+    if(revealAt) reveal = Math.min(1, (now - revealAt) / 1100);
+
+    const dpr = canvas.width / Math.max(canvas.clientWidth, 1);
+    const gx = lens.x * canvas.width, gy = (1.0 - lens.y) * canvas.height;
+
+    /* velocity fluid-stretch (glass-cursor.js recipe) */
+    const dxp = gx - prevGx, dyp = gy - prevGy;
+    prevGx = gx; prevGy = gy;
+    const eTgt = Math.min(Math.hypot(dxp, dyp) * 0.0022 / dpr, 0.16);
+    eSm += (eTgt - eSm) * 0.18;
+    if(Math.hypot(dxp, dyp) > 0.5) aSm = Math.atan2(dyp, dxp);
+    const c = Math.cos(aSm), s = Math.sin(aSm);
+    const isx = 1 / (1 + eSm), isy = 1 / (1 - eSm * 0.55);
+    const m00 = c * c * isx + s * s * isy;
+    const m11 = s * s * isx + c * c * isy;
+    const m01 = c * s * (isx - isy);
+    gl.uniformMatrix2fv(U.uStretchInv, false, [m00, m01, m01, m11]);
+
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    gl.uniform1f(U.uTime, t);
+    gl.uniform2f(U.uLens, gx, gy);
+    gl.uniform1f(U.uLensR, canvas.clientWidth * 0.053 * dpr);
+    gl.uniform1f(U.uTile, Math.max(64, Math.min(canvas.clientWidth / 14, 118)) * dpr);
+    gl.uniform1f(U.uReveal, reveal);
+    gl.uniform2f(U.uMouse, orb.x, 1.0 - orb.y);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- boot ---------- */
+  resize();
+  requestAnimationFrame(frame);
+
+  const ready = Promise.all([
+    document.fonts.ready,
+    new Promise(res => setTimeout(res, 900)),
+  ]);
+  ready.then(() => {
+    refreshTextures();
+    document.getElementById('loader').classList.add('hide');
+    document.body.classList.add('ready');
+    revealAt = performance.now();
+  });
+})();
+</script>
+</body>
+</html>
