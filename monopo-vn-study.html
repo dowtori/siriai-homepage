@@ -3,43 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>monopo saigon — home study (tile aurora)</title>
+<title>monopo saigon — home study (light monochrome, full-bleed glass)</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    monopo.vn (monopo saigon) home — design training reproduction
    with the tile/orb/swap effects ported from the london study.
    (개인 훈련용. 원본: https://monopo.vn/)
 
-   base   : near-black hero, centred "hello saigon", aurora glow
-   ported : glass pixel tiles that surface only where colour hits,
-            aurora orb trails the pointer, invisible swap zone
-            crossfades EN -> Vietnamese with ghost echoes
+   base   : paper hero, centred headline, graphite crescent
+   ported : LIGHT MONOCHROME inversion (from the london study) +
+            full-bleed frosted glass (no pane border) that surfaces
+            where the ink crescent tints it.
+            headline = SIRIAI: "Architecture for Insight, AI" base,
+            "가장 쉬운 AI 리터러시" inside the swap lens.
+            + section 1: cathydolle.com layout study, taken as-is
+              (11px uppercase idiom, NN/ numbering, edge captions,
+              centred portrait photos) — content/photos are dummies
    ============================================================ */
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%}
+html,body{min-height:100%}
 body{
-  background:#0b0a09;
-  color:#fff;
+  background:#f2f1ee;
+  color:#111;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
-  overflow:hidden;
+  overflow-x:clip;
   -webkit-font-smoothing:antialiased;
   cursor:default;
 }
 :root{
   --pad-x:40px;
-  --ink:#fff;
-  --ink-soft:rgba(255,255,255,.5);
+  --ink:#111;
+  --ink-soft:rgba(17,17,17,.55);
 }
 
-#stage{position:fixed;inset:0;width:100%;height:100%;display:block}
+/* hero wraps the canvas so the page can scroll into section 1 */
+.hero{position:relative;height:100svh;overflow:hidden}
+#stage{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 /* ---------- header ---------- */
 .site-head{
-  position:fixed;top:0;left:0;right:0;z-index:10;
+  position:absolute;top:0;left:0;right:0;z-index:10;
   padding:22px var(--pad-x) 0;
   display:flex;align-items:center;justify-content:space-between;
   pointer-events:none;
@@ -51,8 +58,9 @@ body{
   color:var(--ink);text-decoration:none;user-select:none;
 }
 .logo .m{font-weight:700;font-size:15px;letter-spacing:.02em}
-.logo .bar{width:1px;height:16px;background:rgba(255,255,255,.4)}
-.logo .c{font-weight:300;font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.85)}
+.logo .wm{height:13px;width:auto;display:block}
+.logo .bar{width:1px;height:16px;background:rgba(17,17,17,.45)}
+.logo .c{font-weight:300;font-size:12px;letter-spacing:.04em;color:rgba(17,17,17,.85)}
 
 .langs{display:flex;gap:22px}
 .langs a{
@@ -63,7 +71,7 @@ body{
 .langs a.on,.langs a:hover{opacity:1}
 
 /* ---------- bottom captions (bilingual, site copy) ---------- */
-.captions{position:fixed;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
+.captions{position:absolute;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
 .cap{position:absolute;bottom:0;line-height:1.35;font-size:14.5px}
 .cap b{display:block;font-weight:500;color:var(--ink)}
 .cap span{display:block;font-weight:400;color:var(--ink-soft)}
@@ -72,7 +80,7 @@ body{
 
 /* scroll hint, centre bottom */
 .scroll-hint{
-  position:fixed;left:50%;bottom:22px;margin-left:-6px;z-index:10;
+  position:absolute;left:50%;bottom:22px;margin-left:-6px;z-index:10;
   width:12px;height:52px;overflow:hidden;pointer-events:none;
 }
 .scroll-hint svg{
@@ -89,15 +97,16 @@ body{
 /* ---------- intro loader ---------- */
 .loader{
   position:fixed;inset:0;z-index:50;
-  background:#0a0908;
+  background:#f4f3f0;
   display:flex;align-items:center;justify-content:center;
   transition:opacity .7s ease;
 }
 .loader.hide{opacity:0;pointer-events:none}
 .loader .logo-lockup{display:flex;align-items:center;gap:14px;opacity:0;animation:loaderIn .8s ease forwards}
-.loader .m{font-weight:700;font-size:19px;letter-spacing:.02em;color:#fff}
-.loader .bar{width:1px;height:20px;background:rgba(255,255,255,.4)}
-.loader .c{font-weight:300;font-size:14px;color:rgba(255,255,255,.85)}
+.loader .m{font-weight:700;font-size:19px;letter-spacing:.02em;color:#111}
+.loader .wm{height:17px;width:auto;display:block}
+.loader .bar{width:1px;height:20px;background:rgba(17,17,17,.4)}
+.loader .c{font-weight:300;font-size:14px;color:rgba(17,17,17,.85)}
 @keyframes loaderIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* ---------- reveal ---------- */
@@ -110,52 +119,269 @@ body.ready .rv.d2{transition-delay:.3s}
   :root{--pad-x:20px}
   .cap.right{display:none}
 }
+
+/* ============================================================
+   section 1 — cathydolle.com home, ported WITH its scroll feel:
+   - sticky full-screen stage; the centre image strip is
+     virtual-scrolled with inertia (lerp) and wraps infinitely
+     (mod period), the way cathydolle's canvas feed loops
+   - a tall scroll runway (.cd-home height) drives the virtual
+     position, smoothed so it glides after the wheel stops.
+     NOT wheel-jacked, so the hero above stays reachable.
+   - fixed L/R index (11px/500/uppercase); each row's opacity
+     follows its image's distance to the viewport centre
+   - pixel crosshair cursor (mix-blend difference), site-wide
+   (photos = local stand-ins; copy = dummy, as briefed)
+   ============================================================ */
+/* seam bridge: the section ground starts at the hero's paper (#f2f1ee) so the
+   boundary has no colour jump, then cools to white as the (scrolling) runway
+   passes behind the pinned stage — a scroll-driven paper->white settle, no JS */
+.cd-home{position:relative;z-index:1;height:320vh;margin-top:7vh;
+  background:linear-gradient(180deg,#f2f1ee 0,#f2f1ee 12vh,#fff 108vh);color:#000;
+  font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.01em;line-height:1.55}
+.cd-view{position:sticky;top:0;height:100svh;overflow:hidden}
+.cd-toggle{position:absolute;top:12px;left:17.19vw;display:flex;gap:2.2vw;color:#bfbfbf;z-index:3}
+.cd-toggle .on{color:#000}
+.cd-idx{list-style:none;position:absolute;top:20.9vh;margin:0;padding:0;z-index:3}
+.cd-idx li{height:12vh;display:flex;gap:.7vw;align-items:flex-start;opacity:.16;will-change:opacity}
+.cd-idx .n{width:7.75vw;flex:none}
+.cd-idx .t{width:16vw}
+.cd-idx-l{left:8.75vw}
+.cd-idx-r{right:8.875vw;text-align:right}
+/* centre strip — figures absolutely placed, positioned each frame */
+.cd-strip{position:absolute;inset:0;z-index:2}
+.cd-strip figure{position:absolute;left:50%;top:0;margin:0;will-change:transform}
+.cd-strip figure img{width:100%;display:block;filter:grayscale(1)}
+.cd-strip .p{width:16.06vw;min-width:200px}
+.cd-strip .p img{aspect-ratio:3/4;object-fit:cover}
+.cd-strip .l{width:24.38vw;min-width:300px}
+.cd-strip .l img{aspect-ratio:16/9;object-fit:cover}
+/* pixel crosshair cursor — visible on light & dark via difference */
+.cd-cursor{position:fixed;top:0;left:0;width:8px;height:8px;border:1px solid #fff;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:9999;mix-blend-mode:difference}
+/* miniaturised background object — the hero crescent, minified into a
+   small halftone-dot orb that trails the cursor once past the hero */
+.cd-orb{position:fixed;top:0;left:0;width:132px;height:132px;border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:40;opacity:0;
+  background-image:radial-gradient(rgba(33,26,51,.6) 22%, transparent 24%);
+  background-size:7px 7px;
+  -webkit-mask:radial-gradient(circle, #000 6%, rgba(0,0,0,.45) 45%, transparent 72%);
+          mask:radial-gradient(circle, #000 6%, rgba(0,0,0,.45) 45%, transparent 72%);
+  mix-blend-mode:multiply;will-change:transform,opacity}
+body{cursor:none}
+@media (hover:none),(pointer:coarse){
+  body{cursor:auto}.cd-cursor,.cd-orb{display:none}
+}
+@media (max-width:700px){          /* cathydolle drops the list + virtual scroll on mobile */
+  .cd-idx,.cd-toggle{display:none}
+  .cd-home{height:auto}
+  .cd-view{position:static;height:auto;overflow:visible}
+  .cd-strip{position:static;display:flex;flex-direction:column;align-items:center;gap:7px;padding:14vh 0}
+  .cd-strip figure{position:static;left:auto;transform:none!important}
+  .cd-strip .p{width:56vw}
+  .cd-strip .l{width:82vw}
+}
 </style>
 </head>
 <body>
 
+<div class="hero">
 <canvas id="stage"></canvas>
 
 <header class="site-head">
   <a class="logo rv" href="#">
-    <span class="m">monopo</span><span class="bar"></span><span class="c">saigon</span>
+    <img class="wm" src="assets/siriai-word-ink.png" alt="Siriai"><span class="bar"></span><span class="c">seoul</span>
   </a>
   <nav class="langs rv d1">
-    <a href="#" class="on">EN</a>
-    <a href="#">VN</a>
-    <a href="#">中文</a>
+    <a href="#" class="on">KR</a>
+    <a href="#">EN</a>
+    <a href="#">JP</a>
   </nav>
 </header>
 
 <div class="captions">
-  <div class="cap left rv d1"><b>United, Unbound</b><span>Hội tụ, Không giới hạn</span></div>
-  <div class="cap right rv d2"><b>Tokyo-born</b><span>digitally-driven creative studio</span></div>
+  <div class="cap left rv d1"><b>시리아이가 모두의</b><span>“시리아이(しりあい)”가 됩니다</span></div>
+  <div class="cap right rv d2"><b>가장 쉬운 방법으로</b><span>인사이트를 발견해보세요</span></div>
 </div>
 
 <div class="scroll-hint rv d2">
   <svg viewBox="0 0 12 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 0 V44 M1 39 L6 45 L11 39" stroke="#fff" stroke-width="1.1"/>
+    <path d="M6 0 V44 M1 39 L6 45 L11 39" stroke="#111" stroke-width="1.1"/>
   </svg>
 </div>
+</div><!-- /.hero -->
+
+<!-- ============ section 1 — cathydolle.com home, ported ============
+     sticky stage: LEFT index (01/–06/ + titles), RIGHT index mirrored
+     (Arch|SE/ + dummy names), List/Slider toggle. centre strip is
+     virtual-scrolled with inertia + infinite wrap (see script below).
+     photos = local stand-ins; copy = dummy -->
+<section class="cd-home" id="work">
+  <div class="cd-view">
+    <div class="cd-toggle"><span class="on">List</span><span>Slider</span></div>
+    <ul class="cd-idx cd-idx-l">
+      <li><span class="n">01/</span><span class="t">Architecting Insight</span></li>
+      <li><span class="n">02/</span><span class="t">Structure of Problems</span></li>
+      <li><span class="n">03/</span><span class="t">Consulting Loop</span></li>
+      <li><span class="n">04/</span><span class="t">Prototype Sprint</span></li>
+      <li><span class="n">05/</span><span class="t">Interface Craft</span></li>
+      <li><span class="n">06/</span><span class="t">Ship and Scale</span></li>
+    </ul>
+    <ul class="cd-idx cd-idx-r">
+      <li><span class="n">Arch/</span><span class="t">Yuna Choi</span></li>
+      <li><span class="n">Arch/</span><span class="t">Minseo Han</span></li>
+      <li><span class="n">Arch/</span><span class="t">Jiwoo Park</span></li>
+      <li><span class="n">SE/</span><span class="t">Doyun Lee</span></li>
+      <li><span class="n">SE/</span><span class="t">Seoa Kang</span></li>
+      <li><span class="n">SE/</span><span class="t">Haru Jung</span></li>
+    </ul>
+    <div class="cd-strip">
+      <figure class="p"><img src="assets/creator/ARTIST/Dancers/Dancer-1.jpg" alt="" loading="lazy"></figure>
+      <figure class="l"><img src="assets/creator/FASHION/OJOS/OJOS-2.jpg" alt="" loading="lazy"></figure>
+      <figure class="p"><img src="assets/creator/ARTIST/JYP/lily.jpg" alt="" loading="lazy"></figure>
+      <figure class="l"><img src="assets/creator/FASHION/TOOMUCHTAX/TMT-1.jpg" alt="" loading="lazy"></figure>
+      <figure class="p"><img src="assets/creator/FASHION/8DIVISION/INNIR.jpg" alt="" loading="lazy"></figure>
+      <figure class="l"><img src="assets/creator/FASHION/8DIVISION/Store.jpg" alt="" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<div class="cd-cursor" aria-hidden="true"></div>
+<div class="cd-orb" aria-hidden="true"></div>
+
+<script>
+/* global smooth (inertial) scroll — the "죽 당겨지는" glide, monopo.london's
+   idiom (Lenis under the hood there; this is a compact Lenis-lite): hijack the
+   wheel and ease window scroll toward an accumulated target each frame.
+   native fallback for reduced-motion + touch. behaviour only — no new UI. */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(pointer:coarse)').matches) return;
+  const EASE = 0.07;                 // glide strength (bigger = snappier, smaller = longer pull)
+  let target = scrollY, current = target, raf = 0, active = false;
+  function loop(){
+    current += (target - current) * EASE;
+    if(Math.abs(target - current) < 0.4){ current = target; window.scrollTo(0, current); active = false; raf = 0; return; }
+    window.scrollTo(0, current);
+    raf = requestAnimationFrame(loop);
+  }
+  function kick(){ active = true; if(!raf) raf = requestAnimationFrame(loop); }
+  addEventListener('wheel', e => {
+    if(e.ctrlKey) return;            // let pinch-zoom pass through
+    e.preventDefault();
+    let dy = e.deltaY;
+    if(e.deltaMode === 1) dy *= 16;               // lines -> px (Firefox et al.)
+    else if(e.deltaMode === 2) dy *= innerHeight; // pages -> px
+    const max = document.documentElement.scrollHeight - innerHeight;
+    target = Math.max(0, Math.min(max, target + dy));
+    kick();
+  }, {passive:false});
+  addEventListener('scroll', () => { if(!active) target = current = scrollY; }, {passive:true});
+  addEventListener('resize', () => { target = current = scrollY; });
+})();
+</script>
+
+<script>
+/* cathydolle home — virtual inertial scroll + infinite wrap + crosshair.
+   The strip position is driven by scroll progress through the tall
+   .cd-home runway, then lerped so it glides after the wheel stops.
+   Each figure's Y wraps (mod period P) so the feed loops endlessly. */
+(function(){
+  /* pixel crosshair cursor + miniaturised background orb: the hero
+     crescent, minified into a small halftone-dot orb that trails the
+     cursor and fades in once the hero has scrolled out */
+  const cur = document.querySelector('.cd-cursor');
+  const orb = document.querySelector('.cd-orb');
+  let px = innerWidth * 0.5, py = innerHeight * 0.5, ox = px, oy = py, oraf = 0;
+  const OLERP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.10;
+  function orbVis(){ return Math.min(1, Math.max(0, (scrollY - innerHeight * 0.3) / (innerHeight * 0.5))); }
+  function orbTick(){
+    oraf = 0;
+    ox += (px - ox) * OLERP; oy += (py - oy) * OLERP;
+    if(orb){
+      orb.style.transform = `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) translate(-50%,-50%)`;
+      orb.style.opacity = orbVis();
+    }
+    if(Math.abs(px - ox) > 0.4 || Math.abs(py - oy) > 0.4) orbSched();
+  }
+  function orbSched(){ if(!oraf) oraf = requestAnimationFrame(orbTick); }
+  addEventListener('pointermove', e => {
+    px = e.clientX; py = e.clientY;
+    if(cur){ cur.style.left = px + 'px'; cur.style.top = py + 'px'; }
+    orbSched();
+  }, {passive:true});
+  addEventListener('scroll', () => { if(orb) orb.style.opacity = orbVis(); orbSched(); }, {passive:true});
+  orbTick();
+
+  const mob = matchMedia('(max-width:700px)');
+  const RM  = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const home  = document.querySelector('.cd-home');
+  const strip = document.querySelector('.cd-strip');
+  const figs  = strip ? [...strip.querySelectorAll('figure')] : [];
+  const L = [...document.querySelectorAll('.cd-idx-l li')];
+  const R = [...document.querySelectorAll('.cd-idx-r li')];
+  if(!figs.length) return;
+
+  const GAP = 7, TRAVEL = 2.0, LERP = RM ? 1 : 0.18;   // snappier: global smooth already glides scrollY
+  let base = [], P = 1, pos = 0, target = 0, raf = 0;
+
+  function measure(){
+    let y = 0; base = [];
+    for(const f of figs){ const h = f.getBoundingClientRect().height; base.push(y + h/2); y += h + GAP; }
+    P = y || 1;
+  }
+  function wrapSigned(x){ let m = ((x % P) + P) % P; if(m > P/2) m -= P; return m; }
+  function progress(){
+    const span = home.offsetHeight - innerHeight;
+    return span > 0 ? Math.min(1, Math.max(0, (scrollY - home.offsetTop) / span)) : 0;
+  }
+  function frame(){
+    raf = 0;
+    target = progress() * P * TRAVEL;
+    pos += (target - pos) * LERP;
+    const vc = innerHeight / 2, denom = innerHeight * 0.55;
+    for(let i = 0; i < figs.length; i++){
+      const off = wrapSigned(base[i] - pos);
+      figs[i].style.transform = `translate(-50%, ${(vc + off).toFixed(1)}px) translateY(-50%)`;
+      const op = Math.max(0.16, 1 - Math.pow(Math.abs(off) / denom, 1.4));
+      if(L[i]) L[i].style.opacity = op;
+      if(R[i]) R[i].style.opacity = op;
+    }
+    if(Math.abs(target - pos) > 0.4) schedule();
+  }
+  function schedule(){ if(!raf) raf = requestAnimationFrame(frame); }
+
+  function setup(){
+    if(mob.matches){ figs.forEach(f => f.style.transform = ''); return; }
+    measure();
+    pos = target = progress() * P * TRAVEL;   // no glide on first paint
+    frame();
+  }
+  addEventListener('scroll', () => { if(!mob.matches) schedule(); }, {passive:true});
+  addEventListener('resize', setup);
+  for(const f of figs){ const im = f.querySelector('img'); if(im && !im.complete) im.addEventListener('load', setup, {once:true}); }
+  setup();
+})();
+</script>
 
 <div class="loader" id="loader">
   <div class="logo-lockup">
-    <span class="m">monopo</span><span class="bar"></span><span class="c">saigon</span>
+    <img class="wm" src="assets/siriai-word-ink.png" alt="Siriai"><span class="bar"></span><span class="c">seoul</span>
   </div>
 </div>
 
 <script>
 /* ============================================================
-   WebGL stage — monopo saigon base + ported effects
-   - near-black field, aurora crescent (orange -> teal) that
-     trails the pointer: this is the coloured orb of the study
-   - glass pixel tiles surface only where the aurora tints them
-   - invisible swap zone: "hello saigon" <-> "xin chào sài gòn"
+   WebGL stage — monopo saigon base, LIGHT MONOCHROME + single pane
+   - paper field, graphite crescent (value ramp, no hue) that
+     trails the pointer: the monochrome "orb" of the study
+   - ONE large frosted-glass pane surfaces where the crescent tints it
+   - SIRIAI home copy, invisible swap zone crossfades the Korean
+     headline <-> the English tagline "Architecture for Insight, AI"
    ============================================================ */
 (function stage(){
   const canvas = document.getElementById('stage');
   const gl = canvas.getContext('webgl', {antialias:false, alpha:false});
-  if(!gl){ canvas.style.background = '#0b0a09'; return; }
+  if(!gl){ canvas.style.background = '#f2f1ee'; return; }
 
   const VERT = `
 attribute vec2 aPos;
@@ -173,11 +399,11 @@ uniform float uTime;
 uniform vec2  uLens;      // swap zone centre, px (y up)
 uniform float uLensR;     // swap zone half-size basis, px
 uniform float uReveal;    // 0..1 intro reveal
-uniform float uTile;      // tile size px
 uniform mat2  uStretchInv;// velocity fluid-stretch (inverse)
 uniform vec2  uMouse;     // eased pointer, uv (y up) — aurora orb
-uniform sampler2D uTextEn;
-uniform sampler2D uTextVn;
+uniform float uExit;      // 0..1 hero scroll-out — crescent -> halftone dots
+uniform sampler2D uTextBase;  // "Architecture for Insight, AI" — always shown
+uniform sampler2D uTextHover; // "가장 쉬운 AI 리터러시" — inside the swap lens
 
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
@@ -204,34 +430,35 @@ float fbm(vec2 p){
   return v;
 }
 
-/* --- monopo saigon field: warm near-black + aurora crescent
-       (orange top -> teal below) breathing around the pointer --- */
-const vec3 BASE = vec3(0.048, 0.045, 0.041);
+/* --- monopo saigon field, LIGHT MONOCHROME:
+       paper white + a graphite crescent (value ramp, no hue)
+       breathing around the pointer --- */
+const vec3 PAPER = vec3(0.955);
 vec3 background(vec2 uv){
   float aspect = uRes.x / uRes.y;
   vec2 dv = (uv - uMouse) * vec2(aspect, 1.0);
   float t = uTime * 0.06;
 
-  /* fbm warp so the aurora breathes and curls */
+  /* fbm warp so the crescent breathes and curls */
   float n1 = fbm(dv * 2.1 + t);
   float n2 = fbm(dv * 2.1 - t * 0.7 + 3.7);
   vec2 w = dv + (vec2(n1, n2) - 0.5) * 0.22;
 
-  vec3 col = BASE;
-  col += 0.014 * fbm((uv - 0.5) * vec2(aspect, 1.0) * 1.4 + t * 0.3);
+  vec3 col = PAPER;
+  col -= 0.02 * fbm((uv - 0.5) * vec2(aspect, 1.0) * 1.4 + t * 0.3);   // whisper mottling
 
   /* crescent: soft lobe minus offset carve */
   float lobe  = exp(-pow(length(w) / 0.34, 2.0));
   float carve = exp(-pow(length(w + vec2(-0.10, 0.07)) / 0.22, 2.0));
   float arc = clamp(lobe - carve * 0.85, 0.0, 1.0);
 
-  /* hue along the arc: orange above, teal below */
-  float hueMix = smoothstep(-0.7, 1.1, sin(atan(w.y, w.x)));
-  vec3 aur = mix(vec3(0.26, 0.55, 0.43), vec3(0.98, 0.60, 0.18), hueMix);
-  col += aur * arc * 1.2;
+  /* value along the arc: soft grey tail -> deeper ink head (monochrome) */
+  float valMix = smoothstep(-0.7, 1.1, sin(atan(w.y, w.x)));
+  float ink = mix(0.46, 0.20, valMix);
+  col = mix(col, vec3(ink), arc);
 
-  /* small warm core */
-  col += vec3(0.9, 0.5, 0.2) * exp(-pow(length(w) / 0.10, 2.0)) * 0.30;
+  /* a touch deeper at the core */
+  col = mix(col, vec3(0.14), exp(-pow(length(w) / 0.10, 2.0)) * 0.35);
   return col;
 }
 
@@ -240,60 +467,61 @@ float rrect(vec2 p, vec2 b, float r){
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
 }
 
-float enA(vec2 uv){
-  if(uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return 0.0;
-  return texture2D(uTextEn, uv).a;
+float baseA(vec2 uv){
+  if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0) return 0.0;
+  return texture2D(uTextBase, uv).a;
 }
-float vnA(vec2 uv){
-  if(uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return 0.0;
-  return texture2D(uTextVn, uv).a;
+float hovA(vec2 uv){
+  if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0) return 0.0;
+  return texture2D(uTextHover, uv).a;
 }
 
 void main(){
   vec2 fc = vUv * uRes;
 
-  /* ===== glass pixel tiles over the dark field =====
-     invisible on plain black — they surface where the aurora
-     pours colour into them */
-  float TS = uTile;
-  vec2 cell = floor(fc / TS);
-  vec2 cpx = (fract(fc / TS) - 0.5) * TS;
-  vec2 ccUv = (cell + 0.5) * TS / uRes;
-  float dt = rrect(cpx, vec2(TS * 0.5 - TS * 0.045), TS * 0.20);
+  /* ===== full-bleed frosted glass over the paper field =====
+     paper + graphite crescent cover the whole screen. as the hero
+     scrolls out (uExit 0->1) the crescent breaks into a field of
+     small halftone dots — the background object "dotting" away. */
+  vec3 field = background(vUv);
 
-  vec3 fluidCell = background(ccUv);
-  vec3 fluidPix  = background(vUv);
-  vec3 tcol = mix(fluidCell, fluidPix, 0.30);
+  if(uExit > 0.001){
+    float aspect = uRes.x / uRes.y;
+    vec3 paperCol = vec3(0.955) - 0.02 * fbm((vUv - 0.5) * vec2(aspect, 1.0) * 1.4 + uTime * 0.018);
+    float cellPx = 9.0 * (uRes.x / 1600.0);                   // small screen-space cells
+    vec2 g  = fc / cellPx;
+    vec2 gc = fract(g) - 0.5;
+    vec3 cellCol = background((floor(g) + 0.5) * cellPx / uRes);
+    float kCell  = clamp(length(vec3(1.0) - cellCol) * 2.4, 0.0, 1.0);   // crescent coverage
+    float r      = sqrt(kCell) * 0.52 * (1.0 - uExit * 0.25);            // dot radius
+    float dotIn  = smoothstep(r + 0.07, r - 0.07, length(gc)) * step(0.03, kCell);
+    vec3 dotField = mix(paperCol, cellCol, dotIn);            // ink dot keeps the crescent shade
+    field = mix(field, dotField, uExit);
+  }
 
-  /* visibility = how far the tile colour sits from the dark base */
-  float str = clamp(length(tcol - BASE) * 2.2, 0.0, 1.0);
+  /* visibility = how far the glass colour sits from paper white */
+  float str = clamp(length(vec3(1.0) - field) * 2.4 + 0.10, 0.0, 1.0);
 
-  tcol = mix(tcol, vec3(1.0), 0.05 * str);                              // frost
-  tcol += vec3(0.06 * str) * smoothstep(-TS * 0.5, TS * 0.5, cpx.y);    // top-lit
-  float rimT = smoothstep(-3.0, -0.6, dt);
-  tcol += vec3(0.09 * str) * rimT * (0.35 + 0.65 * smoothstep(-TS * 0.2, TS * 0.35, cpx.y));
-  tcol -= vec3(0.05 * str) * rimT * smoothstep(TS * 0.1, -TS * 0.35, cpx.y);
+  field = mix(field, vec3(1.0), 0.16 * (0.5 + 0.5 * str));   // frosted lift
+  field += vec3(0.05 * str) * smoothstep(0.0, 1.0, vUv.y);   // top-lit wash
 
-  vec3 grout = BASE * 0.75;
-  grout = mix(BASE, grout, str) * (1.0 - 0.10 * str * smoothstep(3.5, 0.0, dt));
-  float tileMask = 1.0 - smoothstep(-0.8, 0.8, dt);
-  vec3 col = mix(grout, tcol, tileMask);
+  vec3 col = field;
 
   /* headline reveal: rise + fade */
   vec2 tuv = vec2(vUv.x, 1.0 - vUv.y);
   tuv.y += (1.0 - uReveal) * 0.035;
   float textAlpha = uReveal;
 
-  /* white english headline over everything */
-  float en = enA(tuv);
-  vec3 outsideCol = mix(col, vec3(0.97), en * textAlpha);
+  /* base headline — english tagline, always shown */
+  float baseAlpha = baseA(tuv);
+  vec3 outsideCol = mix(col, vec3(0.05), baseAlpha * textAlpha);
 
   /* ===== invisible swap zone (function only) =====
-     inside the feathered region "hello saigon" crossfades into
-     "xin chào sài gòn"; zone fluid-stretches with velocity */
+     inside the feathered region the tagline gives way to the
+     korean line; zone fluid-stretches with velocity */
   vec2 lp = uStretchInv * (fc - uLens);
   float H = uLensR * 1.12;
-  float dBig = rrect(lp, vec2(H), H * 0.16);
+  float dBig = length(lp) - H;     // circular eraser (same diameter as the old square)
 
   vec3 finalCol = outsideCol;
   if(dBig < 2.0){
@@ -302,23 +530,23 @@ void main(){
     float dl = length(lp);
     vec2 dir = (dl > 0.5) ? lp / dl : vec2(0.0);
     vec2 g1 = dir * 3.0 / uRes;
-    float j0 = vnA(tuv);
-    float j1 = vnA(tuv + g1);
-    float j2 = vnA(tuv - g1 * 0.6);
-    vec3 swapped = mix(col, vec3(0.97), j0 * textAlpha);
-    swapped = mix(swapped, vec3(0.60), j1 * (1.0 - j0) * 0.8 * textAlpha);
-    swapped = mix(swapped, vec3(0.38), j2 * (1.0 - j0) * 0.6 * textAlpha);
+    float j0 = hovA(tuv);
+    float j1 = hovA(tuv + g1);
+    float j2 = hovA(tuv - g1 * 0.6);
+    vec3 swapped = mix(col, vec3(0.05), j0 * textAlpha);
+    swapped = mix(swapped, vec3(0.42), j1 * (1.0 - j0) * 0.8 * textAlpha);
+    swapped = mix(swapped, vec3(0.62), j2 * (1.0 - j0) * 0.6 * textAlpha);
 
     finalCol = mix(outsideCol, swapped, fm);
   }
   col = finalCol;
 
-  /* film grain */
+  /* film grain — feather-light on paper */
   float g = hash(fc + fract(uTime) * 100.0);
-  col += (g - 0.5) * 0.04;
+  col += (g - 0.5) * 0.03;
 
-  /* intro: resolve from black */
-  col = mix(vec3(0.03), col, 0.25 + 0.75 * smoothstep(0.0, 0.6, uReveal));
+  /* intro: resolve from paper white */
+  col = mix(vec3(0.965), col, 0.25 + 0.75 * smoothstep(0.0, 0.6, uReveal));
 
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -347,12 +575,13 @@ void main(){
   gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 0, 0);
 
   const U = {};
-  for(const n of ['uRes','uTime','uLens','uLensR','uReveal','uTile','uStretchInv','uMouse','uTextEn','uTextVn'])
+  for(const n of ['uRes','uTime','uLens','uLensR','uReveal','uStretchInv','uMouse','uExit',
+                  'uTextBase','uTextHover'])
     U[n] = gl.getUniformLocation(prog, n);
 
-  /* ---------- text textures ---------- */
-  const texEn = gl.createTexture();
-  const texVn = gl.createTexture();
+  /* ---------- text textures: base tagline (unit 0) + hover line (unit 1) ---------- */
+  const texBase  = gl.createTexture();
+  const texHover = gl.createTexture();
   function setupTex(tex, unit){
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -361,47 +590,46 @@ void main(){
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   }
-  setupTex(texEn, 0);
-  setupTex(texVn, 1);
-  gl.uniform1i(U.uTextEn, 0);
-  gl.uniform1i(U.uTextVn, 1);
+  setupTex(texBase, 0);
+  setupTex(texHover, 1);
+  gl.uniform1i(U.uTextBase, 0);
+  gl.uniform1i(U.uTextHover, 1);
 
-  /* headline — centred single line, italic "i" like the original.
-     segments: [text, italic?] */
-  const EN_LINE = { y:0.46, segs:[['hello sa',false],['i',true],['gon',false]] };
-  const VN_LINE = { y:0.46, segs:[['xin chào sà',false],['i',true],[' gòn',false]] };
+  /* headline — simple pair (site copy):
+     base = english tagline, hover = korean literacy line */
+  const KR = '"Noto Sans KR","Inter Tight",sans-serif';
+  const EN = '"Inter Tight",Helvetica,Arial,sans-serif';
+  const BASE_SPEC  = { t:'Architecture for Insight, AI', family:EN, weight:500 };
+  const HOVER_SPEC = { t:'가장 쉬운 AI 리터러시',          family:KR, weight:600 };
 
   const txtCanvas = document.createElement('canvas');
   const txtCtx = txtCanvas.getContext('2d');
 
-  function paintText(line){
+  function paintText(spec){
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const w = canvas.clientWidth, h = canvas.clientHeight;
     txtCanvas.width = Math.round(w * dpr);
     txtCanvas.height = Math.round(h * dpr);
     txtCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     txtCtx.clearRect(0, 0, w, h);
-    const size = Math.min(w * 0.038, h * 0.085);
-    const fam = '"Inter Tight",Helvetica,Arial,sans-serif';
     txtCtx.textBaseline = 'middle';
-    if('letterSpacing' in txtCtx) txtCtx.letterSpacing = (-size * 0.01) + 'px';
-    /* measure total width, then draw centred */
-    let total = 0;
-    for(const [t, it] of line.segs){
-      txtCtx.font = (it ? 'italic ' : '') + `450 ${size}px ${fam}`;
-      total += txtCtx.measureText(t).width;
+    txtCtx.fillStyle = '#fff';   /* texture stores alpha only; tint in shader */
+    let size = Math.min(w * 0.033, h * 0.070);        // smaller base size
+    if('letterSpacing' in txtCtx) txtCtx.letterSpacing = (-size * 0.010) + 'px';
+    txtCtx.font = `${spec.weight} ${size}px ${spec.family}`;
+    /* auto-fit: shrink until the single line sits inside the pane */
+    const maxW = w * 0.66;
+    let tw = txtCtx.measureText(spec.t).width;
+    if(tw > maxW){
+      size *= maxW / tw;
+      txtCtx.font = `${spec.weight} ${size}px ${spec.family}`;
+      tw = txtCtx.measureText(spec.t).width;
     }
-    let x = (w - total) / 2;
-    for(const [t, it] of line.segs){
-      txtCtx.font = (it ? 'italic ' : '') + `450 ${size}px ${fam}`;
-      txtCtx.fillStyle = '#fff';
-      txtCtx.fillText(t, x, line.y * h);
-      x += txtCtx.measureText(t).width;
-    }
+    txtCtx.fillText(spec.t, (w - tw) / 2, 0.46 * h);
   }
 
-  function uploadText(tex, unit, line){
-    paintText(line);
+  function uploadText(tex, unit, spec){
+    paintText(spec);
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
@@ -409,8 +637,8 @@ void main(){
   }
 
   function refreshTextures(){
-    uploadText(texEn, 0, EN_LINE);
-    uploadText(texVn, 1, VN_LINE);
+    uploadText(texBase,  0, BASE_SPEC);
+    uploadText(texHover, 1, HOVER_SPEC);
   }
 
   /* ---------- sizing ---------- */
@@ -426,9 +654,10 @@ void main(){
   /* ---------- pointer trackers ---------- */
   const lens = {x:0.5, y:0.46, tx:0.5, ty:0.46};   // swap zone (faster)
   const orb  = {x:0.5, y:0.52};                    // aurora (slower, trails)
-  let pointerActive = false;
+  let pointerActive = false, lastMove = performance.now();
   window.addEventListener('pointermove', e => {
     pointerActive = true;
+    lastMove = performance.now();
     lens.tx = e.clientX / window.innerWidth;
     lens.ty = e.clientY / window.innerHeight;
   });
@@ -439,20 +668,25 @@ void main(){
 
   /* ---------- loop ---------- */
   let reveal = 0, revealAt = 0, start = performance.now();
-  let prevGx = 0, prevGy = 0, eSm = 0, aSm = 0;
-  window.__mono = { get reveal(){ return reveal; }, lens };
+  let prevGx = 0, prevGy = 0, eSm = 0, aSm = 0, driftAmt = 0;
+  window.__mono = { get reveal(){ return reveal; }, lens, orb };
   function frame(now){
     const t = (now - start) / 1000;
 
-    let ax = lens.tx, ay = lens.ty;
-    if(!pointerActive){
-      ax += Math.sin(t * 0.5) * 0.012;
-      ay += Math.cos(t * 0.38) * 0.014;
-    }
-    lens.x += (ax - lens.x) * 0.055;
-    lens.y += (ay - lens.y) * 0.055;
-    orb.x  += (ax - orb.x) * 0.03;
-    orb.y  += (ay - orb.y) * 0.03;
+    /* idle drift: after the pointer rests >1s (or leaves the window) the
+       crescent orb eases into a slow autonomous wander; the moment the mouse
+       moves it ramps back to following. small amplitude — a gentle breath. */
+    const idle = !pointerActive || (now - lastMove) > 1000;
+    driftAmt += ((idle ? 1 : 0) - driftAmt) * (idle ? 0.03 : 0.12);   // slow in, quick out
+    const dx = (Math.sin(t * 0.45) * 0.014 + Math.sin(t * 0.23 + 1.3) * 0.009) * driftAmt;
+    const dy = (Math.cos(t * 0.38) * 0.016 + Math.cos(t * 0.29 + 0.7) * 0.010) * driftAmt;
+
+    /* swap lens tracks the pointer (no wander — the text swap stays put) */
+    lens.x += (lens.tx - lens.x) * 0.055;
+    lens.y += (lens.ty - lens.y) * 0.055;
+    /* crescent orb trails the pointer + the idle wander */
+    orb.x  += ((lens.tx + dx) - orb.x) * 0.03;
+    orb.y  += ((lens.ty + dy) - orb.y) * 0.03;
 
     if(revealAt) reveal = Math.min(1, (now - revealAt) / 1100);
 
@@ -475,9 +709,9 @@ void main(){
     gl.uniform2f(U.uRes, canvas.width, canvas.height);
     gl.uniform1f(U.uTime, t);
     gl.uniform2f(U.uLens, gx, gy);
-    gl.uniform1f(U.uLensR, canvas.clientWidth * 0.053 * dpr);
-    gl.uniform1f(U.uTile, Math.max(64, Math.min(canvas.clientWidth / 14, 118)) * dpr);
+    gl.uniform1f(U.uLensR, canvas.clientWidth * 0.0795 * dpr);   /* 0.053 x 1.5 — bigger eraser */
     gl.uniform1f(U.uReveal, reveal);
+    gl.uniform1f(U.uExit, Math.min(1, Math.max(0, (window.scrollY || 0) / (innerHeight * 0.85))));
     gl.uniform2f(U.uMouse, orb.x, 1.0 - orb.y);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     requestAnimationFrame(frame);
