@@ -955,7 +955,7 @@ body.ready .mv-contact-footer {
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
   padding:clamp(20px,4vw,50px) clamp(20px,5vw,40px) clamp(70px,10vw,120px)}
 .mv-saigonvideo-inner{max-width:none;margin:0}
-.mv-saigonvideo-title{font-size:clamp(40px,8vw,104px);font-weight:600;line-height:1.02;
+.mv-saigonvideo-title{font-size:clamp(64px,15.6vw,225px);font-weight:600;line-height:1.02;
   letter-spacing:-.02em;color:#f5f5f4;margin-bottom:clamp(28px,4vw,48px)}
 .mv-saigonvideo-media{position:relative;width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;
   background:linear-gradient(135deg,rgba(60,54,48,1) 0%,rgba(38,34,30,1) 60%,rgba(24,22,20,1) 100%);
@@ -975,7 +975,7 @@ body.ready .mv-contact-footer {
   -webkit-mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 .mv-trust-track{display:flex;align-items:center;flex-shrink:0;gap:clamp(30px,4vw,70px);padding-right:clamp(30px,4vw,70px);
   white-space:nowrap;animation:mvLogoFlow 42s linear infinite;will-change:transform}
-.mv-trust-track span{font-size:clamp(40px,8vw,104px);font-weight:600;line-height:1;letter-spacing:-.02em;
+.mv-trust-track span{font-size:clamp(64px,15.6vw,225px);font-weight:600;line-height:1;letter-spacing:-.02em;
   color:rgba(245,245,245,.2);flex-shrink:0;cursor:default;transition:color .3s ease}
 .mv-trust-track span:hover{color:#f5f5f4}
 @media (prefers-reduced-motion:reduce){.mv-trust-track{animation:none;flex-wrap:wrap;white-space:normal;justify-content:center}}
@@ -1727,11 +1727,11 @@ void main(){
   /* ===== grain-gradient texture (Paper Design "GrainGradient" idiom) — the sandy dither that gives the
      background its 질감/texture. Two screen-res noise octaves, lifted through the mid-tones so the colour
      transitions read grainy while pure black stays quiet. Applied to the FIELD, UNDER the headline. */
-  float gA = hash(fc * 1.31 + fract(uTime) * 91.7);
-  float gB = hash(fc * 0.63 + 19.0 - fract(uTime) * 53.3);
-  float grain = (gA * 0.6 + gB * 0.4) - 0.5;
+  float gA = hash(fc * 0.58 + fract(uTime) * 91.7);        /* coarser particles (rougher grain per request) */
+  float gB = hash(fc * 0.31 + 19.0 - fract(uTime) * 53.3);
+  float grain = (gA * 0.55 + gB * 0.45) - 0.5;
   float glum = max(col.r, max(col.g, col.b));
-  col += grain * (0.085 + 0.19 * smoothstep(0.0, 0.55, glum));
+  col += grain * (0.12 + 0.27 * smoothstep(0.0, 0.55, glum));   /* stronger amplitude — grittier */
 
   /* headline — 6-language cycle, crossfading current -> next. white type kept crisp ABOVE the grain. */
   vec2 tuv = vec2(vUv.x, 1.0 - vUv.y);
