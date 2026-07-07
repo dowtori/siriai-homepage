@@ -1652,7 +1652,7 @@ const vec3 PINK   = vec3(0.90, 0.18, 0.38);
 vec3 background(vec2 uv){
   float aspect = uRes.x / uRes.y;
   vec2  p  = (uv - 0.5) * vec2(aspect, 1.0);
-  float t  = uTime * 0.05;
+  float t  = uTime * 0.08;   /* colour blooms drift behind the static grain — a touch livelier so the "movement behind" reads */
   float ar = aspect * 0.5;
 
   /* two corner blooms with the SAME colour recipe: one warped scalar field
@@ -1727,8 +1727,11 @@ void main(){
   /* ===== grain-gradient texture (Paper Design "GrainGradient" idiom) — the sandy dither that gives the
      background its 질감/texture. Two screen-res noise octaves, lifted through the mid-tones so the colour
      transitions read grainy while pure black stays quiet. Applied to the FIELD, UNDER the headline. */
-  float gA = hash(fc * 0.58 + fract(uTime) * 91.7);        /* coarser particles (rougher grain per request) */
-  float gB = hash(fc * 0.31 + 19.0 - fract(uTime) * 53.3);
+  /* STATIC grain overlay — fixed to the screen (NO uTime in the hash), so it does NOT boil like
+     per-frame noise. The colour blooms drift BEHIND it (background() animates via uTime). Matches the
+     Paper Design reference: a rough grain layer held on top, the movement happening behind it. */
+  float gA = hash(fc * 0.58);
+  float gB = hash(fc * 0.31 + 19.0);
   float grain = (gA * 0.55 + gB * 0.45) - 0.5;
   float glum = max(col.r, max(col.g, col.b));
   col += grain * (0.12 + 0.27 * smoothstep(0.0, 0.55, glum));   /* stronger amplitude — grittier */
