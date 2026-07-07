@@ -188,7 +188,7 @@ body.ready .rv.d2{transition-delay:.3s}
   transform:translate(-50%,-50%);pointer-events:none;z-index:9999;mix-blend-mode:difference}
 /* miniaturised background object — the hero crescent, minified into a
    small halftone-dot orb that trails the cursor once past the hero */
-.cd-orb{position:fixed;top:0;left:0;width:132px;height:132px;border-radius:50%;
+.cd-orb{display:none;position:fixed;top:0;left:0;width:132px;height:132px;border-radius:50%;   /* dark halftone orb that trailed the cursor — hidden per request */
   transform:translate(-50%,-50%);pointer-events:none;z-index:40;opacity:0;
   background-image:radial-gradient(rgba(33,26,51,.6) 22%, transparent 24%);
   background-size:7px 7px;
@@ -1723,16 +1723,20 @@ void main(){
   /* frosted-glass lift & top-lit wash removed (glassmorphism hidden) — clean black ground + corner blooms */
   vec3 col = field;
 
-  /* headline — 6-language cycle (EN1,EN2,KO1,JP1,KO2,JP2), crossfading
-     current -> next. lens folded away. black type on the warm ground. */
+  /* ===== grain-gradient texture (Paper Design "GrainGradient" idiom) — the sandy dither that gives the
+     background its 질감/texture. Two screen-res noise octaves, lifted through the mid-tones so the colour
+     transitions read grainy while pure black stays quiet. Applied to the FIELD, UNDER the headline. */
+  float gA = hash(fc * 1.31 + fract(uTime) * 91.7);
+  float gB = hash(fc * 0.63 + 19.0 - fract(uTime) * 53.3);
+  float grain = (gA * 0.6 + gB * 0.4) - 0.5;
+  float glum = max(col.r, max(col.g, col.b));
+  col += grain * (0.085 + 0.19 * smoothstep(0.0, 0.55, glum));
+
+  /* headline — 6-language cycle, crossfading current -> next. white type kept crisp ABOVE the grain. */
   vec2 tuv = vec2(vUv.x, 1.0 - vUv.y);
   tuv.y += (1.0 - uReveal) * 0.035;
   float ta = mix(selText(uCurA, tuv), selText(uCurB, tuv), uMix) * uReveal;
   col = mix(col, vec3(0.97), ta);   /* white headline on the dark ground */
-
-  /* film grain — the paper-design grain over the warm gradient */
-  float g = hash(fc + fract(uTime) * 100.0);
-  col += (g - 0.5) * 0.075;                                 /* heavier grain — the reference's dithered warmth */
 
   /* intro: resolve from paper white */
   col = mix(vec3(0.0), col, 0.25 + 0.75 * smoothstep(0.0, 0.6, uReveal));   /* resolve from black */
