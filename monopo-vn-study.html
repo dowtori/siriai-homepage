@@ -3,8 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>monopo saigon — home study (light monochrome, full-bleed glass)</title>
+<title>siriai — home study (monopo based)</title>
 <meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Siriai — home study (monopo based). 다크 히어로 + 그레인 그라디언트 디자인 스터디.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="siriai — home study (monopo based)">
+<meta property="og:description" content="Siriai home study — monopo based. 다크 히어로 · 그레인 그라디언트 디자인 스터디.">
+<meta property="og:image" content="https://cd-study-deploy.vercel.app/og.png">
+<meta property="og:url" content="https://cd-study-deploy.vercel.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="siriai — home study (monopo based)">
+<meta name="twitter:description" content="Siriai home study — monopo based.">
+<meta name="twitter:image" content="https://cd-study-deploy.vercel.app/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
@@ -79,7 +89,7 @@ body{
   transition:background .3s ease,border-color .3s ease}
 .head-cta:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.55)}
 .head-cta svg{width:13px;height:13px}
-.hero-cta{position:absolute;left:50%;top:62%;transform:translateX(-50%);z-index:11;
+.hero-cta{position:absolute;left:50%;top:58%;transform:translateX(-50%);z-index:11;
   display:none;align-items:center;gap:9px;pointer-events:auto;opacity:0;
   padding:15px 28px;border-radius:100px;background:#f4f4f3;color:#0a0a0a;
   font-size:15px;font-weight:600;letter-spacing:-.01em;text-decoration:none;
@@ -94,13 +104,22 @@ body.ready .hero-cta{opacity:1}
   padding:12px 20px;border-radius:100px;background:rgba(18,18,18,.66);border:1px solid rgba(255,255,255,.16);
   -webkit-backdrop-filter:blur(12px) saturate(1.1);backdrop-filter:blur(12px) saturate(1.1);
   color:var(--ink);text-decoration:none;box-shadow:0 14px 44px -14px rgba(0,0,0,.75);
-  transition:opacity .8s ease .3s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease}
+  transition:opacity .8s ease .3s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease;
+  animation:fcPulse 3.6s ease-in-out infinite}
 body.ready .float-cta{opacity:1}
+.cta-txt{transition:opacity .28s ease}
+.float-cta .fc-mark{height:20px;width:auto;display:block;flex:0 0 auto}
+/* continuous soft amber->pink glow pulse (echoes the hero) so the pill keeps drawing the eye */
+@keyframes fcPulse{
+  0%,100%{box-shadow:0 14px 44px -14px rgba(0,0,0,.75),0 0 0 0 rgba(255,140,70,0),0 0 0 0 rgba(230,60,110,0)}
+  50%{box-shadow:0 14px 44px -14px rgba(0,0,0,.75),0 0 22px 2px rgba(255,140,70,.32),0 0 44px 9px rgba(230,60,110,.18)}
+}
+@media (prefers-reduced-motion:reduce){.float-cta{animation:none}}
 .float-cta:hover{transform:translateY(-3px);background:rgba(28,28,28,.82)}
 .float-cta .fc-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:15px}
 .float-cta .fc-txt{font-size:13.5px;font-weight:500;letter-spacing:-.005em;padding-left:12px;border-left:1px solid rgba(255,255,255,.22)}
 .float-cta svg{width:14px;height:14px;opacity:.85}
-@media (max-width:640px){ .hero-cta{top:64%;padding:13px 22px;font-size:14px} .head-cta{display:none!important} }
+@media (max-width:640px){ .hero-cta{top:60%;padding:13px 22px;font-size:14px} .head-cta{display:none!important} }
 
 /* ---------- bottom captions (bilingual, site copy) ---------- */
 .captions{position:absolute;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
@@ -1072,7 +1091,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <a href="#">EN</a>
     <a href="#">JP</a>
   </nav>
-  <a class="head-cta rv d1" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener">사업소개서<svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <a class="head-cta rv d1" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span class="cta-txt">더 알아보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </header>
 
 <div class="captions">
@@ -1080,7 +1099,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="cap right rv d2"><b>가장 쉬운 방법으로</b><span>인사이트를 발견해보세요</span></div>
 </div>
 
-<a class="hero-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener">사업소개서 보기<svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="hero-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span class="cta-txt">더 알아보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 
 <div class="scroll-hint rv d2">
   <svg viewBox="0 0 12 52" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -1090,7 +1109,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </div><!-- /.hero -->
 
 <!-- form 2 (floating): bottom-right CTA -> QA deck (shown when ?cta=2) -->
-<a class="float-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><b class="fc-logo">Siriai</b><span class="fc-txt">사업소개서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="float-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><img class="fc-mark" src="assets/siriai-mark-white.png" alt="Siriai"><span class="fc-txt cta-txt">더 알아보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <script>
 /* hero CTA A/B toggle: default/'1' = Antigravity (header pill replaces KR/EN/JP + CTA below copy);
    '2' = floating bottom-right CTA. Switch with ?cta=1 or ?cta=2. */
@@ -1788,7 +1807,9 @@ void main(){
   /* headline — 6-language cycle, crossfading current -> next. white type kept crisp ABOVE the grain. */
   vec2 tuv = vec2(vUv.x, 1.0 - vUv.y);
   tuv.y += (1.0 - uReveal) * 0.035;
-  float ta = mix(selText(uCurA, tuv), selText(uCurB, tuv), uMix) * uReveal;
+  float aOut = 1.0 - smoothstep(0.0, 0.5, uMix);   /* clean out-then-in: current fully fades out, THEN next fades in (no crossfade overlap) */
+  float aIn  = smoothstep(0.5, 1.0, uMix);
+  float ta = (selText(uCurA, tuv) * aOut + selText(uCurB, tuv) * aIn) * uReveal;
   col = mix(col, vec3(0.97), ta);   /* white headline on the dark ground */
 
   /* intro: resolve from paper white */
@@ -1919,6 +1940,11 @@ void main(){
   let reveal = 0, revealAt = 0, start = performance.now();
   let prevGx = 0, prevGy = 0, eSm = 0, aSm = 0, driftAmt = 0;
   window.__mono = { get reveal(){ return reveal; }, lens, orb };
+  /* CTA text language, synced to the hero headline cycle (EN idx0/1, KO 2/4, JP 3/5) */
+  var CTA_LABEL = { en:'Learn more', ko:'더 알아보기', jp:'詳しく見る' }, heroLangState='';
+  function setCtaLang(l){ var t=CTA_LABEL[l]||CTA_LABEL.ko;
+    [].forEach.call(document.querySelectorAll('.cta-txt'), function(el){ el.style.opacity='0';
+      setTimeout(function(){ el.textContent=t; el.style.opacity=''; }, 240); }); }
   function frame(now){
     const t = (now - start) / 1000;
 
@@ -1960,10 +1986,13 @@ void main(){
     const ph = t / HOLD;
     const curA = ((Math.floor(ph) % 6) + 6) % 6;
     const frac = ph - Math.floor(ph);
-    const cmix = frac < 0.82 ? 0 : (frac - 0.82) / 0.18;   // crossfade last 18%
+    const cmix = frac < 0.72 ? 0 : (frac - 0.72) / 0.28;   // out-then-in transition over the last 28%
     gl.uniform1i(U.uCurA, curA);
     gl.uniform1i(U.uCurB, (curA + 1) % 6);
     gl.uniform1f(U.uMix, cmix);
+    var shownIdx = cmix < 0.5 ? curA : (curA + 1) % 6;   /* CTA text follows the hero's currently-visible language */
+    var hl = (shownIdx===2||shownIdx===4)?'ko':(shownIdx===3||shownIdx===5)?'jp':'en';
+    if(hl !== heroLangState){ heroLangState = hl; setCtaLang(hl); }
 
     gl.uniform2f(U.uRes, canvas.width, canvas.height);
     gl.uniform1f(U.uTime, t);
