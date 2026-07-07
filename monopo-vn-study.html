@@ -1666,12 +1666,12 @@ vec3 background(vec2 uv){
           + exp(-dot(w - aTR, w - aTR) / 0.20);     // TR — a touch larger (asymmetric)
   g = clamp(g, 0.0, 1.0);
 
-  /* pointer "eraser" — clears the bloom to black near the cursor, grain-scattered.
-     radius shrunk to ~30% of the original (0.10/0.40 -> 0.03/0.12) per request. */
+  /* pointer eraser — clears the bloom to black near the cursor (grain-scattered).
+     DISABLED per request; original radius (0.10/0.40) restored below — to re-enable, uncomment these 4 lines.
   vec2  m = (uMouse - 0.5) * vec2(aspect, 1.0);
-  float clear = smoothstep(0.03, 0.12, length(p - m));
+  float clear = smoothstep(0.10, 0.40, length(p - m));
   clear = clamp(clear + (fbm(p * 6.0 + t * 2.0) - 0.5) * 0.18, 0.0, 1.0);
-  g *= clear;
+  g *= clear; */
 
   /* one colormap for BOTH corners (amber -> orange -> pink) */
   vec3 cm = AMBER;
