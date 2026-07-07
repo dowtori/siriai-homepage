@@ -71,6 +71,37 @@ body{
 }
 .langs a.on,.langs a:hover{opacity:1}
 
+/* ---------- hero CTA -> QA deck (A/B toggled by ?cta=) ---------- */
+/* form 1 (Antigravity): header pill replaces the KR/EN/JP nav + a solid CTA below the copy */
+.head-cta{display:none;align-items:center;gap:7px;pointer-events:auto;
+  padding:9px 18px;border-radius:100px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.05);
+  color:var(--ink);font-size:12.5px;font-weight:500;letter-spacing:.01em;text-decoration:none;
+  transition:background .3s ease,border-color .3s ease}
+.head-cta:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.55)}
+.head-cta svg{width:13px;height:13px}
+.hero-cta{position:absolute;left:50%;top:62%;transform:translateX(-50%);z-index:11;
+  display:none;align-items:center;gap:9px;pointer-events:auto;opacity:0;
+  padding:15px 28px;border-radius:100px;background:#f4f4f3;color:#0a0a0a;
+  font-size:15px;font-weight:600;letter-spacing:-.01em;text-decoration:none;
+  box-shadow:0 12px 40px -14px rgba(0,0,0,.6);
+  transition:opacity .8s ease .25s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease}
+body.ready .hero-cta{opacity:1}
+.hero-cta:hover{transform:translateX(-50%) translateY(-3px);background:#fff}
+.hero-cta svg{width:15px;height:15px}
+/* form 2 (floating): bottom-right pill (logo + deck), Twelve-Labs style */
+.float-cta{position:fixed;right:clamp(18px,3vw,34px);bottom:clamp(18px,3vw,34px);z-index:60;
+  display:none;align-items:center;gap:12px;pointer-events:auto;opacity:0;
+  padding:12px 20px;border-radius:100px;background:rgba(18,18,18,.66);border:1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(12px) saturate(1.1);backdrop-filter:blur(12px) saturate(1.1);
+  color:var(--ink);text-decoration:none;box-shadow:0 14px 44px -14px rgba(0,0,0,.75);
+  transition:opacity .8s ease .3s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease}
+body.ready .float-cta{opacity:1}
+.float-cta:hover{transform:translateY(-3px);background:rgba(28,28,28,.82)}
+.float-cta .fc-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:15px}
+.float-cta .fc-txt{font-size:13.5px;font-weight:500;letter-spacing:-.005em;padding-left:12px;border-left:1px solid rgba(255,255,255,.22)}
+.float-cta svg{width:14px;height:14px;opacity:.85}
+@media (max-width:640px){ .hero-cta{top:64%;padding:13px 22px;font-size:14px} .head-cta{display:none!important} }
+
 /* ---------- bottom captions (bilingual, site copy) ---------- */
 .captions{position:absolute;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
 .cap{position:absolute;bottom:0;line-height:1.35;font-size:14.5px}
@@ -1041,6 +1072,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <a href="#">EN</a>
     <a href="#">JP</a>
   </nav>
+  <a class="head-cta rv d1" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener">사업소개서<svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </header>
 
 <div class="captions">
@@ -1048,12 +1080,29 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="cap right rv d2"><b>가장 쉬운 방법으로</b><span>인사이트를 발견해보세요</span></div>
 </div>
 
+<a class="hero-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener">사업소개서 보기<svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+
 <div class="scroll-hint rv d2">
   <svg viewBox="0 0 12 52" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <path d="M6 0 V44 M1 39 L6 45 L11 39" stroke="#f4f4f3" stroke-width="1.1"/>
   </svg>
 </div>
 </div><!-- /.hero -->
+
+<!-- form 2 (floating): bottom-right CTA -> QA deck (shown when ?cta=2) -->
+<a class="float-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><b class="fc-logo">Siriai</b><span class="fc-txt">사업소개서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<script>
+/* hero CTA A/B toggle: default/'1' = Antigravity (header pill replaces KR/EN/JP + CTA below copy);
+   '2' = floating bottom-right CTA. Switch with ?cta=1 or ?cta=2. */
+(function(){
+  var mode=(new URLSearchParams(location.search).get('cta')||'1').toLowerCase();
+  var floating=(mode==='2'||mode==='float'||mode==='floating');
+  var langs=document.querySelector('.langs'), headCta=document.querySelector('.head-cta'),
+      heroCta=document.querySelector('.hero-cta'), floatCta=document.querySelector('.float-cta');
+  if(floating){ if(floatCta) floatCta.style.display='inline-flex'; var capR=document.querySelector('.cap.right'); if(capR) capR.style.display='none'; /* clear the corner for the floating pill */ }
+  else { if(langs) langs.style.display='none'; if(headCta) headCta.style.display='inline-flex'; if(heroCta) heroCta.style.display='inline-flex'; }
+})();
+</script>
 
 <!-- ============ monopo.vn below-hero sections (real structure + copy; CSS placeholder media) ============ -->
 
@@ -1652,7 +1701,7 @@ const vec3 PINK   = vec3(0.90, 0.18, 0.38);
 vec3 background(vec2 uv){
   float aspect = uRes.x / uRes.y;
   vec2  p  = (uv - 0.5) * vec2(aspect, 1.0);
-  float t  = uTime * 0.08;   /* colour blooms drift behind the static grain — a touch livelier so the "movement behind" reads */
+  float t  = uTime * 0.11;   /* colour blooms drift behind the static grain — a bit livelier per request */
   float ar = aspect * 0.5;
 
   /* two corner blooms with the SAME colour recipe: one warped scalar field
