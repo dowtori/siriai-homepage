@@ -92,8 +92,8 @@ body{
 .hero-cta{position:absolute;left:50%;top:58%;transform:translateX(-50%);z-index:11;
   display:none;align-items:center;gap:9px;pointer-events:auto;opacity:0;
   padding:15px 28px;border-radius:100px;
-  background:rgba(255,255,255,.09);color:#f4f4f3;border:1px solid rgba(255,255,255,.24);
-  -webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);
+  background:rgba(255,255,255,.06);color:#f4f4f3;border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(5px) saturate(1.15);backdrop-filter:blur(5px) saturate(1.15);
   font-size:15px;font-weight:600;letter-spacing:-.01em;text-decoration:none;
   box-shadow:0 8px 30px -16px rgba(0,0,0,.5);   /* glassmorphism — sits into the hero instead of popping (esp. mobile) */
   transition:opacity .8s ease .25s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease}
@@ -462,7 +462,7 @@ body{cursor:none;background:#000}
 
 .mv-saigon-souls-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.75fr 1fr;
   gap: clamp(40px, 6vw, 80px);
   align-items: center;
 }
@@ -475,13 +475,14 @@ body{cursor:none;background:#000}
 
 .mv-saigon-souls-heading {
   font-family: "Inter Tight", Helvetica, Arial, sans-serif;
-  font-size: clamp(36px, 5.2vw, 56px);
+  font-size: clamp(34px, 4.9vw, 54px);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.016em;
   margin: 0;
   padding: 0;
   color: #f5f5f4;
+  white-space: nowrap;
 }
 
 .mv-saigon-souls-body {
@@ -595,8 +596,11 @@ body{cursor:none;background:#000}
     padding: clamp(48px, 7vw, 80px) clamp(20px, 4vw, 28px);
   }
 
+  .mv-saigon-souls-grid { grid-template-columns: 1fr; }
   .mv-saigon-souls-heading {
     letter-spacing: -0.012em;
+    white-space: normal;
+    font-size: clamp(28px, 7vw, 40px);
   }
 
   .mv-saigon-souls-body {
@@ -1290,19 +1294,28 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <div class="mv-saigon-souls-content">
         <h2 class="mv-saigon-souls-heading mv-fill">
           <span class="mv-line">
-            <span class="mv-en-line"><span class="mv-w">Siriai</span></span>
-            <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이가</span></span>
-          </span>
-          <span class="mv-line">
-            <span class="mv-en-line"><span class="mv-w">becomes</span> <span class="mv-w">everyone's</span></span>
-            <span class="mv-ko-line" lang="ko"><span class="mv-w">모두의</span></span>
+            <span class="mv-en-line"><span class="mv-w">Siriai</span> <span class="mv-w">becomes</span> <span class="mv-w">everyone's</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이가</span> <span class="mv-w">모두의</span></span>
           </span>
           <span class="mv-line">
             <span class="mv-en-line"><span class="mv-w">acquaintance.</span></span>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">“시리아이(しりあい)”가</span> <span class="mv-w">됩니다.</span></span>
           </span>
         </h2>
-        <p class="mv-saigon-souls-body reveal">しりあい means an acquaintance — someone you already know. The easiest AI literacy makes Siriai exactly that: a companion anyone can speak to, whether you just started, just came back, or have been building all along.</p>
+        <p class="mv-saigon-souls-body mv-fill mv-fill-body">
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">しりあい</span> <span class="mv-w">means</span> <span class="mv-w">an</span> <span class="mv-w">acquaintance —</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">しりあい는</span> <span class="mv-w">‘아는</span> <span class="mv-w">사이’,</span></span>
+          </span>
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">someone</span> <span class="mv-w">you</span> <span class="mv-w">already</span> <span class="mv-w">know.</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">이미</span> <span class="mv-w">알고</span> <span class="mv-w">지내던</span> <span class="mv-w">사람이라는</span> <span class="mv-w">뜻이에요.</span></span>
+          </span>
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">The</span> <span class="mv-w">easiest</span> <span class="mv-w">AI</span> <span class="mv-w">literacy</span> <span class="mv-w">makes</span> <span class="mv-w">Siriai</span> <span class="mv-w">that,</span> <span class="mv-w">for</span> <span class="mv-w">everyone.</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉬운</span> <span class="mv-w">AI</span> <span class="mv-w">리터러시가</span> <span class="mv-w">시리아이를</span> <span class="mv-w">모두에게</span> <span class="mv-w">그런</span> <span class="mv-w">존재로</span> <span class="mv-w">만듭니다.</span></span>
+          </span>
+        </p>
         <a href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener" class="mv-saigon-souls-cta reveal">
           Discover Siriai
           <svg class="mv-saigon-souls-cta-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
