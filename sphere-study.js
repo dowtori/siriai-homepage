@@ -48,7 +48,7 @@
   const arand=(a,b)=> a+Math.random()*(b-a);
 
   /* ── tiles on a fibonacci sphere ── */
-  const TILE_N = reduce ? 90 : 150;
+  const TILE_N = reduce ? 110 : 180;
   const SIZE = 1.4;   // global tile-size multiplier — the sphere reads as a full-page backdrop
   const order=[]; let pool=[];
   for(let i=0;i<TILE_N;i++){ if(!pool.length) pool=shuffled(flat, i+1); order.push(pool.pop()); }
@@ -83,7 +83,7 @@
     canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr);
     canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    R=Math.min(cssW*0.82, cssH*0.84)/2;   // height-governed so the sphere (and its burst overshoot) never clips the section top
+    R=Math.min(cssW*0.92, cssH*0.92)/2;   // enlarged — night-sky reveal has no overshoot, so the sphere fills more of the viewport
     offX=0;
   }
 
