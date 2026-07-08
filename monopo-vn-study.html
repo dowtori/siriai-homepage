@@ -1039,21 +1039,19 @@ body.ready .mv-contact-footer {
 .mv-trust-marquee{position:relative;display:flex;overflow:hidden;margin-top:clamp(18px,2.4vw,36px);
   -webkit-mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 .mv-trust-track{display:flex;align-items:center;flex-shrink:0;gap:clamp(30px,4vw,70px);padding-right:clamp(30px,4vw,70px);
-  white-space:nowrap;animation:mvLogoFlow 84s linear infinite;will-change:transform}   /* relaxed pace (was 42s) */
-.mv-trust-marquee:hover .mv-trust-track{animation-play-state:paused}   /* hold the row still so the hovered brand doesn't drift while the hero gradient sweeps it */
+  white-space:nowrap;animation:mvLogoFlow 84s linear infinite;will-change:transform}   /* relaxed pace (was 42s) — no pause on hover */
 .mv-trust-track span{font-size:clamp(64px,15.6vw,225px);font-weight:600;line-height:1;letter-spacing:-.02em;
   flex-shrink:0;cursor:default;
-  /* hero gradient (amber->orange->pink) baked in, hidden behind a dim text-fill until hover */
-  background-image:linear-gradient(105deg,#f4f4f3 0%,#f4f4f3 38%,rgb(255,199,13) 45%,rgb(255,107,33) 50%,rgb(230,46,97) 55%,#f4f4f3 62%,#f4f4f3 100%);
-  background-size:240% 100%;background-position:110% 0;background-repeat:no-repeat;
-  -webkit-background-clip:text;background-clip:text;
-  color:rgba(245,245,245,.2);-webkit-text-fill-color:rgba(245,245,245,.2);
-  transition:-webkit-text-fill-color .4s ease}
-.mv-trust-track span:hover{color:transparent;-webkit-text-fill-color:transparent;   /* reveal the gradient, then sweep the hero band slowly across */
-  animation:mvTrustSweep 3.4s linear infinite}
-@keyframes mvTrustSweep{0%{background-position:118% 0}100%{background-position:-18% 0}}
+  /* default: a SOLID dim fill clipped to the text (uniform — no leak, no dark letters) */
+  background-image:linear-gradient(90deg,rgba(245,245,245,.22),rgba(245,245,245,.22));
+  background-size:100% 100%;background-repeat:no-repeat;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.mv-trust-track span:hover{   /* hover: the hero gradient (amber->orange->pink) sweeps slowly across the letters */
+  background-image:linear-gradient(100deg,#f4f4f3 0%,#f4f4f3 40%,rgb(255,199,13) 46%,rgb(255,107,33) 50%,rgb(230,46,97) 54%,#f4f4f3 60%,#f4f4f3 100%);
+  background-size:250% 100%;animation:mvTrustSweep 3.4s linear infinite}
+@keyframes mvTrustSweep{from{background-position:100% 0}to{background-position:0% 0}}   /* stays within [0,100%] so every letter is always covered */
 @media (prefers-reduced-motion:reduce){.mv-trust-track{animation:none;flex-wrap:wrap;white-space:normal;justify-content:center}
-  .mv-trust-track span:hover{animation:none;color:#f5f5f4;-webkit-text-fill-color:#f5f5f4}}
+  .mv-trust-track span:hover{animation:none;background-image:linear-gradient(90deg,#f5f5f4,#f5f5f4)}}
 
 /* ===== section: TEAM — rebuilt (portrait + real bios) ===== */
 .mv-team-title{font-size:clamp(30px,5.2vw,54px);font-weight:400;line-height:1.14;
