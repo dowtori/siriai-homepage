@@ -91,12 +91,14 @@ body{
 .head-cta svg{width:13px;height:13px}
 .hero-cta{position:absolute;left:50%;top:58%;transform:translateX(-50%);z-index:11;
   display:none;align-items:center;gap:9px;pointer-events:auto;opacity:0;
-  padding:15px 28px;border-radius:100px;background:#f4f4f3;color:#0a0a0a;
+  padding:15px 28px;border-radius:100px;
+  background:rgba(255,255,255,.09);color:#f4f4f3;border:1px solid rgba(255,255,255,.24);
+  -webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);
   font-size:15px;font-weight:600;letter-spacing:-.01em;text-decoration:none;
-  box-shadow:0 12px 40px -14px rgba(0,0,0,.6);
+  box-shadow:0 8px 30px -16px rgba(0,0,0,.5);   /* glassmorphism — sits into the hero instead of popping (esp. mobile) */
   transition:opacity .8s ease .25s,transform .35s cubic-bezier(.22,1,.36,1),background .3s ease}
 body.ready .hero-cta{opacity:1}
-.hero-cta:hover{transform:translateX(-50%) translateY(-3px);background:#fff}
+.hero-cta:hover{transform:translateX(-50%) translateY(-3px);background:rgba(255,255,255,.18)}
 .hero-cta svg{width:15px;height:15px}
 /* form 2 (floating): bottom-right pill (logo + deck), Twelve-Labs style */
 .float-cta{position:fixed;right:clamp(18px,3vw,34px);bottom:clamp(18px,3vw,34px);z-index:60;
@@ -608,8 +610,8 @@ body{cursor:none;background:#000}
 .mv-frames{position:relative;background:#000;color:#f5f5f4;overflow:hidden;
   padding:clamp(70px,12vh,140px) var(--pad-x) clamp(70px,12vh,140px);
   font-family:"Inter Tight",Helvetica,Arial,sans-serif}
-.mv-frames-cluster{position:relative;width:100%;margin:0;
-  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(14px,2.4vw,30px)}
+.mv-frames-cluster{position:relative;width:min(88vw,82vh,1000px);aspect-ratio:1/1;margin:0 auto;display:block}
+#sphereCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mv-frames-tile{flex:0 0 auto;border-radius:3px;border:1px solid rgba(245,245,245,.14);
   background:linear-gradient(135deg,rgba(245,245,245,.17) 0%,rgba(245,245,245,.06) 100%);
   box-shadow:0 16px 46px -20px rgba(0,0,0,.55);
@@ -1277,17 +1279,17 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="mv-saigon-souls-container">
     <div class="mv-saigon-souls-grid">
       <div class="mv-saigon-souls-content">
-        <h2 class="mv-saigon-souls-heading reveal">Saigon Souls</h2>
-        <p class="mv-saigon-souls-body reveal">Saigon Souls captures a state of mind. You are Saigonese if you feel like you are, whether you just arrived, just returned or have been living here your whole life. Most of all, just being in Saigon makes you part of the Saigon Souls.</p>
-        <a href="#" class="mv-saigon-souls-cta reveal">
-          Discover Saigon Souls
+        <h2 class="mv-saigon-souls-heading reveal">Everyone's Siriai</h2>
+        <p class="mv-saigon-souls-body reveal">AI literacy is a state of mind. You speak AI the moment you feel you do — whether you just started, just came back, or have been building all along. Most of all, the easiest literacy makes anyone a Siriai.</p>
+        <a href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener" class="mv-saigon-souls-cta reveal">
+          Discover Siriai
           <svg class="mv-saigon-souls-cta-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 8H15M15 8L9 2M15 8L9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
       </div>
       <div class="mv-saigon-souls-media reveal-clip" data-mv-speed="0.12">
-        <div class="mv-saigon-souls-media-label">saigon capture</div>
+        <div class="mv-saigon-souls-media-label">siriai</div>
       </div>
     </div>
   </div>
@@ -1296,15 +1298,51 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <!-- TILES — rotated gallery -->
 <section class="mv-frames">
   <div class="mv-frames-cluster">
-    <div class="mv-frames-tile p"></div>
-    <div class="mv-frames-tile l"></div>
-    <div class="mv-frames-tile p"></div>
-    <div class="mv-frames-tile l"></div>
-    <div class="mv-frames-tile p"></div>
-    <div class="mv-frames-tile l"></div>
+    <canvas id="sphereCanvas" aria-hidden="true"></canvas>
   </div>
-  <p class="mv-frames-cap">Selected frames</p>
+  <p class="mv-frames-cap">Trusted network</p>
 </section>
+<script>
+/* content sphere — Siriai client/partner names on a slow-rotating globe (ported + distilled from the
+   homepage's cv-sphere content sphere). Front names bright/large, back dim; warm accents echo the hero. */
+(function(){
+  var canvas=document.getElementById('sphereCanvas'); if(!canvas) return;
+  var ctx=canvas.getContext('2d'); if(!ctx) return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var LABELS=['HYBE','CJ ENM','JYP','MUSINSA','COSRX','innisfree','moev','oddtype','8DIVISION','Neverust','QUADTHERA','TOOMUCHTAX','TOCOBO','HARIM','OJOS','NONGSHIM','OpenAI','Anthropic','Gemini','Vercel','Supabase','Next.js'];
+  var N=42, GA=Math.PI*(3-Math.sqrt(5)), nodes=[];
+  for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(Math.max(0,1-y*y)), th=GA*i;
+    nodes.push({t:LABELS[i%LABELS.length], vx:Math.cos(th)*r, vy:y, vz:Math.sin(th)*r, x:0, yy:0, z:0, d:0, acc:(i%6===0)}); }
+  var ay=0.5, ax=-0.16, raf=0, vis=false;
+  function measure(){ var dpr=Math.min(window.devicePixelRatio||1,1.5);
+    canvas.width=Math.round(canvas.offsetWidth*dpr); canvas.height=Math.round(canvas.offsetHeight*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); }
+  function draw(){
+    if(!reduce) ay+=0.0021;
+    var cy=Math.cos(ay), sy=Math.sin(ay), cx=Math.cos(ax), sx=Math.sin(ax);
+    var w=canvas.offsetWidth, h=canvas.offsetHeight, ox=w/2, oy=h/2, R=Math.min(w,h)*0.37;
+    for(var k=0;k<nodes.length;k++){ var n=nodes[k];
+      var x=n.vx*cy+n.vz*sy, z=-n.vx*sy+n.vz*cy, yv=n.vy*cx-z*sx, z2=n.vy*sx+z*cx;
+      n.z=z2; n.d=(z2+1)/2; n.x=ox+x*R; n.yy=oy+yv*R; }
+    nodes.sort(function(a,b){return a.z-b.z;});
+    ctx.clearRect(0,0,w,h); ctx.textAlign='center'; ctx.textBaseline='middle';
+    for(var m=0;m<nodes.length;m++){ var nd=nodes[m], d=nd.d, a=0.10+d*d*0.90;
+      if(a<0.03) continue;
+      ctx.globalAlpha=a;
+      ctx.fillStyle=nd.acc?'#ffb27a':'#f5f5f4';
+      ctx.font='500 '+Math.round(13+d*d*20)+"px 'Inter Tight',Helvetica,Arial,sans-serif";
+      ctx.fillText(nd.t, nd.x, nd.yy); }
+    ctx.globalAlpha=1;
+    raf=(vis && !reduce) ? requestAnimationFrame(draw) : 0;
+  }
+  function kick(){ if(!raf && !reduce) raf=requestAnimationFrame(draw); }
+  addEventListener('resize', function(){ measure(); if(reduce) draw(); });
+  measure();
+  try{ new IntersectionObserver(function(es){ vis=es[0].isIntersecting; if(vis) kick(); }, {rootMargin:'200px'}).observe(canvas); }
+  catch(e){ vis=true; kick(); }
+  draw();   /* initial paint (and the only paint under reduced-motion) */
+})();
+</script>
 
 <!-- TEAM — portrait + real bios -->
 <section class="mv-team">
@@ -1982,7 +2020,7 @@ void main(){
     gl.uniformMatrix2fv(U.uStretchInv, false, [m00, m01, m01, m11]);
 
     /* headline language cycle: EN1 -> EN2 -> KO1 -> JP1 -> KO2 -> JP2 */
-    const HOLD = 2.8;                              // seconds per language
+    const HOLD = 3.6;                              // seconds per language (slower per request)
     const ph = t / HOLD;
     const curA = ((Math.floor(ph) % 6) + 6) % 6;
     const frac = ph - Math.floor(ph);
@@ -2072,7 +2110,7 @@ void main(){
         var cy=r.top+r.height*0.5-cty, cx=(r.left+r.width*0.5)/window.innerWidth;
         var eb=clamp((0.96*vh - cy)/(0.18*vh),0,1); eb=eb*eb*(3-2*eb);
         /* trigger moved FORWARD: EN starts leaving at ~0.80vh (lower in the viewport). mv-line--keep stays English. */
-        var fo=hasKo?clamp(((0.80 - cx*0.05)*vh - cy)/(0.07*vh),0,1):0;   /* EN fully gone by ~0.73vh */
+        var fo=hasKo?clamp(((0.82 - cx*0.05)*vh - cy)/(0.15*vh),0,1):0;   /* slower: EN leaves over a wide band, fully gone by ~0.67vh */
         w.style.opacity=((0.18+0.82*eb)*(1-fo)).toFixed(3);
         w.style.transform='translate3d(0,'+((1-eb)*8).toFixed(2)+'px,0)';
       }
@@ -2081,7 +2119,7 @@ void main(){
       for(var j=0;j<L.ko.length;j++){
         var wk=L.ko[j], rk=wk.getBoundingClientRect();
         var cyk=rk.top+rk.height*0.5, cxk=(rk.left+rk.width*0.5)/window.innerWidth;
-        var fi=clamp(((0.70 - cxk*0.05)*vh - cyk)/(0.07*vh),0,1); fi=fi*fi*(3-2*fi);   /* KO starts ~0.70vh, after EN is gone -> blank gap, no overlap */
+        var fi=clamp(((0.56 - cxk*0.05)*vh - cyk)/(0.15*vh),0,1); fi=fi*fi*(3-2*fi);   /* slower + unhurried pause: KO starts lower (~0.56vh), well after EN is gone (~0.67) -> clear blank gap, no rush */
         wk.style.opacity=fi.toFixed(3);
       }
     }
