@@ -613,10 +613,14 @@ body{cursor:none;background:#000}
 .cv-stage{position:absolute;inset:0;z-index:2;display:block}
 .cv-stage canvas{position:absolute;inset:0;display:block}
 .cv-brands{position:absolute;right:clamp(20px,3vw,46px);top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:clamp(7px,1.3vh,15px)}
+.cv-groups{position:absolute;left:clamp(20px,3vw,46px);top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(3px,0.95vh,9px);max-height:84vh;flex-wrap:wrap}
 .cv-brand{font-family:"Inter Tight",Helvetica,Arial,sans-serif;font-weight:500;font-size:clamp(15px,1.3vw,23px);letter-spacing:-.01em;color:rgba(245,245,245,.4);background:none;border:0;cursor:pointer;text-align:right;padding:2px 0;transition:color .25s,transform .25s}
 .cv-brand:hover{color:rgba(245,245,245,.72)}
 .cv-brand.active{color:#f5f5f4;font-weight:600;transform:translateX(-5px)}
-@media (max-width:760px){ .cv-brands{right:5vw} }
+.cv-groups .cv-brand{text-align:left;font-weight:400;font-size:clamp(10px,0.86vw,13px);letter-spacing:.005em;color:rgba(245,245,245,.34);max-width:22vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-groups .cv-brand:hover{color:rgba(245,245,245,.66)}
+.cv-groups .cv-brand.active{color:#f5f5f4;font-weight:500;transform:translateX(5px)}
+@media (max-width:760px){ .cv-brands{right:5vw} .cv-groups{display:none} }
 .mv-frames-tile{flex:0 0 auto;border-radius:3px;border:1px solid rgba(245,245,245,.14);
   background:linear-gradient(135deg,rgba(245,245,245,.17) 0%,rgba(245,245,245,.06) 100%);
   box-shadow:0 16px 46px -20px rgba(0,0,0,.55);
@@ -1303,6 +1307,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <!-- TILES — rotated gallery -->
 <section class="mv-frames">
   <div class="cv-stage" id="cvStage" aria-hidden="true"><canvas id="cvCanvas"></canvas></div>
+  <nav class="cv-groups" id="cvGroups" aria-label="brands"></nav>
   <nav class="cv-brands" id="cvBrands" aria-label="categories"></nav>
   <p class="mv-frames-cap">Trusted network</p>
 </section>
