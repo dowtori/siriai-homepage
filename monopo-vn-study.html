@@ -608,10 +608,15 @@ body{cursor:none;background:#000}
 
 /* ===== section: frames (robust rotated tiles) ===== */
 .mv-frames{position:relative;background:#000;color:#f5f5f4;overflow:hidden;
-  padding:clamp(70px,12vh,140px) var(--pad-x) clamp(70px,12vh,140px);
+  height:100svh;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif}
-.mv-frames-cluster{position:relative;width:min(88vw,82vh,1000px);aspect-ratio:1/1;margin:0 auto;display:block}
-#sphereCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cv-stage{position:absolute;inset:0;z-index:2;display:block}
+.cv-stage canvas{position:absolute;inset:0;display:block}
+.cv-brands{position:absolute;right:clamp(20px,3vw,46px);top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:clamp(7px,1.3vh,15px)}
+.cv-brand{font-family:"Inter Tight",Helvetica,Arial,sans-serif;font-weight:500;font-size:clamp(15px,1.3vw,23px);letter-spacing:-.01em;color:rgba(245,245,245,.4);background:none;border:0;cursor:pointer;text-align:right;padding:2px 0;transition:color .25s,transform .25s}
+.cv-brand:hover{color:rgba(245,245,245,.72)}
+.cv-brand.active{color:#f5f5f4;font-weight:600;transform:translateX(-5px)}
+@media (max-width:760px){ .cv-brands{right:5vw} }
 .mv-frames-tile{flex:0 0 auto;border-radius:3px;border:1px solid rgba(245,245,245,.14);
   background:linear-gradient(135deg,rgba(245,245,245,.17) 0%,rgba(245,245,245,.06) 100%);
   box-shadow:0 16px 46px -20px rgba(0,0,0,.55);
@@ -625,7 +630,7 @@ body{cursor:none;background:#000}
 .mv-frames-tile:nth-child(5){rotate:-2.2deg;animation-delay:-3s}
 .mv-frames-tile:nth-child(6){rotate:1.6deg;animation-delay:-5s}
 @keyframes mvDrift{0%,100%{translate:0 0}50%{translate:0 -9px}}
-.mv-frames-cap{max-width:none;margin:clamp(28px,4vh,46px) 0 0;
+.mv-frames-cap{position:absolute;left:var(--pad-x);bottom:clamp(28px,4vh,46px);margin:0;z-index:6;
   font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,245,245,.5)}
 @media (prefers-reduced-motion:reduce){.mv-frames-tile{animation:none}}
 @media (max-width:700px){.mv-frames-tile.l{width:72vw}.mv-frames-tile.p{width:46vw}}
@@ -1297,52 +1302,12 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 
 <!-- TILES — rotated gallery -->
 <section class="mv-frames">
-  <div class="mv-frames-cluster">
-    <canvas id="sphereCanvas" aria-hidden="true"></canvas>
-  </div>
+  <div class="cv-stage" id="cvStage" aria-hidden="true"><canvas id="cvCanvas"></canvas></div>
+  <nav class="cv-brands" id="cvBrands" aria-label="categories"></nav>
   <p class="mv-frames-cap">Trusted network</p>
 </section>
-<script>
-/* content sphere — Siriai client/partner names on a slow-rotating globe (ported + distilled from the
-   homepage's cv-sphere content sphere). Front names bright/large, back dim; warm accents echo the hero. */
-(function(){
-  var canvas=document.getElementById('sphereCanvas'); if(!canvas) return;
-  var ctx=canvas.getContext('2d'); if(!ctx) return;
-  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var LABELS=['HYBE','CJ ENM','JYP','MUSINSA','COSRX','innisfree','moev','oddtype','8DIVISION','Neverust','QUADTHERA','TOOMUCHTAX','TOCOBO','HARIM','OJOS','NONGSHIM','OpenAI','Anthropic','Gemini','Vercel','Supabase','Next.js'];
-  var N=42, GA=Math.PI*(3-Math.sqrt(5)), nodes=[];
-  for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(Math.max(0,1-y*y)), th=GA*i;
-    nodes.push({t:LABELS[i%LABELS.length], vx:Math.cos(th)*r, vy:y, vz:Math.sin(th)*r, x:0, yy:0, z:0, d:0, acc:(i%6===0)}); }
-  var ay=0.5, ax=-0.16, raf=0, vis=false;
-  function measure(){ var dpr=Math.min(window.devicePixelRatio||1,1.5);
-    canvas.width=Math.round(canvas.offsetWidth*dpr); canvas.height=Math.round(canvas.offsetHeight*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0); }
-  function draw(){
-    if(!reduce) ay+=0.0021;
-    var cy=Math.cos(ay), sy=Math.sin(ay), cx=Math.cos(ax), sx=Math.sin(ax);
-    var w=canvas.offsetWidth, h=canvas.offsetHeight, ox=w/2, oy=h/2, R=Math.min(w,h)*0.37;
-    for(var k=0;k<nodes.length;k++){ var n=nodes[k];
-      var x=n.vx*cy+n.vz*sy, z=-n.vx*sy+n.vz*cy, yv=n.vy*cx-z*sx, z2=n.vy*sx+z*cx;
-      n.z=z2; n.d=(z2+1)/2; n.x=ox+x*R; n.yy=oy+yv*R; }
-    nodes.sort(function(a,b){return a.z-b.z;});
-    ctx.clearRect(0,0,w,h); ctx.textAlign='center'; ctx.textBaseline='middle';
-    for(var m=0;m<nodes.length;m++){ var nd=nodes[m], d=nd.d, a=0.10+d*d*0.90;
-      if(a<0.03) continue;
-      ctx.globalAlpha=a;
-      ctx.fillStyle=nd.acc?'#ffb27a':'#f5f5f4';
-      ctx.font='500 '+Math.round(13+d*d*20)+"px 'Inter Tight',Helvetica,Arial,sans-serif";
-      ctx.fillText(nd.t, nd.x, nd.yy); }
-    ctx.globalAlpha=1;
-    raf=(vis && !reduce) ? requestAnimationFrame(draw) : 0;
-  }
-  function kick(){ if(!raf && !reduce) raf=requestAnimationFrame(draw); }
-  addEventListener('resize', function(){ measure(); if(reduce) draw(); });
-  measure();
-  try{ new IntersectionObserver(function(es){ vis=es[0].isIntersecting; if(vis) kick(); }, {rootMargin:'200px'}).observe(canvas); }
-  catch(e){ vis=true; kick(); }
-  draw();   /* initial paint (and the only paint under reduced-motion) */
-})();
-</script>
+<script src="creator-cards.js"></script>
+<script src="sphere-study.js"></script>
 
 <!-- TEAM — portrait + real bios -->
 <section class="mv-team">
