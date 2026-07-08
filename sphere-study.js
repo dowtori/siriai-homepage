@@ -21,7 +21,18 @@
   const byKey  = {}; brands.forEach(b=> byKey[b.key]=b);
   const flat=[]; brands.forEach(b=> b.cards.forEach(c=> flat.push(Object.assign({brand:b.key}, c))));
   const gmenu = document.getElementById('cvGroups');
-  const groups=[]; { const gs={}; flat.forEach(c=>{ if(c.group && !gs[c.group]){ gs[c.group]=1; groups.push(c.group); } }); }
+  const LEFT_INDEX=[
+    {label:'8DIVISION',       groups:['8DIVISION']},
+    {label:'OJOS',            groups:['OJOS']},
+    {label:'toomuchtax',      groups:['toomuchtax']},
+    {label:'innisfree',       groups:['innisfree']},
+    {label:'COSRX',           groups:['COSRX']},
+    {label:'TOCOBO',          groups:['TOCOBO']},
+    {label:'MUSINSA PB',      groups:['ODDTYPE','WHIZZY','29Apostrophe','Musinsa Standard Beauty']},
+    {label:'BEAUTY PARTNERS', groups:['OHAYOH','LUSOM','DASODA','NOTHELOVE','KEEPINTOUCH']},
+    {label:'Entertainment',   cat:'ARTIST'},
+    {label:'강릉시',           cat:'GOVERNMENT'}
+  ];
   function shuffled(arr, seed){ const a=arr.slice(); let s=seed||1;
     for(let i=a.length-1;i>0;i--){ s=(s*9301+49297)%233280; const j=Math.floor(s/233280*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
   const imgCache={}; function getImg(src){ let im=imgCache[src]; if(im) return im; im=new Image(); im.decoding='async'; im.src=src; imgCache[src]=im; return im; }
@@ -84,13 +95,13 @@
   function activeBrand(){ return hoverList||hoverTile||locked||ghostBrand; }
   let hoverGroup=null, lockedGroup=null;
   function activeGrp(){ return hoverGroup||lockedGroup; }
-  function tmatch(t){ const g=activeGrp(); if(g) return t.card.group===g; const c=activeBrand(); return !!c && t.brand===c; }
+  function tmatch(t){ const g=activeGrp(); if(g){ return g.cat ? t.brand===g.cat : g.groups.indexOf(t.card.group)>=0; } const c=activeBrand(); return !!c && t.brand===c; }
   /* the directly-hovered tile becomes its card's representative — hovering a duplicate grows THAT tile (and suppresses its far original, so no double-enlarge) */
   function isRep(t){ if(!locked && hoveredTile && t.card===hoveredTile.card) return t===hoveredTile; return t.orig; }
   function applyFocus(){
     const g=activeGrp(), ab=g?null:activeBrand();
     [...menu.children].forEach(c=> c.classList.toggle('active', c.dataset.brand===ab));
-    if(gmenu)[...gmenu.children].forEach(c=> c.classList.toggle('active', c.dataset.group===g));
+    if(gmenu)[...gmenu.children].forEach(c=> c.classList.toggle('active', !!g && c.dataset.gkey===g.label));
     sec.classList.toggle('focus', !!(g||ab));
     if(descEl){ if(featured){
         const g=descEl.querySelector('.cv-desc-group'), t=descEl.querySelector('.cv-desc-title');
@@ -293,11 +304,11 @@
     });
     menu.appendChild(btn);
   });
-  if(gmenu){ groups.forEach(gk=>{
-    const btn=document.createElement('button'); btn.type='button'; btn.className='cv-brand'; btn.dataset.group=gk; btn.textContent=gk;
-    btn.addEventListener('pointerenter',()=>{ hoverGroup=gk; userPoke(); applyFocus(); });
+  if(gmenu){ LEFT_INDEX.forEach(entry=>{
+    const btn=document.createElement('button'); btn.type='button'; btn.className='cv-brand'; btn.dataset.gkey=entry.label; btn.textContent=entry.label;
+    btn.addEventListener('pointerenter',()=>{ hoverGroup=entry; userPoke(); applyFocus(); });
     btn.addEventListener('pointerleave',()=>{ hoverGroup=null; applyFocus(); });
-    btn.addEventListener('click',()=>{ userPoke(); lockedGroup=(lockedGroup===gk)?null:gk; if(lockedGroup){ locked=null; featured=null; } applyFocus(); });
+    btn.addEventListener('click',()=>{ userPoke(); lockedGroup=(lockedGroup===entry)?null:entry; if(lockedGroup){ locked=null; featured=null; } applyFocus(); });
     gmenu.appendChild(btn);
   }); }
   document.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(featured){ featured=null; locked=null; } else if(locked){ locked=null; } applyFocus(); });
