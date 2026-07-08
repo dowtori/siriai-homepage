@@ -58,7 +58,7 @@
     const y=1-(i/(TILE_N-1))*2, r=Math.sqrt(Math.max(0,1-y*y)), th=GA*i;
     tiles.push({ card, brand:card.brand, px:!!card.px, img:null, src:card.tile,
       vx:Math.cos(th)*r, vy:y, vz:Math.sin(th)*r,
-      base:9+((i*37)%5)*2.6, sd:((i*53)%TILE_N)/TILE_N*0.6, g:1, orig:false,
+      base:9+((i*37)%5)*2.6, sd:((i*53)%TILE_N)/TILE_N*0.6, g:1, orig:false, burstStagger:0,
       _x:0,_y:0,_z:0,_w:0,_h:0,_a:0,_cx:0,_cy:0 });
   }
 
@@ -82,13 +82,15 @@
     canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr);
     canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    R=Math.min(cssW*0.86, innerHeight*1.02)/2;   // full-bleed — the sphere fills the page like a backdrop, not a contained object
+    R=Math.min(cssW*0.82, cssH*0.84)/2;   // height-governed so the sphere (and its burst overshoot) never clips the section top
     offX=0;
   }
 
   /* ── rotation + intro ── */
   let ay=0.3, ax=-0.12, velY=reduce?0:0.0014, velX=0, tgtVX=0, tgtVY=reduce?0:0.0014;
   let intro=0, introStart=0; function easeOut(t){ return 1-Math.pow(1-t,3); }
+  let burstStarted=false, burstStart=0; const BURST_MS=1200;
+  function easeOutBack(t){ t=t<0?0:(t>1?1:t); const c1=1.70158,c3=c1+1,u=t-1; return 1 + c3*u*u*u + c1*u*u; }   // point -> sphere, ~10% overshoot pop
 
   /* ── focus model ── */
   let hoverList=null, hoverTile=null, hoveredTile=null, locked=null, featured=null, featScale=0;
@@ -116,7 +118,14 @@
   function renderSphere(){
     const now=performance.now();
     if(!introStart){ introStart=now; ghostNext=now+1300; twNext=now+1600; }   // time ambient from first render, not page load
-    if(intro<1) intro=reduce?1:easeOut(Math.min(1,(now-introStart)/1100));
+    if(!burstStarted && (reduce || sec.getBoundingClientRect().top < innerHeight*0.40)){
+      burstStarted=true; burstStart=now;                                        // scroll-in fires the burst once
+      const cyt=Math.cos(ay),syt=Math.sin(ay),cxt=Math.cos(ax),sxt=Math.sin(ax);
+      for(const t of tiles){ const xx=t.vx*cyt+t.vz*syt, zz=-t.vx*syt+t.vz*cyt, yv=t.vy*cxt-zz*sxt;
+        t.burstStagger=Math.min(1,Math.hypot(xx,yv))*0.33; }                    // tiles nearest the view centre emerge first
+    }
+    const bp = reduce?1:(burstStarted ? Math.min(1,(now-burstStart)/BURST_MS) : 0);   // linear burst progress
+    const be = reduce?1:easeOutBack(bp);                                         // radius factor: point -> sphere (pop)
     velY+=(tgtVY-velY)*0.05; velX+=(tgtVX-velX)*0.05;
     if(!locked){ ay+=velY; ax+=velX; ax=Math.max(-0.55,Math.min(0.55,ax)); }   // click freezes the sphere
     const cy=Math.cos(ay), sy=Math.sin(ay), cx=Math.cos(ax), sx=Math.sin(ax);
@@ -129,7 +138,7 @@
         lastUserTs=now-AMB.idle-100;   // treat as idle so this intro ghost persists, not instantly cleared
         applyFocus(); introGhostAt=0;
       }
-      const idle = (now-lastUserTs)>AMB.idle && !locked && !featured;
+      const idle = (now-lastUserTs)>AMB.idle && !locked && !featured && bp>=1;   // hold ambient life until the burst has fully assembled
       if(ghostBrand){
         if(now>ghostUntil || !idle){ ghostBrand=null; applyFocus(); ghostNext=now+arand(AMB.gap[0],AMB.gap[1]); }
       } else if(idle && now>ghostNext){
@@ -143,8 +152,17 @@
     }
     const ab=activeBrand()||activeGrp();
     const breathe = reduce?0:Math.sin(now/2600)*0.006;
-    const ox=cssW/2+offX, oy=innerHeight*0.48, rr=R*(0.84+0.16*intro+breathe);
+    const ox=cssW/2+offX, oy=cssH*0.5, rr=R*(be+breathe);
     ctx.clearRect(0,0,cssW,cssH);
+    if(!reduce){                                    // seed dot — the single point the sphere bursts from
+      const dotA = burstStarted ? Math.max(0, 0.92*(1 - bp/0.30)) : 0.92;
+      if(dotA>0.01){
+        const gr=ctx.createRadialGradient(ox,oy,0,ox,oy,20);
+        gr.addColorStop(0,'rgba(245,158,11,'+dotA+')'); gr.addColorStop(0.4,'rgba(245,158,11,'+(dotA*0.42)+')'); gr.addColorStop(1,'rgba(245,158,11,0)');
+        ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(ox,oy,20,0,6.2832); ctx.fill();
+        ctx.fillStyle='rgba(255,224,178,'+dotA+')'; ctx.beginPath(); ctx.arc(ox,oy,4.5,0,6.2832); ctx.fill();
+      }
+    }
     for(const t of tiles){
       const x=t.vx*cy + t.vz*sy, z=-t.vx*sy + t.vz*cy, yv=t.vy*cx - z*sx, z2=t.vy*sx + z*cx;
       t._z=z2; const depth=(z2+1)/2, sc=0.5+depth*0.62;
@@ -156,7 +174,7 @@
         ? t._w*(_im.naturalHeight/_im.naturalWidth)   // every tile takes its image's original ratio (no forced card shape)
         : t._w*1.28;
       t._cx=ox + x*rr; t._cy=oy + yv*rr; t._x=t._cx-t._w/2; t._y=t._cy-t._h/2;
-      const li=Math.max(0,Math.min(1,(intro*1.6 - t.sd)/0.4));
+      const li=Math.max(0,Math.min(1,(bp*1.7 - t.burstStagger)/0.38));
       let a=(0.26+depth*0.74)*li;
       if(ab) a = on ? li : a*0.34;                 // active fully opaque (no transparency), others faded
       if(featScale>0.05) a*= (1-featScale*0.72);   // dim the cloud when one photo is featured

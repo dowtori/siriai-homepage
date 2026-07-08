@@ -608,7 +608,7 @@ body{cursor:none;background:#000}
 
 /* ===== section: frames (robust rotated tiles) ===== */
 .mv-frames{position:relative;background:#000;color:#f5f5f4;overflow:hidden;
-  height:100svh;
+  height:100svh;margin-top:clamp(60px,12vh,180px);
   font-family:"Inter Tight",Helvetica,Arial,sans-serif}
 .cv-stage{position:absolute;inset:0;z-index:2;display:block}
 .cv-stage canvas{position:absolute;inset:0;display:block}
@@ -1288,8 +1288,21 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="mv-saigon-souls-container">
     <div class="mv-saigon-souls-grid">
       <div class="mv-saigon-souls-content">
-        <h2 class="mv-saigon-souls-heading reveal">Everyone's Siriai</h2>
-        <p class="mv-saigon-souls-body reveal">AI literacy is a state of mind. You speak AI the moment you feel you do — whether you just started, just came back, or have been building all along. Most of all, the easiest literacy makes anyone a Siriai.</p>
+        <h2 class="mv-saigon-souls-heading mv-fill">
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">Siriai</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이가</span></span>
+          </span>
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">becomes</span> <span class="mv-w">everyone's</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">모두의</span></span>
+          </span>
+          <span class="mv-line">
+            <span class="mv-en-line"><span class="mv-w">acquaintance.</span></span>
+            <span class="mv-ko-line" lang="ko"><span class="mv-w">“시리아이(しりあい)”가</span> <span class="mv-w">됩니다.</span></span>
+          </span>
+        </h2>
+        <p class="mv-saigon-souls-body reveal">しりあい means an acquaintance — someone you already know. The easiest AI literacy makes Siriai exactly that: a companion anyone can speak to, whether you just started, just came back, or have been building all along.</p>
         <a href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener" class="mv-saigon-souls-cta reveal">
           Discover Siriai
           <svg class="mv-saigon-souls-cta-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
