@@ -1087,13 +1087,6 @@ body.ready .mv-contact-footer {
   .mv-saigonvideo-title{white-space:normal}
 }
 
-/* ── ambient hero-echo: subtle amber/pink corner blooms so the flat sections share the hero's warm grain-gradient field (pure CSS backgrounds — no WebGL/JS, ~0 cost). Tune all at once with --amb-i. ── */
-:root{--amb-warm:255,178,54;--amb-cool:232,72,112;--amb-i:.14}
-.amb-a{background:radial-gradient(60% 62% at 6% 94%,rgba(var(--amb-warm),var(--amb-i)),rgba(255,120,40,calc(var(--amb-i)*.30)) 34%,transparent 60%),#000}
-.amb-b{background:radial-gradient(58% 60% at 94% 6%,rgba(var(--amb-cool),var(--amb-i)),transparent 58%),#000}
-.amb-c{background:radial-gradient(58% 60% at 92% 92%,rgba(var(--amb-warm),calc(var(--amb-i)*.85)),transparent 58%),#000}
-.amb-d{background:radial-gradient(58% 60% at 8% 8%,rgba(var(--amb-cool),calc(var(--amb-i)*.90)),transparent 56%),#000}
-.amb-hero{background:radial-gradient(58% 62% at 6% 92%,rgba(var(--amb-warm),var(--amb-i)),transparent 60%),radial-gradient(56% 60% at 94% 10%,rgba(var(--amb-cool),var(--amb-i)),transparent 58%),#000}
 </style>
 </head>
 <body>
@@ -1211,7 +1204,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </section>
 
 <!-- MANIFESTO — statement -->
-<section class="mv-manifesto amb-a">
+<section class="mv-manifesto">
   <div class="mv-manifesto-intro">
     <span class="mv-sec-eyebrow reveal">
       <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 8h13M14 8l-5-5M14 8l-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1255,7 +1248,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <!-- STRENGTHS — 2 pinned virtual-scroll categories. Each is a tall track whose inner is sticky: the frame
      stays put while items 01->02->03 cycle in place on scroll, then the next category takes over.
      01 keeps the existing copy; 02/03 are PLACEHOLDERS to replace later. -->
-<section class="mv-str-pin amb-b" data-str-pin>
+<section class="mv-str-pin" data-str-pin>
   <div class="mv-str-sticky">
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Architecting</span>
@@ -1270,7 +1263,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     </div>
   </div>
 </section>
-<section class="mv-str-pin amb-c" data-str-pin>
+<section class="mv-str-pin" data-str-pin>
   <div class="mv-str-sticky">
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Software Engineering</span>
@@ -1299,7 +1292,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </section>
 
 <!-- SAIGON SOULS — text + CTA -->
-<section class="mv-saigon-souls amb-d">
+<section class="mv-saigon-souls">
   <div class="mv-saigon-souls-container">
     <div class="mv-saigon-souls-grid">
       <div class="mv-saigon-souls-content">
@@ -1356,7 +1349,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <script src="sphere-study.js"></script>
 
 <!-- TEAM — portrait + real bios -->
-<section class="mv-team amb-c">
+<section class="mv-team">
   <div class="mv-team-intro">
     <span class="mv-sec-eyebrow reveal">
       <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 8h13M14 8l-5-5M14 8l-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1423,7 +1416,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </section>
 
 <!-- CONTACT -->
-<section class="mv-contact amb-hero">
+<section class="mv-contact">
   <div class="mv-contact-inner">
     <div class="mv-contact-eyebrow">Keep in touch</div>
     <h2 class="mv-contact-headline">Start a conversation</h2>
