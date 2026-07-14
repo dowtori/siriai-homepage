@@ -991,20 +991,20 @@ body.ready .mv-contact-footer {
   letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
 .mv-strengths-eyebrow::before{content:'\2198';font-size:13px;opacity:.65}
 .mv-strengths-row{display:grid;grid-template-columns:0.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:center}
-.mv-strengths-orb{position:relative;width:100%;max-width:min(440px,38vw);aspect-ratio:1/1;justify-self:center;overflow:hidden;border-radius:8px;
-  --mx:50%;--my:50%;--r:clamp(66px,9vw,120px)}
+.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;overflow:hidden;
+  transform:perspective(1000px);transform-origin:center;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform}
+.mv-strengths-orb:hover{transform:perspective(1000px) scale(1.05)}   /* object steps forward (JS adds a cursor tilt) */
 .mv-strengths-orb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:translate3d(0,18px,0) scale(1.03);
   transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
-.mv-strengths-orb img:first-child{opacity:1;transform:none}   /* fallback + mobile (JS syncs the rest to the active item on desktop) */
-/* frosted-glass veil (hero-like field) over the image; hover cuts a soft clear hole under the cursor */
-.orb-frost{position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
-  -webkit-backdrop-filter:blur(17px) saturate(.82) brightness(.6);backdrop-filter:blur(17px) saturate(.82) brightness(.6);
-  background:radial-gradient(58% 58% at 28% 20%,rgba(255,150,40,.10),transparent 62%),rgba(6,6,9,.30)}
-.mv-strengths-orb:hover .orb-frost{
-  -webkit-mask:radial-gradient(circle var(--r) at var(--mx) var(--my),transparent 0,transparent 40%,#000 82%);
-          mask:radial-gradient(circle var(--r) at var(--mx) var(--my),transparent 0,transparent 40%,#000 82%)}
-@media (pointer:coarse){.orb-frost{display:none}}   /* no hover on touch -> show the sharp image */
-@keyframes mvOrb{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.05) rotate(10deg)}}
+.mv-strengths-orb img:first-child{opacity:1;transform:none}   /* fallback + mobile */
+/* frosted veil: blur + dim ONLY (no flat tint -> black margin stays black -> NO visible square box).
+   hover dissolves the WHOLE veil at once (generous reveal, not a circular spotlight) -> the object lights up. */
+.orb-frost{position:absolute;inset:0;z-index:2;pointer-events:none;
+  -webkit-backdrop-filter:blur(22px) brightness(.56) saturate(.94);backdrop-filter:blur(22px) brightness(.56) saturate(.94);
+  transition:opacity .5s cubic-bezier(.22,1,.36,1)}
+.mv-strengths-orb:hover .orb-frost{opacity:0}
+@media (pointer:coarse){.orb-frost{display:none}}
+
 .mv-str-stage{position:relative;min-height:clamp(220px,34vh,340px)}
 .mv-str-item{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;will-change:opacity,transform;
   font-size:clamp(19px,2.4vw,32px);font-weight:450;line-height:1.4;letter-spacing:-.01em;color:#f5f5f4}
@@ -1557,9 +1557,12 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     });
     imgs.forEach(function(im,i){ im.style.opacity = i===0?'1':'0'; im.style.transform = i===0?'none':'translate3d(0,18px,0) scale(1.03)'; });   /* image settles in sync with its text item */
     var orb = sec.querySelector('.mv-strengths-orb');
-    if(orb) orb.addEventListener('mousemove', function(e){ var r=orb.getBoundingClientRect();   /* move the frost's clear hole with the cursor */
-      orb.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
-      orb.style.setProperty('--my', ((e.clientY-r.top)/r.height*100).toFixed(1)+'%'); });
+    if(orb){
+      orb.addEventListener('mousemove', function(e){ var r=orb.getBoundingClientRect();   /* subtle 3D tilt toward the cursor */
+        var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
+        orb.style.transform='perspective(1000px) rotateY('+(dx*9).toFixed(2)+'deg) rotateX('+(-dy*9).toFixed(2)+'deg) scale(1.05)'; });
+      orb.addEventListener('mouseleave', function(){ orb.style.transform=''; });
+    }
     return { sec:sec, items:items, imgs:imgs, idx:0 };
   });
   if(!secs.length) return;
