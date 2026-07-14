@@ -4,3 +4,7 @@
 node_modules/
 .DS_Store
 Thumbs.db
+
+# gemini api key (never commit)
+gemini-key.txt
+.gemini-key
