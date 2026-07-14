@@ -1095,6 +1095,29 @@ body.ready .mv-contact-footer {
   .mv-saigonvideo-title{white-space:normal}
 }
 
+/* ===== footer — real Siriai footer info (ported from siriai-homepage), dark-adapted ===== */
+.mv-contact{display:none}   /* "Keep in touch" hidden — replaced by the real footer below */
+.mv-foot{position:relative;z-index:2;background:#000;color:#f5f5f4;
+  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif}
+.mv-foot-cols{padding:clamp(48px,8vh,90px) var(--pad-x) clamp(40px,6vh,70px);
+  display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:36px;border-top:1px solid rgba(255,255,255,.14)}
+.mv-foot-logo{height:22px;width:auto;object-fit:contain;display:block;filter:brightness(0) invert(1);opacity:.92}
+.mv-foot-col h4{font-weight:600;font-size:12px;letter-spacing:.04em;color:rgba(245,245,245,.5);margin:0 0 16px}
+.mv-foot-col a{display:block;font-size:15px;color:#f5f5f4;text-decoration:none;padding:6px 0;width:fit-content;
+  letter-spacing:-.008em;transition:color .3s ease,transform .3s ease}
+.mv-foot-col a:hover{color:rgb(255,178,54);transform:translateX(3px)}
+.mv-foot-biz{padding:24px var(--pad-x) 14px;font-family:"Noto Sans KR","Inter Tight",Helvetica,Arial,sans-serif;
+  font-size:12px;line-height:1.75;color:rgba(245,245,245,.45);letter-spacing:-.002em;border-top:1px solid rgba(255,255,255,.14)}
+.mv-foot-biz p{margin:0 0 4px;max-width:64em;word-break:keep-all}
+.mv-foot-biz a{color:inherit}
+.mv-foot-copy{display:flex;justify-content:space-between;gap:16px;padding:0 var(--pad-x) clamp(28px,5vh,48px);
+  font-size:13px;color:rgba(245,245,245,.45);letter-spacing:-.004em}
+@media (max-width:880px){
+  .mv-foot-cols{grid-template-columns:1fr 1fr;gap:30px}
+  .mv-foot-logo{grid-column:1/-1}
+  .mv-foot-copy{flex-direction:column;gap:6px}
+}
+
 </style>
 </head>
 <body>
@@ -1445,6 +1468,33 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     </div>
   </div>
 </section>
+
+<!-- FOOTER — real Siriai footer (ported from siriai-homepage index.html, dark-adapted).
+     Links point at the live homepage since the study has no sub-pages. -->
+<footer class="mv-foot">
+  <div class="mv-foot-cols">
+    <img class="mv-foot-logo" src="assets/siriai-word-ink.png" alt="Siriai">
+    <div class="mv-foot-col">
+      <h4>스튜디오</h4>
+      <a href="https://siriai.co.kr/Cases.html" target="_blank" rel="noopener">포트폴리오</a>
+      <a href="https://siriai.co.kr/Contact.html" target="_blank" rel="noopener">문의하기</a>
+    </div>
+    <div class="mv-foot-col">
+      <h4>약관</h4>
+      <a href="https://siriai.co.kr/Terms.html" target="_blank" rel="noopener">이용약관</a>
+      <a href="https://siriai.co.kr/Privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>
+    </div>
+    <div class="mv-foot-col">
+      <h4>채널</h4>
+      <a href="#">Instagram</a>
+    </div>
+  </div>
+  <div class="mv-foot-biz">
+    <p>상호 시리아이(SIRIAI) · 대표 김동현 · 사업자등록번호 405-23-02027 · 통신판매신고번호 제2024-서울용산-1589호</p>
+    <p>서울특별시 용산구 한강대로 293, 4층 A호 (갈월동, 성원빌딩) · 대표전화 070-7576-1944 · 개인정보보호책임자 박슬범 (<a href="mailto:sbsiriai@gmail.com">sbsiriai@gmail.com</a>)</p>
+  </div>
+  <div class="mv-foot-copy"><span>© 2026 시리아이(SIRIAI) 공식 홈페이지. All rights reserved.</span><span>Signal · Structure · Decision</span></div>
+</footer>
 
 
 <!-- ============ section 1 — cathydolle.com home, ported ============
@@ -1826,16 +1876,18 @@ void main(){
   vec3 field = background(vUv);
 
   if(uExit > 0.001){
-    float aspect = uRes.x / uRes.y;
-    vec3 paperCol = vec3(0.955) - 0.02 * fbm((vUv - 0.5) * vec2(aspect, 1.0) * 1.4 + uTime * 0.018);
+    /* DARK dot-away: ground between dots stays BLACK (was near-white paper in the light theme).
+       coverage now = cell BRIGHTNESS (bloom glow), with a faint floor so the whole hero still
+       reads as a dot lattice — bloom areas pop as amber/pink dots, black areas as dim gray dots. */
     float cellPx = 9.0 * (uRes.x / 1600.0);                   // small screen-space cells
     vec2 g  = fc / cellPx;
     vec2 gc = fract(g) - 0.5;
     vec3 cellCol = background((floor(g) + 0.5) * cellPx / uRes);
-    float kCell  = clamp(length(vec3(1.0) - cellCol) * 2.4, 0.0, 1.0);   // crescent coverage
-    float r      = sqrt(kCell) * 0.52 * (1.0 - uExit * 0.25);            // dot radius
-    float dotIn  = smoothstep(r + 0.07, r - 0.07, length(gc)) * step(0.03, kCell);
-    vec3 dotField = mix(paperCol, cellCol, dotIn);            // ink dot keeps the crescent shade
+    float kCell  = clamp(max(cellCol.r, max(cellCol.g, cellCol.b)) * 2.6, 0.0, 1.0) * 0.82 + 0.18;  // bloom coverage + faint floor
+    float r      = sqrt(kCell) * 0.52 * (1.0 - uExit * 0.25);            // dot radius (shrinks as the hero leaves)
+    float dotIn  = smoothstep(r + 0.07, r - 0.07, length(gc));
+    vec3 dotCol  = max(cellCol, vec3(0.13));                  // dots keep the bloom colour; faint gray where black
+    vec3 dotField = dotCol * dotIn;                           // black ground between dots
     field = mix(field, dotField, uExit);
   }
 
