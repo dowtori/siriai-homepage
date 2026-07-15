@@ -991,30 +991,17 @@ body.ready .mv-contact-footer {
   letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
 .mv-strengths-eyebrow::before{content:'\2198';font-size:13px;opacity:.65}
 .mv-strengths-row{display:grid;grid-template-columns:0.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:center}
-/* strengths slot = a MINIATURE HERO: the hero's own bloom field (its shader math painted once into --field)
-   drifting slowly behind a STATIC grain overlay, seen through a circular FORM. 2D, abstract — no photos. */
+/* strengths slot: each form is DRAWN as grain dispersion — density dithered against noise, so the core is a
+   dense mass and the edge scatters into particles and dies into black. The hero's own grain language;
+   no masks, no hard-cut shapes. Slightly soft, never crisp. */
 .mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;
-  transition:filter .34s cubic-bezier(.22,1,.36,1)}
-.orb-form{position:absolute;inset:0;opacity:0;background-image:var(--field);background-size:118% 118%;
-  background-repeat:no-repeat;animation:orbDrift 30s ease-in-out infinite alternate;
-  transition:opacity .6s cubic-bezier(.22,1,.36,1);will-change:background-position,opacity}
+  transition:transform 1s cubic-bezier(.22,1,.36,1)}   /* barely-there drift toward the cursor (JS, clamped) */
+.orb-form{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;
+  /* softness comes free from drawing at 300px and letting CSS scale it up — no blur filter needed */
+  transition:opacity .9s cubic-bezier(.4,0,.2,1);      /* long dissolve so 01->02->03 never snaps */
+  will-change:opacity}
 .orb-form:first-of-type{opacity:1}
-@keyframes orbDrift{from{background-position:14% 86%}to{background-position:86% 14%}}
-/* the six forms — silhouette only (circular language) */
-.orb-form[data-f='a1']{clip-path:circle(36% at 50% 50%)}                                              /* 진단: one whole disc */
-.orb-form[data-f='a2']{-webkit-mask:radial-gradient(circle at 50% 50%,#000 0 14%,transparent 14% 26%,#000 26% 36%,transparent 36%);
-                    mask:radial-gradient(circle at 50% 50%,#000 0 14%,transparent 14% 26%,#000 26% 36%,transparent 36%)}   /* 설계: hub + reach */
-.orb-form[data-f='a3']{-webkit-mask:radial-gradient(circle at 50% 50%,transparent 0 22%,#000 22% 36%,transparent 36%);
-                    mask:radial-gradient(circle at 50% 50%,transparent 0 22%,#000 22% 36%,transparent 36%)}                /* 실행: a cycle */
-.orb-form[data-f='s1']{clip-path:circle(14% at 50% 50%)}                                              /* 기획: the first spark */
-.orb-form[data-f='s2']{clip-path:ellipse(37% 14% at 50% 50%)}                                         /* 개발: motion */
-.orb-form[data-f='s3']{-webkit-mask:radial-gradient(circle at 50% 50%,transparent 0 11%,#000 11% 16%,transparent 16% 24%,#000 24% 29%,transparent 29% 33%,#000 33% 38%,transparent 38%);
-                    mask:radial-gradient(circle at 50% 50%,transparent 0 11%,#000 11% 16%,transparent 16% 24%,#000 24% 29%,transparent 29% 33%,#000 33% 38%,transparent 38%)}   /* UX·UI: one system */
-/* the hero's signature: STATIC grain, strong on lit areas, quiet on black (overlay blend does exactly that) */
-.orb-grain{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:overlay;opacity:.92;
-  background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'180'%20height%3D'180'%3E%3Cfilter%20id%3D'n'%20x%3D'0'%20y%3D'0'%20width%3D'100%25'%20height%3D'100%25'%3E%3CfeTurbulence%20type%3D'fractalNoise'%20baseFrequency%3D'0.62'%20numOctaves%3D'2'%20stitchTiles%3D'stitch'%20result%3D't'%2F%3E%3CfeColorMatrix%20in%3D't'%20type%3D'saturate'%20values%3D'0'%20result%3D'g'%2F%3E%3CfeComponentTransfer%20in%3D'g'%3E%3CfeFuncR%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncG%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncB%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncA%20type%3D'linear'%20slope%3D'0'%20intercept%3D'1'%2F%3E%3C%2FfeComponentTransfer%3E%3C%2Ffilter%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20filter%3D'url(%23n)'%2F%3E%3C%2Fsvg%3E")}
-@media (hover:hover){.mv-strengths-orb:hover{filter:brightness(1.18) saturate(1.06)}}
-@media (prefers-reduced-motion:reduce){.orb-form{animation:none}}
+@media (prefers-reduced-motion:reduce){.mv-strengths-orb{transition:none;transform:none!important}}
 
 .mv-str-stage{position:relative;min-height:clamp(220px,34vh,340px)}
 .mv-str-item{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;will-change:opacity,transform;
@@ -1302,7 +1289,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Architecting</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><i class="orb-form" data-f="a1"></i><i class="orb-form" data-f="a2"></i><i class="orb-form" data-f="a3"></i><div class="orb-grain"></div></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-form" data-f="a1"></canvas><canvas class="orb-form" data-f="a2"></canvas><canvas class="orb-form" data-f="a3"></canvas></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>문제 정의 (착수·진단)</b> — 브랜드의 니즈를 깊이 있게 이해하고 전체 맥락을 파악해, 근본적인 페인 포인트를 폭넓은 인사이트로 확인합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>계획 설계</b> — IT·제조·아트·패션·뷰티를 아우르는 넓은 네트워크를 기반으로, 실행 가능한 구체적인 계획을 제시합니다.</p>
@@ -1317,7 +1304,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Software Engineering</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><i class="orb-form" data-f="s1"></i><i class="orb-form" data-f="s2"></i><i class="orb-form" data-f="s3"></i><div class="orb-grain"></div></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-form" data-f="s1"></canvas><canvas class="orb-form" data-f="s2"></canvas><canvas class="orb-form" data-f="s3"></canvas></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>서비스 기획</b> — 세상의 문제에서 출발합니다. 페인 포인트를 먼저 정의하고 기획을 시작합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>프로덕트 개발</b> — 상상 속 프로덕트를 가장 빠르게. 핵심 프로토타입을 며칠 만에 구현합니다.</p>
@@ -1557,44 +1544,84 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 /* strengths wheel-step carousel — DOWN-scroll captures a category with a gentle magnetic
    SETTLE (no hard snap) and steps 01->02->03 one item per flick; UP-scroll is frictionless
    (never captures, releases instantly). one flick = one item even on a hard flick / long
-   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slot field: the HERO's own shader math (fbm-warped corner blooms -> amber->orange->pink
-   colormap -> glow), painted ONCE per section into a data-URL and handed to CSS as --field. The CSS then
-   drifts it slowly behind a static grain overlay, through a circular form. No WebGL, no image downloads. ---- */
+   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slot forms — drawn, not masked ----------------------------------------------
+   Each form is a DENSITY field dithered against noise: where density is 1 the grain packs into a solid
+   mass, and as density falls the particles scatter and dissolve into black (see the references). Colour
+   comes from the hero's own colormap; the two sections sample different bands of it (amber vs pink).
+   Three states tell one story instead of repeating a circle:
+     01  a SHARP circle crossing a BLURRED circle
+     02  those same two elements re-placed — one at the centre, one around it: an eye / a hinted target
+     03  the circle breaks into a LINE — an oscillation (正·反) resolving into a single band (合)
+   ------------------------------------------------------------------------------------------------- */
 (function(){
-  function heroField(size, pink){
-    var c=document.createElement('canvas'); c.width=c.height=size;
-    var x=c.getContext('2d'), im=x.createImageData(size,size), d=im.data;
-    function hash(a,b){ var n=Math.sin(a*12.9898+b*78.233)*43758.5453; return n-Math.floor(n); }
-    function noise(a,b){ var i=Math.floor(a),j=Math.floor(b),f=a-i,g=b-j,u=f*f*(3-2*f),v=g*g*(3-2*g);
-      return hash(i,j)*(1-u)*(1-v)+hash(i+1,j)*u*(1-v)+hash(i,j+1)*(1-u)*v+hash(i+1,j+1)*u*v; }
-    function fbm(a,b){ var s=0,m=0.5,k; for(k=0;k<3;k++){ s+=m*noise(a,b); a*=2; b*=2; m*=0.5; } return s; }
-    function ss(e0,e1,t){ t=Math.min(1,Math.max(0,(t-e0)/(e1-e0))); return t*t*(3-2*t); }
-    var AM=[1,.78,.05], OR=[1,.42,.13], PK=[.90,.18,.38], px,py;
-    for(py=0;py<size;py++) for(px=0;px<size;px++){
-      var p0=(px+0.5)/size-0.5, p1=(py+0.5)/size-0.5;
-      var w0=p0+(fbm(p0*1.6+2.3,p1*1.6+1.7)-0.5)*0.34, w1=p1+(fbm(p0*1.6+4.0,p1*1.6+3.1)-0.5)*0.34;
-      /* The mini slot shows a BLOOM ITSELF (the hero's corner-bloom composition has a dark centre that a
-         circular crop would land on). The two sections sample DIFFERENT BANDS of the hero's own colormap —
-         exactly like the hero's amber bottom-left bloom vs its pink top-right one. */
-      var d0=w0-0.06, d1=w1+0.05;
-      var bloom=Math.exp(-(d0*d0+d1*d1)/0.16);                    /* 0..1 */
-      var g=pink ? (0.58+0.42*bloom) : (0.30+0.34*bloom);         /* SE -> orange..pink band, Arch -> gold..amber band */
-      var t1=ss(.34,.72,g), t2=ss(.60,.98,g);
-      var r=AM[0]+(OR[0]-AM[0])*t1, gg=AM[1]+(OR[1]-AM[1])*t1, bb=AM[2]+(OR[2]-AM[2])*t1;
-      r+=(PK[0]-r)*t2; gg+=(PK[1]-gg)*t2; bb+=(PK[2]-bb)*t2;
-      var glow=0.26+0.66*bloom, i=(py*size+px)*4;
-      d[i]=r*glow*255; d[i+1]=gg*glow*255; d[i+2]=bb*glow*255; d[i+3]=255;
-    }
-    x.putImageData(im,0,0); return c.toDataURL('image/png');
+  var AM=[1,.78,.05], OR=[1,.42,.13], PK=[.90,.18,.38];
+  function ss(a,b,t){ t=Math.min(1,Math.max(0,(t-a)/(b-a))); return t*t*(3-2*t); }
+  function rnd(x,y){ var n=Math.sin(x*127.1+y*311.7)*43758.5453; return n-Math.floor(n); }
+  function colour(d, pink){
+    var g = pink ? (0.60+0.40*d) : (0.16+0.30*d);          /* SE -> pink band, Architecting -> gold band */
+    var t1=ss(.34,.72,g), t2=ss(.60,.98,g);
+    var r=AM[0]+(OR[0]-AM[0])*t1, gg=AM[1]+(OR[1]-AM[1])*t1, bb=AM[2]+(OR[2]-AM[2])*t1;
+    r+=(PK[0]-r)*t2; gg+=(PK[1]-gg)*t2; bb+=(PK[2]-bb)*t2;
+    return [r,gg,bb];
   }
-  function paint(){
+  /* --- density fields (x,y in -0.5..0.5) --- */
+  function d1(x,y){                                        /* 01 — sharp circle x blurred circle */
+    var a=Math.sqrt((x+0.105)*(x+0.105)+(y+0.015)*(y+0.015));
+    var b=Math.sqrt((x-0.115)*(x-0.115)+(y-0.010)*(y-0.010));
+    var sharp = 1-ss(0.195,0.268,a);                       /* a defined edge */
+    var soft  = 1-ss(0.030,0.310,b);                       /* dissolves the whole way out */
+    return Math.min(1, Math.max(sharp, soft*0.95));
+  }
+  function d2(x,y){                                        /* 02 — one at the centre, one around it */
+    var r=Math.sqrt(x*x+y*y);
+    var halo = (1-ss(0.215,0.375,r)) * ss(0.115,0.235,r);  /* the blurred one, now a surrounding band */
+    var core = 1-ss(0.045,0.090,r);                        /* the sharp one, now the pupil */
+    return Math.min(1, Math.max(halo*1.06, core));
+  }
+  function d3(x,y){                                        /* 03 — 正·反 oscillation resolving into 合 */
+    var t=x+0.5;
+    var amp=0.155*(1-ss(0.12,0.94,t));                     /* the swing decays into one line */
+    var wave=Math.sin(t*Math.PI*3.0)*amp;
+    var dy=Math.abs(y-wave);
+    var thick=0.050+0.030*(1-t);
+    var body=1-ss(thick, thick+0.085, dy);
+    return body * (0.55+0.45*ss(0.02,0.30,t)) * (1-ss(0.86,1.02,t));   /* fades in at the left, out at the right */
+  }
+  var DENS={a1:d1,a2:d2,a3:d3,s1:d1,s2:d2,s3:d3};
+  function draw(cv){
+    var f=cv.getAttribute('data-f')||'a1', pink=f.charAt(0)==='s', dens=DENS[f]||d1;
+    var size=300;   /* drawn small and scaled up by CSS: coarser particles + the soft focus the hero has */
+    cv.width=size; cv.height=size;
+    var ctx=cv.getContext('2d'), im=ctx.createImageData(size,size), out=im.data, px, py;
+    for(py=0; py<size; py++) for(px=0; px<size; px++){
+      var x=(px+0.5)/size-0.5, y=(py+0.5)/size-0.5;
+      var d=Math.min(1,Math.max(0,dens(x,y)));
+      var i=(py*size+px)*4;
+      if(d<=0.004){ out[i+3]=255; continue; }              /* black */
+      /* grain dispersion: coarse particles, lit stochastically in proportion to density */
+      var gx=Math.floor(px/1.15), gy=Math.floor(py/1.15);
+      var n=rnd(gx,gy);
+      if(n > Math.pow(d,0.78)){ out[i+3]=255; continue; }   /* particle not lit -> black */
+      var c=colour(d,pink), b=(0.42+0.58*d)*(0.72+0.5*rnd(gx+7.3,gy+2.1));
+      out[i]=Math.min(255,c[0]*b*255); out[i+1]=Math.min(255,c[1]*b*255); out[i+2]=Math.min(255,c[2]*b*255); out[i+3]=255;
+    }
+    ctx.putImageData(im,0,0);
+  }
+  function paintAll(){ [].slice.call(document.querySelectorAll('canvas.orb-form')).forEach(draw); }
+  /* the object drifts a few px toward the cursor — very slight, and clamped inside its own box */
+  function follow(){
     [].slice.call(document.querySelectorAll('.mv-strengths-orb')).forEach(function(orb){
-      var f=orb.querySelector('.orb-form'); if(!f) return;
-      var pink=(f.getAttribute('data-f')||'').charAt(0)==='s';   /* SE reads pink, Architecting amber */
-      orb.style.setProperty('--field', 'url('+heroField(320, pink)+')');
+      orb.addEventListener('mousemove', function(e){
+        var r=orb.getBoundingClientRect();
+        var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
+        orb.style.transform='translate3d('+(dx*9).toFixed(1)+'px,'+(dy*9).toFixed(1)+'px,0)';   /* max ~4.5px */
+      });
+      orb.addEventListener('mouseleave', function(){ orb.style.transform=''; });
     });
   }
-  if(window.requestIdleCallback) requestIdleCallback(paint, {timeout:2500}); else setTimeout(paint, 400);
+  function boot(){ paintAll(); if(!matchMedia('(pointer:coarse)').matches) follow(); }
+  if(window.requestIdleCallback) requestIdleCallback(boot,{timeout:2600}); else setTimeout(boot,400);
+  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt=setTimeout(paintAll, 350); });
 })();
 
 /* strengths wheel-step module (desktop only) */
