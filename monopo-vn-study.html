@@ -1004,7 +1004,7 @@ body.ready .mv-contact-footer {
    had nothing, which is why the sections read as floating in an empty screen. */
 .mv-biz::before{content:'';position:absolute;top:0;left:var(--pad-x);right:var(--pad-x);height:1px;
   background:rgba(245,245,244,.20)}
-.mv-biz-label{display:inline-flex;align-items:center;gap:8px;font-size:clamp(10px,.83vw,15px);font-weight:400;
+.mv-biz-label{display:inline-flex;align-items:center;gap:8px;font-size:max(10px,.83vw);font-weight:400;   /* uncapped for the same reason */
   letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(26px,3.4vw,48px)}
 .mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
 .mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}
@@ -1015,7 +1015,12 @@ body.ready .mv-contact-footer {
       column. Centring it left a slab of black on the left and pushed the whole composition inward. */
 .orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
 @media (prefers-reduced-motion:reduce){.mv-biz-orb{transition:none;transform:none!important}}
-.mv-biz-copy{position:relative;font-size:clamp(16px,1.98vw,30px)}   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
+.mv-biz-copy{position:relative;font-size:max(16px,1.98vw)}
+  /* No upper cap, because monopo has none: measured live on their page at 1885px, their body is still
+     37.32px — exactly 1.98vw. A cap stops the TYPE growing while the COLUMN keeps going, so past the cap
+     the measure opens up and the copy just floats in it: 91% full at 1512px, 73% at 1885px. That gap on
+     the right was not a copy problem, it was this. The 16px floor stays; it is what the 769px pinch is
+     measured against. */   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
 .mv-biz-num{position:absolute;left:-2.3em;top:.62em;font-size:.419em;font-weight:300;line-height:1;
   color:rgba(245,245,245,.5)}   /* .83vw / 1.98vw = .419 — monopo's index, to the same ratio. It hangs in
                                    the gutter between the object and the claim so the measure keeps its 47%. */
@@ -1350,7 +1355,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">이미</span> <span class="mv-w">아는</span> <span class="mv-w">이름이</span> <span class="mv-w">됩니다.</span></span>
         </span>
       </div>
-      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>크리에이터 협업, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="https://siriai.co.kr/Cases.html"><span>크리에이터 협업 사례보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1395,7 +1400,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">보고서</span> <span class="mv-w">대신</span> <span class="mv-w">결정이</span> <span class="mv-w">남습니다.</span></span>
         </span>
       </div>
-      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>비즈니스 컨설팅, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="https://siriai.co.kr/Contact.html"><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1440,7 +1445,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">이</span> <span class="mv-w">속도의</span> <span class="mv-w">이유입니다.</span></span>
         </span>
       </div>
-      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>소프트웨어 엔지니어링, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="https://siriai.co.kr/Contact.html"><span>소프트웨어 엔지니어링 함께하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
