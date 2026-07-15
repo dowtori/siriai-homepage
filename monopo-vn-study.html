@@ -986,44 +986,47 @@ body.ready .mv-contact-footer {
 @keyframes mvLogoSweep{0%{background-position:150% 0}100%{background-position:-150% 0}}
 @media (prefers-reduced-motion:reduce){.mv-clients-track{animation:none;flex-wrap:wrap;justify-content:center;white-space:normal}}
 
-/* ===== section: STRENGTHS — 2 pinned virtual-scroll categories (Architecting, Software Engineering) =====
-   Each .mv-str-pin is a tall track; .mv-str-sticky is position:sticky so the frame stays put while the 3
-   items (01/02/03) cycle in place on scroll (driven by the scroll-fx module). Then the next category takes
-   over. .mv-strengths-orb is a placeholder bloom — swap your own image later. */
-/* Typography here is measured off the real monopo.vn manifesto section (live, at both 1200px and
-   1512px, so the vw figures are exact rather than eyeballed): body 1.98vw / weight 300 / line-height
-   1.581 / no tracking, index 0.83vw, label 0.83vw weight 400 with NO tracking, and a text column that
-   is 47% of the content starting at 53% of it. The study had been running 2.4vw / weight 450 / 1.4 /
-   -.01em with a 700 lead-in, which is what read as a prototype next to it. */
-.mv-str-pin{position:relative;z-index:2;height:100vh;background:#000;
-  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif}   /* Inter Tight has no Hangul — name the Korean face rather than falling back to whatever the OS has */
-.mv-str-sticky{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden;
-  padding:0 var(--pad-x)}
-.mv-str-inner{max-width:none;width:100%;margin:0}
-.mv-strengths-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:clamp(10px,.83vw,15px);font-weight:400;
-  letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
-.mv-strengths-eyebrow::before{content:'\2198';font-size:1.08em;opacity:.65}
-.mv-strengths-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}   /* the gap is inside the 53/47 split, as it is on monopo */
-/* the strengths slot is built from the hero's own primitives (warp/colormap/grain) and supplies only a
-   density, so it renders TRUE BLACK wherever there is no object — the canvas leaves no rectangle on the
-   page, and the object simply floats in the same black as everything around it. */
-.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center}
+/* THE BUSINESS LINES. Three sections, one per line of work, built to the monopo.vn geometry measured
+   live at 1200px AND 1512px so the figures are exact rather than eyeballed: a 1px rule across the
+   content width, a 0.83vw label above it, then a 53/47 split of object and claim, and body type at
+   1.98vw / weight 300 / line-height 1.581 / no tracking.
+   These used to be two pinned 100vh modules stepping 01->02->03. They said what every agency says, and
+   said it twice in the same shape — so the second one read as an echo rather than as information. */
+.mv-biz{position:relative;z-index:2;background:#000;color:#f5f5f4;
+  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+  padding:clamp(54px,7vh,96px) var(--pad-x) clamp(62px,8vh,108px)}
+/* monopo rules every item off at the content width (section::before, 1px, gutter to gutter). This page
+   had nothing, which is why the sections read as floating in an empty screen. */
+.mv-biz::before{content:'';position:absolute;top:0;left:var(--pad-x);right:var(--pad-x);height:1px;
+  background:rgba(245,245,244,.20)}
+.mv-biz-label{display:inline-flex;align-items:center;gap:8px;font-size:clamp(10px,.83vw,15px);font-weight:400;
+  letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(26px,3.4vw,48px)}
+.mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
+.mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}
+.mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:center}
 .orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
-
-.mv-str-stage{position:relative;min-height:clamp(248px,38vh,384px)}   /* line-height went 1.4 -> 1.581, so the stage has to grow with it or the items clip */
-.mv-str-item{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;will-change:opacity,transform;
-  font-size:clamp(16px,1.98vw,30px);font-weight:300;line-height:1.581;letter-spacing:0;color:#f5f5f4;word-break:keep-all}
-.mv-str-item b{font-weight:500}   /* the step name still leads, but at 500 rather than the browser default 700 — monopo never goes bold */
-.mv-strengths-num{font-size:.419em;font-weight:300;vertical-align:top;color:rgba(245,245,245,.5);margin-right:.7em;line-height:1}   /* .83vw / 1.98vw = .419 */
-@media (max-width:768px){.mv-strengths-row{grid-template-columns:1fr;gap:clamp(20px,4vw,30px)}
-  .mv-strengths-orb{max-width:140px;justify-self:start}
-  .mv-str-stage{min-height:clamp(240px,42vh,360px)}}
-@media (prefers-reduced-motion:reduce), (pointer:coarse){
-  .mv-strengths-orb{animation:none}
-  .mv-str-pin{height:auto}
-  .mv-str-sticky{position:static;height:auto;padding-top:clamp(60px,10vh,110px);padding-bottom:clamp(60px,10vh,110px)}
-  .mv-str-stage{min-height:0}
-  .mv-str-item{position:static;opacity:1!important;transform:none!important;margin-bottom:clamp(22px,4vw,36px)}
+.mv-biz-copy{position:relative;font-size:clamp(16px,1.98vw,30px)}   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
+.mv-biz-num{position:absolute;left:-2.3em;top:.62em;font-size:.419em;font-weight:300;line-height:1;
+  color:rgba(245,245,245,.5)}   /* .83vw / 1.98vw = .419 — monopo's index, to the same ratio. It hangs in
+                                   the gutter between the object and the claim so the measure keeps its 47%. */
+/* the lens. Hovering the copy turns a BAND of lines Korean — a band and not a circle, because a circle
+   cuts words in half and the point here is to be READ, not to look like a lens. The EN and KO of each
+   line already live in one grid cell (.mv-line), so a line is either one language or the other, never
+   a smear of both. */
+.mv-lens{font-weight:300;line-height:1.581;letter-spacing:0;cursor:default}
+.mv-lens .mv-ko-line{font-weight:300}
+.mv-biz-cta{display:inline-flex;align-items:center;gap:.5em;margin-top:clamp(24px,2.8vw,42px);
+  font-size:.52em;font-weight:400;color:rgba(245,245,245,.62);text-decoration:none;
+  border-bottom:1px solid rgba(245,245,245,.2);padding-bottom:.3em;
+  transition:color .3s,border-color .3s}
+.mv-biz-cta:hover{color:#f5f5f4;border-color:rgba(245,245,245,.55)}
+.mv-biz-cta svg{width:1em;height:1em;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.mv-biz-cta:hover svg{transform:translate3d(.16em,-.16em,0)}
+@media (max-width:768px){
+  .mv-biz-row{grid-template-columns:1fr;gap:clamp(22px,4vw,34px)}
+  .mv-biz-orb{max-width:210px;justify-self:start}
+  .mv-biz-num{left:0;top:-1.6em}
+}
 }
 
 /* ===== section: SAIGON SOUL video ===== */
@@ -1294,36 +1297,136 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   </div>
 </section>
 
-<!-- STRENGTHS — 2 pinned virtual-scroll categories. Each is a tall track whose inner is sticky: the frame
-     stays put while items 01->02->03 cycle in place on scroll, then the next category takes over.
-     01 keeps the existing copy; 02/03 are PLACEHOLDERS to replace later. -->
-<section class="mv-str-pin" data-str-pin>
-  <div class="mv-str-sticky">
-    <div class="mv-str-inner">
-      <span class="mv-strengths-eyebrow">Architecting</span>
-      <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-field" data-set="a"></canvas></div>
-        <div class="mv-str-stage">
-          <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>문제 정의 (착수·진단)</b> — 브랜드의 니즈를 깊이 있게 이해하고 전체 맥락을 파악해, 근본적인 페인 포인트를 폭넓은 인사이트로 확인합니다.</p>
-          <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>계획 설계</b> — IT·제조·아트·패션·뷰티를 아우르는 넓은 네트워크를 기반으로, 실행 가능한 구체적인 계획을 제시합니다.</p>
-          <p class="mv-str-item"><sup class="mv-strengths-num">03</sup><b>실행 &amp; 팔로업</b> — 고객사의 실행을 서포트하거나 필요하면 직접 실행하고, 결과에 따라 단계를 다시 반복하거나 새로운 방안을 제시합니다.</p>
-        </div>
+<!-- BUSINESS LINES — the three the real site already names (01 크리에이터 협업 / 02 비즈니스 컨설팅 /
+     03 소프트웨어 엔지니어링). One looping object and one long claim each, instead of a three-step process
+     told twice. The right-hand copy is English at volume; hovering it turns a band of lines Korean. -->
+<section class="mv-biz">
+  <span class="mv-biz-label">Connect</span>
+  <div class="mv-biz-row">
+    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="c"></canvas></div>
+    <div class="mv-biz-copy">
+      <sup class="mv-biz-num">01</sup>
+      <div class="mv-lens">
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">A</span> <span class="mv-w">brand</span> <span class="mv-w">rarely</span> <span class="mv-w">reaches</span> <span class="mv-w">people</span> <span class="mv-w">by</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드는</span> <span class="mv-w">목소리를</span> <span class="mv-w">키워서</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">speaking</span> <span class="mv-w">louder.</span> <span class="mv-w">It</span> <span class="mv-w">reaches</span> <span class="mv-w">them</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">사람들에게</span> <span class="mv-w">닿지</span> <span class="mv-w">않습니다.</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">through</span> <span class="mv-w">someone</span> <span class="mv-w">they</span> <span class="mv-w">already</span> <span class="mv-w">trust.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">이미</span> <span class="mv-w">신뢰하는</span> <span class="mv-w">사람을</span> <span class="mv-w">통해</span> <span class="mv-w">닿습니다.</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">put</span> <span class="mv-w">creators</span> <span class="mv-w">in</span> <span class="mv-w">that</span> <span class="mv-w">gap</span> <span class="mv-w">—</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이는</span> <span class="mv-w">그</span> <span class="mv-w">사이에</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">beauty,</span> <span class="mv-w">fashion,</span> <span class="mv-w">entertainment,</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">크리에이터를</span> <span class="mv-w">놓습니다.</span> <span class="mv-w">뷰티,</span> <span class="mv-w">패션,</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">once</span> <span class="mv-w">a</span> <span class="mv-w">whole</span> <span class="mv-w">city</span> <span class="mv-w">—</span> <span class="mv-w">so</span> <span class="mv-w">that</span> <span class="mv-w">a</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">엔터테인먼트,</span> <span class="mv-w">한</span> <span class="mv-w">번은</span> <span class="mv-w">도시</span> <span class="mv-w">전체까지.</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">brand</span> <span class="mv-w">arrives</span> <span class="mv-w">already</span> <span class="mv-w">introduced.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드는</span> <span class="mv-w">이미</span> <span class="mv-w">소개된</span> <span class="mv-w">채</span> <span class="mv-w">도착합니다.</span></span>
+        </span>
       </div>
+      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>크리에이터 협업, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
-<section class="mv-str-pin" data-str-pin>
-  <div class="mv-str-sticky">
-    <div class="mv-str-inner">
-      <span class="mv-strengths-eyebrow">Software Engineering</span>
-      <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-field" data-set="s"></canvas></div>
-        <div class="mv-str-stage">
-          <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>서비스 기획</b> — 세상의 문제에서 출발합니다. 페인 포인트를 먼저 정의하고 기획을 시작합니다.</p>
-          <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>프로덕트 개발</b> — 상상 속 프로덕트를 가장 빠르게. 핵심 프로토타입을 며칠 만에 구현합니다.</p>
-          <p class="mv-str-item"><sup class="mv-strengths-num">03</sup><b>UX · UI</b> — 일관된 디자인 시스템으로 기획 의도와 사용자 경험을 함께 설계합니다.</p>
-        </div>
+
+<section class="mv-biz">
+  <span class="mv-biz-label">Architect</span>
+  <div class="mv-biz-row">
+    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="a"></canvas></div>
+    <div class="mv-biz-copy">
+      <sup class="mv-biz-num">02</sup>
+      <div class="mv-lens">
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">Structure</span> <span class="mv-w">is</span> <span class="mv-w">not</span> <span class="mv-w">a</span> <span class="mv-w">document</span> <span class="mv-w">you</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">구조는</span> <span class="mv-w">마지막에</span> <span class="mv-w">받아보는</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">receive</span> <span class="mv-w">at</span> <span class="mv-w">the</span> <span class="mv-w">end.</span> <span class="mv-w">It</span> <span class="mv-w">decides</span> <span class="mv-w">how</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">문서가</span> <span class="mv-w">아닙니다.</span> <span class="mv-w">그</span> <span class="mv-w">뒤의</span> <span class="mv-w">모든</span> <span class="mv-w">것이</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">fast</span> <span class="mv-w">everything</span> <span class="mv-w">after</span> <span class="mv-w">it</span> <span class="mv-w">can</span> <span class="mv-w">move.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">얼마나</span> <span class="mv-w">빨리</span> <span class="mv-w">움직일지를</span> <span class="mv-w">정합니다.</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">define</span> <span class="mv-w">the</span> <span class="mv-w">problem,</span> <span class="mv-w">then</span> <span class="mv-w">design</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">문제를</span> <span class="mv-w">정의하고,</span> <span class="mv-w">IT·제조·아트·</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">against</span> <span class="mv-w">a</span> <span class="mv-w">network</span> <span class="mv-w">that</span> <span class="mv-w">runs</span> <span class="mv-w">through</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">패션·뷰티를</span> <span class="mv-w">관통하는</span> <span class="mv-w">네트워크</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">IT,</span> <span class="mv-w">manufacturing,</span> <span class="mv-w">art,</span> <span class="mv-w">fashion</span> <span class="mv-w">and</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">위에서</span> <span class="mv-w">설계합니다.</span> <span class="mv-w">팀은</span> <span class="mv-w">보고서가</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">beauty</span> <span class="mv-w">—</span> <span class="mv-w">so</span> <span class="mv-w">a</span> <span class="mv-w">team</span> <span class="mv-w">leaves</span> <span class="mv-w">with</span> <span class="mv-w">a</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">아니라</span> <span class="mv-w">결정을</span> <span class="mv-w">들고</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">decision,</span> <span class="mv-w">not</span> <span class="mv-w">a</span> <span class="mv-w">deck.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">회의실을</span> <span class="mv-w">나갑니다.</span></span>
+        </span>
       </div>
+      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>비즈니스 컨설팅, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<section class="mv-biz">
+  <span class="mv-biz-label">Build</span>
+  <div class="mv-biz-row">
+    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="s"></canvas></div>
+    <div class="mv-biz-copy">
+      <sup class="mv-biz-num">03</sup>
+      <div class="mv-lens">
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">Most</span> <span class="mv-w">ideas</span> <span class="mv-w">die</span> <span class="mv-w">waiting</span> <span class="mv-w">to</span> <span class="mv-w">be</span> <span class="mv-w">seen.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">대부분의</span> <span class="mv-w">아이디어는</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">So</span> <span class="mv-w">we</span> <span class="mv-w">build</span> <span class="mv-w">the</span> <span class="mv-w">part</span> <span class="mv-w">that</span> <span class="mv-w">answers</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">보여지기를</span> <span class="mv-w">기다리다</span> <span class="mv-w">죽습니다.</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">the</span> <span class="mv-w">question</span> <span class="mv-w">first</span> <span class="mv-w">—</span> <span class="mv-w">a</span> <span class="mv-w">working</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">그래서</span> <span class="mv-w">질문에</span> <span class="mv-w">답하는</span> <span class="mv-w">부분을</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">prototype</span> <span class="mv-w">in</span> <span class="mv-w">days,</span> <span class="mv-w">not</span> <span class="mv-w">quarters,</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">먼저</span> <span class="mv-w">만듭니다.</span> <span class="mv-w">분기가</span> <span class="mv-w">아니라</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">with</span> <span class="mv-w">the</span> <span class="mv-w">interface</span> <span class="mv-w">designed</span> <span class="mv-w">beside</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">며칠</span> <span class="mv-w">만에</span> <span class="mv-w">동작하는</span> <span class="mv-w">프로토타입을,</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">it</span> <span class="mv-w">rather</span> <span class="mv-w">than</span> <span class="mv-w">after</span> <span class="mv-w">it.</span> <span class="mv-w">AI</span> <span class="mv-w">literacy</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">인터페이스는</span> <span class="mv-w">나중이</span> <span class="mv-w">아니라</span> <span class="mv-w">그</span> <span class="mv-w">옆에서</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">is</span> <span class="mv-w">not</span> <span class="mv-w">the</span> <span class="mv-w">product</span> <span class="mv-w">here.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">함께</span> <span class="mv-w">설계합니다.</span> <span class="mv-w">AI</span> <span class="mv-w">리터러시는</span></span>
+        </span>
+        <span class="mv-line">
+          <span class="mv-en-line"><span class="mv-w">It</span> <span class="mv-w">is</span> <span class="mv-w">the</span> <span class="mv-w">reason</span> <span class="mv-w">this</span> <span class="mv-w">is</span> <span class="mv-w">fast.</span></span>
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">상품이</span> <span class="mv-w">아니라</span> <span class="mv-w">속도의</span> <span class="mv-w">이유입니다.</span></span>
+        </span>
+      </div>
+      <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>소프트웨어 엔지니어링, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1554,30 +1657,27 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <div class="cd-orb" aria-hidden="true"></div>
 
 <script>
-/* strengths wheel-step carousel — DOWN-scroll captures a category with a gentle magnetic
-   SETTLE (no hard snap) and steps 01->02->03 one item per flick; UP-scroll is frictionless
-   (never captures, releases instantly). one flick = one item even on a hard flick / long
-   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slots — the hero's field, given a controlled silhouette ---------------------------
+/* ---- business-line objects — the hero's field, given a controlled silhouette --------------------
    Built only out of the hero's own primitives (warp / bloom / colormap / grain, straight from
-   HERO_FIELD). The slot supplies a DENSITY, exactly as the hero does: dense -> core, thin -> shoulder,
-   none -> true black, so the canvas leaves no rectangle and the object floats in the page's own black.
+   HERO_FIELD). Each slot supplies a DENSITY, exactly as the hero does: dense -> core, thin ->
+   shoulder, none -> true black, so the canvas leaves no rectangle and the object floats in the
+   page's own black.
 
    EVERYTHING THAT MOVES IS A DEVIATION FROM A FIXED SILHOUETTE, never the silhouette itself. uCalm
    scales those deviations to nothing, so hovering does not freeze the object mid-drift — it lets it
-   settle back into the exact shape it is supposed to be.
+   settle back into the exact shape it is meant to be.
 
-   BOTH SECTIONS NOW SPEAK ONE LANGUAGE: round bodies whose combination changes, summed into a single
-   field. Nothing is ever drawn between them. A link, a neck, a lens — those are not shapes, they are
-   what HAPPENS when two bodies are brought close enough, and letting the field say it is the whole
-   point. The sections differ in what they are made of, not in how they are made.
+   Nothing between two bodies is ever DRAWN. A bridge is not a shape, it is what happens when two
+   metaballs are close enough that their fields close over the gap. That single fact carries both of
+   the first two lines, and it is why they are the same function with different numbers:
 
-     Architecting (metaballs — bodies that actually merge)
-       01  two circles, apart, level with each other        문제 정의: the need, and its context
-       02  drawn close: a thin bridge appears in the gap     계획 설계: the plan is what forms between them
-       03  they arrive together, and become one running wave 실행 & 팔로업: it moves, and it repeats
-     Software Engineering (spheres — bodies that overlap)
-       three spheres, apart -> intersecting -> one mass. Densities SUM, so every overlap doubles and
-       the colormap turns it pink on its own. Integration is literally the heat.
+     CONNECT    the two never move. They cannot reach each other at this distance — and then a third
+                body appears in the gap, and now there is one chain. The creator IS the connection.
+     ARCHITECT  no third body. Instead the two close on each other until the field bridges by itself,
+                and then what they became runs as a wave.
+     BUILD      three spheres whose combination changes. Their densities SUM the way the hero sums
+                its two blooms, so every overlap doubles and turns pink on its own. Integration is
+                literally the heat.
    ---------------------------------------------------------------------------------------------- */
 (function(){
   function start(){
@@ -1591,18 +1691,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform float uTime;',
     'uniform float uAmp;',
     'uniform float uCalm;',                 /* 0 = alive, 1 = settled into the fixed silhouette */
-    'uniform float uLight;',                /* 1 = Architecting, on the light ramp; 0 = SE, on the heat ramp */
-    'uniform float uSE;',
-    'uniform vec3 uSpA;',                   /* SE: three spheres, x / y / radius */
+    'uniform float uLight;',                /* 1 = the light ramp; 0 = the page heat ramp */
+    'uniform float uSE;',                   /* 1 = spheres (BUILD); 0 = metaballs (CONNECT/ARCHITECT) */
+    'uniform vec3 uSpA;',                   /* BUILD: three spheres, x / y / radius */
     'uniform vec3 uSpB;',
     'uniform vec3 uSpC;',
-    'uniform float uSpread;',               /* Architecting: two bodies, this far apart, */
+    'uniform float uSpread;',               /* CONNECT/ARCHITECT: the outer pair, this far apart, */
     'uniform float uRadA;',                 /* this big, */
-    'uniform float uWave;',                 /* and this far into having become a wave. Lerped on the JS side, */
-    ''                                      /* so the bodies genuinely travel toward each other and merge. */
+    'uniform float uRadM;',                 /* a third body in the gap, this big (0 = absent), */
+    'uniform float uWave;',                 /* and this far into having become a wave. */
+    ''
   ].join('\n');
   var OBJ = [
-    /* a sphere with a boundary that breathes, carrying its own volume — Software Engineering */
+    '/* a sphere with a boundary that breathes, carrying its own volume — BUILD */',
     'float sph(vec2 q, vec2 c, float R){',
     '  float r = length(q - c) / R;',
     '  float body = 1.0 - smoothstep(0.78, 1.06, r);',
@@ -1610,21 +1711,22 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '  return body * (0.16 + 0.84 * vol);',
     '}',
     '/* a metaball: a body with an infinite tail, so two of them REACH for each other. This is the only',
-    '   reason the bridge in 02 can exist without being drawn. */',
+    '   reason a bridge can exist without anyone drawing one. */',
     'float mball(vec2 q, vec2 c, float r){',
     '  if(r < 0.0005) return 0.0;',
     '  vec2 v = q - c;',
-    '  return (r * r) / max(dot(v, v), r * r * 0.16);   /* capped: an uncapped 1/d^2 spikes at every centre, which is what turned the wave into a string of beads */',
+    '  return (r * r) / max(dot(v, v), r * r * 0.16);   /* capped: an uncapped 1/d^2 spikes at every centre */',
     '}',
-    'float architecting(vec2 q){',
-    '  /* 01 -> 02: two bodies, and nothing else. They travel toward each other and the field does the rest. */',
-    '  float m = mball(q, vec2(-uSpread, 0.0), uRadA) + mball(q, vec2(uSpread, 0.0), uRadA);',
+    'float bodies(vec2 q){',
+    '  float m = mball(q, vec2(-uSpread, 0.0), uRadA)',
+    '          + mball(q, vec2( uSpread, 0.0), uRadA)',
+    '          + mball(q, vec2( 0.0,     0.0), uRadM);   /* the one in the middle — present only for CONNECT */',
     '  float surf  = smoothstep(0.55, 1.45, m);      /* the surface. where two bodies both reach, it closes over. */',
     '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — volume, without every',
     '                                                   body centre becoming its own hot spot */',
     '  float body = surf * (0.72 + 0.28 * depth);',
     '  if(uWave < 0.002) return body;',
-    '  /* 03: the fused body runs. ONE analytic band, dense on its line and dispersing off it — built out of a',
+    '  /* the fused body runs. ONE analytic band, dense on its line and dispersing off it — built out of a',
     '     chain of separate bodies it read as a caterpillar, because a chain is exactly what it was. */',
     '  float t = q.x + 0.5;',
     '  float ph = uTime * 0.62;',
@@ -1642,7 +1744,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '  vec2 q = warp(vUv - 0.5, 0.052 * (1.0 - uCalm));   /* the hero\'s own warp — and it, too, is only a deviation */',
     '  float d = uSE > 0.5',
     '    ? sph(q, uSpA.xy, uSpA.z) + sph(q, uSpB.xy, uSpB.z) + sph(q, uSpC.xy, uSpC.z)',
-    '    : architecting(q);',
+    '    : bodies(q);',
     '  vec3 col = uLight > 0.5 ? colormapLight(d * uAmp) : colormap(d * uAmp);',
     '  vec2 fc = vUv * uRes;',
     '  float gA = hash(fc * 0.58);',
@@ -1656,15 +1758,20 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   ].join('\n');
   var FRAG = HEAD + FIELD + '\n' + OBJ;
 
-  /* Architecting — two bodies, closing. 01 and 02 are only ever those two travelling; nothing between them
-     is drawn, the field closes the gap by itself. At 03 they arrive at the same place and the wave takes over
-     from them, so the fusion IS the transition. */
-  var ARCH = [
-    { spread:0.290, rad:0.138, wave:0.0 },   /* 01  apart, level — the field between them reaches only 0.45, under the 0.55 the surface needs. No bridge is POSSIBLE. */
-    { spread:0.212, rad:0.150, wave:0.0 },   /* 02  drawn close: it reaches 1.00, just over — a thin bridge appears that nobody drew. Fusion, one step away. */
-    { spread:0.026, rad:0.132, wave:1.0 }    /* 03  the two arrive at the same place, and what they become is the wave */
+  /* CONNECT — the outer two never move, and at this distance their fields reach 0.35 between them:
+     under the 0.55 the surface needs, so they simply cannot touch. Only the body in the middle changes. */
+  var CONNECT = [
+    { spread:0.300, rad:0.125, mid:0.000, wave:0.0 },   /* 01  two, and a gap that nothing crosses */
+    { spread:0.300, rad:0.125, mid:0.022, wave:0.0 },   /* 02  someone appears in it — still too small to join anything */
+    { spread:0.300, rad:0.125, mid:0.105, wave:0.0 }    /* 03  and now the three are one chain. Nobody moved. */
   ];
-  /* Software Engineering — the same three spheres, recombined. x, y, radius. */
+  /* ARCHITECT — no third body. The two close on each other instead, and then run. */
+  var ARCH = [
+    { spread:0.290, rad:0.138, mid:0.0, wave:0.0 },     /* 01  apart — the field between them reaches only 0.45 */
+    { spread:0.212, rad:0.150, mid:0.0, wave:0.0 },     /* 02  drawn close: it reaches 1.00, just over — a bridge nobody drew */
+    { spread:0.026, rad:0.132, mid:0.0, wave:1.0 }      /* 03  the two arrive at the same place, and become the wave */
+  ];
+  /* BUILD — the same three spheres, recombined. x, y, radius. */
   var SE = [
     [[-0.100,-0.092, 0.212], [ 0.132, 0.110, 0.162], [-0.058, 0.152, 0.104]],  /* 01  apart, touching — distinct parts */
     [[-0.072,-0.048, 0.194], [ 0.082, 0.052, 0.178], [ 0.004, 0.130, 0.126]],  /* 02  slid together — intersections open up */
@@ -1684,18 +1791,20 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadA','uWave']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadA','uRadM','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
-    var se = cv.getAttribute('data-set')==='s';
-    gl.uniform1f(U.uSE,   se ? 1.0 : 0.0);
-    /* Architecting runs the SAME ramp in light instead of heat, and runs it to the top — thinking, before
-       anything is made. Software Engineering stays on the page's heat, held so that a lone sphere is warm
-       and only an overlap is hot. */
+    var set = cv.getAttribute('data-set') || 'a';
+    var se = set === 's';
+    gl.uniform1f(U.uSE, se ? 1.0 : 0.0);
+    /* CONNECT and ARCHITECT are the thinking half of the work, and thinking happens before anything is
+       made, so they run the same ramp in light. BUILD makes, and its overlaps reach the page's heat. */
     gl.uniform1f(U.uLight, se ? 0.0 : 1.0);
     gl.uniform1f(U.uAmp,   se ? 0.74 : 1.0);
     gl.uniform1f(U.uCalm, 0.0);
-    return {gl:gl, U:U, se:se, active:0, calm:0, want:0,
-            from:(se?SE[0]:ARCH[0]), to:(se?SE[0]:ARCH[0]), cur:(se?SE[0]:ARCH[0]), mix:1, t0:0};
+    var states = se ? SE : (set === 'c' ? CONNECT : ARCH);
+    return {gl:gl, U:U, se:se, states:states, calm:0, want:0,
+            from:states[0], to:states[0], cur:states[0], mix:1, t0:0,
+            idx:0, dir:1, holdUntil:0};
   }
 
   function lp(a,b,t){ return a+(b-a)*t; }
@@ -1703,27 +1812,22 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   function cl(t){ return Math.max(0, Math.min(1, t)); }
   function blendSE(a,b,t){ return [0,1,2].map(function(i){ return [lp(a[i][0],b[i][0],t), lp(a[i][1],b[i][1],t), lp(a[i][2],b[i][2],t)]; }); }
   /* The two bodies have to ARRIVE before the wave can take over from them. Run both at once and you get
-     a blob and a wave dissolving through each other — which is exactly why 02 -> 03 felt abrupt. So the
-     halves are staggered with a beat between them: the bodies finish closing, there is a moment where
-     they are simply one mass, and only then does that mass start to run. Reversed, the wave settles back
-     into the mass first, and the mass parts afterwards. */
-  function blendArch(a,b,t){
+     a blob and a wave dissolving through each other. So the halves are staggered with a beat between
+     them: the bodies finish closing, there is a moment where they are simply one mass, and only then
+     does that mass start to run. Reversed, the wave settles back into the mass first. */
+  function blendBod(a,b,t){
     var into = b.wave > a.wave;
-    var tp = ez(cl(into ? t / 0.52 : (t - 0.46) / 0.54));   /* the bodies travel */
-    var tw = ez(cl(into ? (t - 0.46) / 0.54 : t / 0.52));   /* the wave takes over */
-    return { spread:lp(a.spread,b.spread,tp), rad:lp(a.rad,b.rad,tp), wave:lp(a.wave,b.wave,tw) };
+    var tp = ez(cl(into ? t / 0.52 : (t - 0.46) / 0.54));
+    var tw = ez(cl(into ? (t - 0.46) / 0.54 : t / 0.52));
+    if(a.wave === b.wave){ tp = ez(t); tw = tp; }        /* CONNECT never waves, so it just eases */
+    return { spread:lp(a.spread,b.spread,tp), rad:lp(a.rad,b.rad,tp),
+             mid:lp(a.mid,b.mid,tp), wave:lp(a.wave,b.wave,tw) };
   }
 
   var orbs=[];
   [].slice.call(document.querySelectorAll('canvas.orb-field')).forEach(function(cv){
     var r=build(cv); if(!r) return;
-    r.cv=cv; r.host=cv.closest('.mv-strengths-orb'); orbs.push(r);
-    r.host.__setForm=function(i){
-      var k=Math.max(0,Math.min(2,i)); r.active=k;
-      var want=(r.se?SE:ARCH)[k];
-      if(want===r.to) return;
-      r.from=r.cur; r.to=want; r.mix=0; r.t0=performance.now();   /* the bodies travel — nothing cross-fades */
-    };
+    r.cv=cv; r.host=cv.closest('.mv-biz-orb'); orbs.push(r);
   });
   if(!orbs.length) return;
 
@@ -1734,9 +1838,10 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     return px;
   }
   var vis=new WeakMap();
-  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis.set(e.target, e.isIntersecting); }); },{rootMargin:'280px'});
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis.set(e.target, e.isIntersecting); }); },{rootMargin:'240px'});
   orbs.forEach(function(o){ vis.set(o.host,false); io.observe(o.host); });
 
+  var MORPH = 1600, HOLD = 2100;
   var T0=performance.now(), prev=T0;
   function frame(now){
     var dt=Math.min(0.05,(now-prev)/1000); prev=now;
@@ -1746,11 +1851,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       var px=size(o), gl=o.gl;
       o.calm += (o.want - o.calm) * Math.min(1, dt * 5.2);
       gl.uniform1f(o.U.uCalm, o.calm);
-      if(o.mix<1){
-        /* Architecting gets longer: it has two halves to get through, and a beat to hold between them */
-        o.mix=Math.min(1,(now-o.t0)/(o.se ? 1000 : 1600));
-        o.cur = o.se ? blendSE(o.from,o.to,ez(o.mix)) : blendArch(o.from,o.to,o.mix);
+
+      if(o.mix < 1){
+        o.mix = Math.min(1,(now-o.t0)/(o.se ? 1000 : MORPH));
+        o.cur = o.se ? blendSE(o.from,o.to,ez(o.mix)) : blendBod(o.from,o.to,o.mix);
+        if(o.mix >= 1) o.holdUntil = now + HOLD;
+      } else if(now >= o.holdUntil){
+        /* the loop breathes back and forth rather than snapping 03 -> 01: the story reads in both
+           directions, and a hard cut back to the start would be the one edit nobody asked for. */
+        if(o.idx === o.states.length-1) o.dir = -1; else if(o.idx === 0) o.dir = 1;
+        o.idx += o.dir;
+        o.from = o.cur; o.to = o.states[o.idx]; o.mix = 0; o.t0 = now;
       }
+
       if(o.se){
         gl.uniform3f(o.U.uSpA, o.cur[0][0], o.cur[0][1], o.cur[0][2]);
         gl.uniform3f(o.U.uSpB, o.cur[1][0], o.cur[1][1], o.cur[1][2]);
@@ -1758,6 +1871,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       } else {
         gl.uniform1f(o.U.uSpread, o.cur.spread);
         gl.uniform1f(o.U.uRadA, o.cur.rad);
+        gl.uniform1f(o.U.uRadM, o.cur.mid);
         gl.uniform1f(o.U.uWave, o.cur.wave);
       }
       gl.uniform2f(o.U.uRes,px,px);
@@ -1766,10 +1880,11 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     }
     requestAnimationFrame(frame);
   }
+  orbs.forEach(function(o){ o.holdUntil = T0 + HOLD; });
   requestAnimationFrame(frame);
 
-  /* Hovering does not move the object and does not jump it to another step. It stills it: the drift and
-     the flow are only ever deviations, so taking them to zero leaves the shape it was always meant to be. */
+  /* Hovering does not move the object and does not jump it anywhere. It stills it: the drift and the
+     flow are only ever deviations, so taking them to zero leaves the shape it was always meant to be. */
   if(!matchMedia('(pointer:coarse)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     orbs.forEach(function(o){
       o.host.addEventListener('mouseenter', function(){ o.want=1; });
@@ -1781,96 +1896,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 })();
 
 
-/* strengths wheel-step module (desktop only) */
-(function(){
-  if(matchMedia('(prefers-reduced-motion:reduce)').matches || matchMedia('(pointer:coarse)').matches) return;
-  var secs = [].slice.call(document.querySelectorAll('[data-str-pin]')).map(function(sec){
-    var items=[].slice.call(sec.querySelectorAll('.mv-str-item'));
-    var orbEl=sec.querySelector('.mv-strengths-orb');
-    items.forEach(function(it,i){
-      it.style.opacity = i===0?'1':'0';
-      it.style.transform = i===0?'none':'translate3d(0,26px,0)';
-      it.style.transition = 'opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
-    });
-    if(orbEl && orbEl.__setForm) orbEl.__setForm(0);
-    return { sec:sec, items:items, orbEl:orbEl, idx:0 };
-  });
-  if(!secs.length) return;
-  window.__mvStrLock = false;
 
-  var SETTLE_MS = 420, IDLE_GAP = 130;               /* ms of wheel-quiet that ends one gesture */
-  var engaged=null, blocked=null, settling=false, settleRAF=0;
-  var canStep=true, idleT=0, lastY=window.pageYOffset;
-  function band(){ return window.innerHeight*0.24; }
-  function absTop(sec){ var y=0,n=sec; while(n){ y+=n.offsetTop||0; n=n.offsetParent; } return y; }
-  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
-  function render(S){
-    for(var i=0;i<S.items.length;i++){ var on=i===S.idx;
-      S.items[i].style.opacity = on?'1':'0';
-      S.items[i].style.transform = on?'none':('translate3d(0,'+(i<S.idx?-26:26)+'px,0)');
-      }
-    if(S.orbEl && S.orbEl.__setForm) S.orbEl.__setForm(S.idx);   /* the object morphs to the active item */
-  }
-  function armIdle(){ if(idleT) clearTimeout(idleT); idleT = setTimeout(function(){ canStep = true; }, IDLE_GAP); }
-  /* gentle eased glide that fills the viewport with the captured category — replaces the instant "턱" snap.
-     while it runs, __mvStrLock keeps the smooth-scroll paused so this is the SOLE scroll driver (no fight). */
-  function settleTo(destY){
-    if(settleRAF){ cancelAnimationFrame(settleRAF); settleRAF = 0; }
-    var startY = window.pageYOffset, dist = destY - startY, t0 = 0;
-    settling = true;
-    if(Math.abs(dist) < 2){ window.scrollTo(0, destY); settling = false; return; }
-    function step(ts){
-      if(!t0) t0 = ts;
-      var p = Math.min(1, (ts - t0) / SETTLE_MS);
-      window.scrollTo(0, startY + dist * easeOutCubic(p));
-      if(p < 1){ settleRAF = requestAnimationFrame(step); } else { settleRAF = 0; settling = false; }
-    }
-    settleRAF = requestAnimationFrame(step);
-  }
-  function engage(S){
-    engaged = S; S.idx = 0; render(S);
-    window.__mvStrLock = true;                        /* freeze the page: settle + item-stepping own the scroll */
-    canStep = false; armIdle();                       /* the entering flick's momentum is ONE gesture — its tail must not auto-step */
-    settleTo(absTop(S.sec));
-  }
-  function release(){
-    if(settleRAF){ cancelAnimationFrame(settleRAF); settleRAF = 0; }
-    settling = false; window.__mvStrLock = false; blocked = engaged; engaged = null; lastY = window.pageYOffset;
-  }
-  /* CAPTURE on DOWN-scroll only (UP never captures → frictionless up). Also auto-release if the captured
-     section is scrolled out of the band by any non-wheel means (keyboard, scrollbar) so the lock can't stick. */
-  addEventListener('scroll', function(){
-    var y = window.pageYOffset, dir = y>=lastY?1:-1; lastY = y;
-    var b = band();
-    if(engaged){
-      var er = engaged.sec.getBoundingClientRect();
-      if(!(er.top>-b && er.top<b)) release();
-      return;
-    }
-    if(dir < 0) return;                               /* UP = no capture */
-    if(blocked){ var br = blocked.sec.getBoundingClientRect(); if(!(br.top>-b && br.top<b)) blocked = null; }
-    for(var s=0;s<secs.length;s++){
-      if(secs[s]===blocked) continue;
-      var r = secs[s].sec.getBoundingClientRect();
-      if(r.top>-b && r.top<b){ engage(secs[s]); return; }
-    }
-  }, {passive:true});
-  /* STEP while captured. UP always wins first (zero resistance): cancel the settle, unlock, and let the
-     wheel bubble to the smooth-scroll so it rises freely. DOWN advances exactly ONE item per gesture — a
-     gesture = a flick plus its momentum tail, ended by IDLE_GAP of wheel-quiet, so a hard flick or a long
-     trackpad tail still yields one step. Past the last item, the releasing flick scrolls the page onward. */
-  addEventListener('wheel', function(e){
-    if(!engaged || e.ctrlKey || !e.deltaY) return;
-    if(e.deltaY < 0){ release(); return; }            /* UP: frictionless — release + let it bubble up */
-    var fresh = canStep && !settling;
-    canStep = false; armIdle();                       /* keep the gesture "closed" until wheels go quiet */
-    if(!fresh){ e.preventDefault(); e.stopImmediatePropagation(); return; }   /* settle window or same-gesture tail: swallow */
-    var nx = engaged.idx + 1;
-    if(nx >= engaged.items.length){ release(); return; }   /* past last: release + let THIS flick scroll onward (not prevented) */
-    e.preventDefault(); e.stopImmediatePropagation();
-    engaged.idx = nx; render(engaged);
-  }, {capture:true, passive:false});
-})();
 </script>
 
 <script>
@@ -2436,14 +2462,9 @@ void main(){
   });
   var NL = mlines.length || 1;
   var settle = [].slice.call(document.querySelectorAll('[data-mv-settle-x]'));
-  var strPins = [].slice.call(document.querySelectorAll('[data-str-pin]')).map(function(sec){
-    var items=[].slice.call(sec.querySelectorAll('.mv-str-item'));
-    items.forEach(function(it,ix){ it.style.opacity = ix===0?'1':'0'; });
-    return { sec:sec, items:items };
-  });
   var para = [].slice.call(document.querySelectorAll('[data-mv-speed]'));
   var horiz = [].slice.call(document.querySelectorAll('[data-mv-x]'));
-  if(!mlines.length && !para.length && !horiz.length && !settle.length && !strPins.length) return;
+  if(!mlines.length && !para.length && !horiz.length && !settle.length) return;
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
   var ticking = false;
   function update(){
@@ -2511,6 +2532,59 @@ void main(){
     ents.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   els.forEach(function(e){ io.observe(e); });
+})();
+</script>
+
+<script>
+/* ---- the lens (돋보기) ---------------------------------------------------------------------------
+   Hovering a claim turns a BAND of its lines Korean, and the band follows the pointer down the block.
+   A band and not a circle: a circle cuts words in half, and the whole point of this is to be READ.
+   Each .mv-line already holds its English and its Korean in ONE grid cell, so a line is only ever one
+   language or the other — there is no way for the two to smear together. Roughly four lines are lit at
+   once, which is a thought, not a word.
+   The scroll-driven EN->KO loop only ever touches `.mv-fill .mv-line`, so these blocks are ours alone.
+   ------------------------------------------------------------------------------------------------ */
+(function(){
+  var blocks = [].slice.call(document.querySelectorAll('.mv-lens'));
+  if(!blocks.length) return;
+  var coarse = matchMedia('(pointer:coarse)').matches;
+  var still  = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  blocks.forEach(function(b){
+    var lines = [].slice.call(b.querySelectorAll('.mv-line')).map(function(L){
+      return { el:L,
+               en:[].slice.call(L.querySelectorAll('.mv-en-line .mv-w')),
+               ko:[].slice.call(L.querySelectorAll('.mv-ko-line .mv-w')),
+               on:null };
+    });
+    if(!lines.length) return;
+
+    function set(L, on){
+      if(L.on === on) return;
+      L.on = on;
+      for(var i=0;i<L.en.length;i++) L.en[i].style.opacity = on ? '0' : '1';
+      for(var j=0;j<L.ko.length;j++) L.ko[j].style.opacity = on ? '1' : '0';
+    }
+    function all(on){ lines.forEach(function(L){ set(L, on); }); }
+
+    /* no pointer, or the reader asked for no motion: give them the Korean outright rather than a
+       reveal they can never trigger. */
+    if(coarse || still){ all(true); return; }
+    all(false);
+
+    /* Straight through, no rAF latch. Measuring a handful of line boxes costs less than scheduling a
+       frame to do it, and mousemove is already delivered at frame rate — whereas a `pending` flag that
+       is cleared inside a rAF callback stops clearing the moment rAF stops running, and the lens dies
+       with it. */
+    b.addEventListener('mousemove', function(e){
+      var band = (lines[0].el.getBoundingClientRect().height || 40) * 1.9;   /* ~4 lines lit: a thought, not a word */
+      for(var i=0;i<lines.length;i++){
+        var r = lines[i].el.getBoundingClientRect();
+        set(lines[i], Math.abs((r.top + r.height * 0.5) - e.clientY) <= band);
+      }
+    });
+    b.addEventListener('mouseleave', function(){ all(false); });
+  });
 })();
 </script>
 </body>
