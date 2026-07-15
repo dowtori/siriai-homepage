@@ -992,14 +992,24 @@ body.ready .mv-contact-footer {
    1.98vw / weight 300 / line-height 1.581 / no tracking.
    These used to be two pinned 100vh modules stepping 01->02->03. They said what every agency says, and
    said it twice in the same shape — so the second one read as an echo rather than as information. */
+/* Each line of work is a TRACK, and its content STICKS inside it: the area holds you while the object
+   walks 01 -> 02 -> 03, then lets you go. That hold is the whole point — an object that merely scrubs
+   past as the section slides away is the other option wearing this one's name.
+   position:sticky and nothing else. The old module did this by capturing wheel events and freezing the
+   page behind a lock, which is why it fought the smooth-scroll; here the browser does the holding, the
+   reader is never trapped, and no event is taken from anyone. (Safe: this page's smooth-scroll drives
+   window.scrollTo, real scroll — a transform-based scroller would have broken sticky outright.) */
 .mv-biz{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
-  padding:clamp(54px,7vh,96px) var(--pad-x) clamp(62px,8vh,108px)}
+  height:250vh;padding:0 var(--pad-x)}
+.mv-biz-hold{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(54px,7vh,96px) 0}
 /* The first line of work sat box-to-box against the Manifesto — 0px between them — so the reader was
    asked to change subject with no beat at all. Named by what it actually is (the one after the
    Manifesto) rather than :first-of-type, which matches the first SECTION among its siblings and so
-   matched nothing here: several sections come before these. */
-.mv-manifesto + .mv-biz{padding-top:clamp(110px,15vh,200px)}
+   matched nothing here: several sections come before these. A margin, not padding: the track's padding
+   is spoken for by the sticky hold inside it. */
+.mv-manifesto + .mv-biz{margin-top:clamp(110px,15vh,200px)}
 /* monopo rules every item off at the content width (section::before, 1px, gutter to gutter). This page
    had nothing, which is why the sections read as floating in an empty screen. */
 .mv-biz::before{content:'';position:absolute;top:0;left:var(--pad-x);right:var(--pad-x);height:1px;
@@ -1029,6 +1039,10 @@ body.ready .mv-contact-footer {
 .mv-biz-cta svg{width:1em;height:1em;transition:transform .3s cubic-bezier(.22,1,.36,1)}
 .mv-biz-cta:hover svg{transform:translate3d(.16em,-.16em,0)}
 @media (max-width:768px){
+  /* no pinning on a phone: a 250vh track on a short screen is a hostage situation, and the object
+     falls back to reading the section's own position instead. */
+  .mv-biz{height:auto;padding:clamp(54px,7vh,96px) var(--pad-x)}
+  .mv-biz-hold{position:static;height:auto;padding:0}
   .mv-biz-row{grid-template-columns:1fr;gap:clamp(22px,4vw,34px)}
   .mv-biz-orb{max-width:210px;justify-self:start}
   .mv-biz-num{left:0;top:-1.6em}
@@ -1248,6 +1262,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <div class="mv-works-roles">Creative Direction, Video Production</div>
     </a>
   </div>
+  </div>
 </section>
 
 <!-- CLIENTS — They trust us -->
@@ -1258,6 +1273,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-clients-track">
       <span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>Neverust</span><span>QUADTHERA</span><span>TOOMUCHTAX</span><span>TOCOBO</span><span>HARIM</span><span>OJOS</span><span>GANGNEUNG CITY</span><span>NONGSHIM</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">Neverust</span><span aria-hidden="true">QUADTHERA</span><span aria-hidden="true">TOOMUCHTAX</span><span aria-hidden="true">TOCOBO</span><span aria-hidden="true">HARIM</span><span aria-hidden="true">OJOS</span><span aria-hidden="true">GANGNEUNG CITY</span><span aria-hidden="true">NONGSHIM</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1301,13 +1317,15 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       </span>
     </h2>
   </div>
+  </div>
 </section>
 
 <!-- BUSINESS LINES — the three the real site already names (01 크리에이터 협업 / 02 비즈니스 컨설팅 /
      03 소프트웨어 엔지니어링). One looping object and one long claim each, instead of a three-step process
      told twice. The right-hand copy is English at volume; hovering it turns a band of lines Korean. -->
 <section class="mv-biz">
-  <span class="mv-biz-label">Connect</span>
+  <div class="mv-biz-hold">
+    <span class="mv-biz-label">Connect</span>
   <div class="mv-biz-row">
     <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="c"></canvas></div>
     <div class="mv-biz-copy">
@@ -1345,10 +1363,12 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>크리에이터 협업, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
+  </div>
 </section>
 
 <section class="mv-biz">
-  <span class="mv-biz-label">Architect</span>
+  <div class="mv-biz-hold">
+    <span class="mv-biz-label">Architect</span>
   <div class="mv-biz-row">
     <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="a"></canvas></div>
     <div class="mv-biz-copy">
@@ -1390,10 +1410,12 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>비즈니스 컨설팅, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
+  </div>
 </section>
 
 <section class="mv-biz">
-  <span class="mv-biz-label">Build</span>
+  <div class="mv-biz-hold">
+    <span class="mv-biz-label">Build</span>
   <div class="mv-biz-row">
     <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="s"></canvas></div>
     <div class="mv-biz-copy">
@@ -1435,6 +1457,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>소프트웨어 엔지니어링, 사업소개서에서</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- TRUSTED BY (relocated here) — big heading + big brand marquee (brand font = former Saigon-title scale) -->
@@ -1446,6 +1469,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>Neverust</span><span>QUADTHERA</span><span>TOOMUCHTAX</span><span>TOCOBO</span><span>HARIM</span><span>OJOS</span><span>GANGNEUNG CITY</span><span>NONGSHIM</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">Neverust</span><span aria-hidden="true">QUADTHERA</span><span aria-hidden="true">TOOMUCHTAX</span><span aria-hidden="true">TOCOBO</span><span aria-hidden="true">HARIM</span><span aria-hidden="true">OJOS</span><span aria-hidden="true">GANGNEUNG CITY</span><span aria-hidden="true">NONGSHIM</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1493,6 +1517,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <div class="mv-saigon-souls-media-label">siriai</div>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1571,6 +1596,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       </div>
     </article>
   </div>
+  </div>
 </section>
 
 <!-- CONTACT -->
@@ -1593,6 +1619,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <span>© monopo saigon</span>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1656,6 +1683,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       <figure class="p"><img src="assets/creator/FASHION/8DIVISION/INNIR.jpg" alt="" loading="lazy"></figure>
       <figure class="l"><img src="assets/creator/FASHION/8DIVISION/Store.jpg" alt="" loading="lazy"></figure>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1879,7 +1907,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   var orbs=[];
   [].slice.call(document.querySelectorAll('canvas.orb-field')).forEach(function(cv){
     var r=build(cv); if(!r) return;
-    r.cv=cv; r.host=cv.closest('.mv-biz-orb'); orbs.push(r);
+    r.cv=cv; r.host=cv.closest('.mv-biz-orb'); r.sec=cv.closest('.mv-biz'); orbs.push(r);
   });
   if(!orbs.length) return;
 
@@ -1893,16 +1921,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis.set(e.target, e.isIntersecting); }); },{rootMargin:'240px'});
   orbs.forEach(function(o){ vis.set(o.host,false); io.observe(o.host); });
 
-  /* The story used to run on a timer: 7.4s from 01 to 03, in a section a reader passes in about 1.9s.
-     An image on a clock and a reader on a scrollbar were never going to agree — most people saw one
-     state and left. So the state IS the scroll position now. Scroll fast and it plays fast; stop and
-     it waits for you; it cannot be missed, because it is not running anywhere. And it costs nothing:
-     no pinning, no wheel-jacking, no extra page height — the things that made this heavy before. */
-  function progress(host){
-    var r = host.getBoundingClientRect();
+  /* The story used to run on a timer: 7.4s from 01 to 03, in a section a reader passed in about 1.9s.
+     An image on a clock and a reader on a scrollbar were never going to agree. So the state IS the
+     scroll now — and the section HOLDS while it plays, which is the half of this that matters. The
+     track is 250vh and its content sticks, so progress is simply how far the track has been pulled
+     through: 0 as it locks, 1 as it lets go. Scroll fast and it plays fast, stop and it waits, and it
+     cannot be missed because the area does not leave until the story is told. */
+  function progress(sec){
+    var r = sec.getBoundingClientRect();
+    var span = r.height - window.innerHeight;    /* the distance the content stays stuck for */
+    if(span > 40) return cl(-r.top / span);
+    /* not pinned (phone, or a viewport taller than the track): read the section's own position instead */
     var mid = r.top + r.height * 0.5;
-    var p = 1.0 - mid / window.innerHeight;      /* 0 as it enters at the bottom, 1 as it leaves at the top */
-    return cl((p - 0.14) / 0.66);                /* the band where it is actually being looked at */
+    return cl(((1.0 - mid / window.innerHeight) - 0.14) / 0.66);
   }
   var T0=performance.now(), prev=T0;
   function frame(now){
@@ -1915,7 +1946,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       gl.uniform1f(o.U.uCalm, o.calm);
 
       /* walk the states by scroll position: 0 -> 01, 0.5 -> 02, 1 -> 03, blending across each leg */
-      var f = progress(o.host) * (o.states.length - 1);
+      var f = progress(o.sec) * (o.states.length - 1);
       var i0 = Math.min(o.states.length - 2, Math.floor(f)), t = cl(f - i0);
       o.cur = o.se ? blendSE(o.states[i0], o.states[i0+1], ez(t))
                    : blendBod(o.states[i0], o.states[i0+1], t);
@@ -1969,7 +2000,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   const EASE = 0.07;                 // glide strength (bigger = snappier, smaller = longer pull)
   let target = scrollY, current = target, raf = 0, active = false;
   function loop(){
-    if(window.__mvStrLock){ active = false; raf = 0; return; }   /* paused while a strengths category is captured */
     current += (target - current) * EASE;
     if(Math.abs(target - current) < 0.4){ current = target; window.scrollTo(0, current); active = false; raf = 0; return; }
     window.scrollTo(0, current);
@@ -1978,7 +2008,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   function kick(){ active = true; if(!raf) raf = requestAnimationFrame(loop); }
   addEventListener('wheel', e => {
     if(e.ctrlKey) return;            // let pinch-zoom pass through
-    if(window.__mvStrLock){ e.preventDefault(); return; }   // strengths captured -> ignore here
     e.preventDefault();
     let dy = e.deltaY;
     if(e.deltaMode === 1) dy *= 16;               // lines -> px (Firefox et al.)
@@ -1987,7 +2016,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     target = Math.max(0, Math.min(max, target + dy));
     kick();
   }, {passive:false});
-  addEventListener('scroll', () => { if(!active || window.__mvStrLock) target = current = scrollY; }, {passive:true});
+  addEventListener('scroll', () => { if(!active) target = current = scrollY; }, {passive:true});
   addEventListener('resize', () => { target = current = scrollY; });
 })();
 </script>
