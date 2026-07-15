@@ -1568,7 +1568,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
      Architecting (metaballs — bodies that actually merge)
        01  two circles, apart, level with each other        문제 정의: the need, and its context
        02  drawn close: a thin bridge appears in the gap     계획 설계: the plan is what forms between them
-       03  they fuse, and the fused thing runs as a wave     실행 & 팔로업: it moves, and it repeats
+       03  they arrive together, and become one running wave 실행 & 팔로업: it moves, and it repeats
      Software Engineering (spheres — bodies that overlap)
        three spheres, apart -> intersecting -> one mass. Densities SUM, so every overlap doubles and
        the colormap turns it pink on its own. Integration is literally the heat.
@@ -1590,10 +1590,10 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform vec3 uSpA;',                   /* SE: three spheres, x / y / radius */
     'uniform vec3 uSpB;',
     'uniform vec3 uSpC;',
-    'uniform float uRad[7];',               /* Architecting: seven metaballs on a line — radius each, */
-    'uniform float uSpread;',               /* how far the line reaches, */
-    'uniform float uWav;',                  /* and how hard it waves. All lerped on the JS side, so the */
-    ''                                      /* bodies genuinely travel, meet and merge. */
+    'uniform float uSpread;',               /* Architecting: two bodies, this far apart, */
+    'uniform float uRadA;',                 /* this big, */
+    'uniform float uWave;',                 /* and this far into having become a wave. Lerped on the JS side, */
+    ''                                      /* so the bodies genuinely travel toward each other and merge. */
   ].join('\n');
   var OBJ = [
     /* a sphere with a boundary that breathes, carrying its own volume — Software Engineering */
@@ -1611,18 +1611,26 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '  return (r * r) / max(dot(v, v), r * r * 0.16);   /* capped: an uncapped 1/d^2 spikes at every centre, which is what turned the wave into a string of beads */',
     '}',
     'float architecting(vec2 q){',
-    '  float m = 0.0;',
-    '  for(int i = 0; i < 7; i++){',
-    '    float f = float(i) / 6.0;',
-    '    float x = mix(-uSpread, uSpread, f);',
-    '    float base = sin(float(i) * 1.15);                                   /* THE fixed wave */',
-    '    float flow = sin(float(i) * 0.95 + uTime * 0.80) * 0.28 * (1.0 - uCalm);   /* only ever a deviation from it */',
-    '    m += mball(q, vec2(x, uWav * (base + flow)), uRad[i]);',
-    '  }',
+    '  /* 01 -> 02: two bodies, and nothing else. They travel toward each other and the field does the rest. */',
+    '  float m = mball(q, vec2(-uSpread, 0.0), uRadA) + mball(q, vec2(uSpread, 0.0), uRadA);',
     '  float surf  = smoothstep(0.55, 1.45, m);      /* the surface. where two bodies both reach, it closes over. */',
-    '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — enough for volume, not so much',
-    '                                                   that every body centre becomes its own hot spot */',
-    '  return surf * (0.72 + 0.28 * depth);',
+    '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — volume, without every',
+    '                                                   body centre becoming its own hot spot */',
+    '  float body = surf * (0.72 + 0.28 * depth);',
+    '  if(uWave < 0.002) return body;',
+    '  /* 03: the fused body runs. ONE analytic band, dense on its line and dispersing off it — built out of a',
+    '     chain of separate bodies it read as a caterpillar, because a chain is exactly what it was. */',
+    '  float t = q.x + 0.5;',
+    '  float ph = uTime * 0.62;',
+    '  float env = sin(t * 3.14159);                                  /* dies at both ends, so it never hits the edge */',
+    '  float base = sin(t * 6.28318 * 1.55) * 0.150;                  /* THE fixed silhouette */',
+    '  float flow = (sin(t * 6.28318 * 2.70 + ph * 1.7) * 0.062',
+    '             +  sin(t * 6.28318 * 1.05 - ph * 1.1) * 0.050)',
+    '             * (1.0 - uCalm);                                    /* ...and this is only ever a deviation from it */',
+    '  float sw = (base + flow) * env * 1.16;',
+    '  float e = (q.y - sw) / 0.082;',
+    '  float wave = exp(-e * e) * smoothstep(0.0, 0.11, t) * (1.0 - smoothstep(0.90, 1.0, t));',
+    '  return mix(body, wave, uWave);',
     '}',
     'void main(){',
     '  vec2 q = warp(vUv - 0.5, 0.052 * (1.0 - uCalm));   /* the hero\'s own warp — and it, too, is only a deviation */',
@@ -1642,12 +1650,13 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   ].join('\n');
   var FRAG = HEAD + FIELD + '\n' + OBJ;
 
-  /* Architecting — one line of seven bodies. At 01 and 02 only the two ends exist; the middle five are
-     nothing at all. They only grow when the two ends have already met, and what they grow into is the wave. */
+  /* Architecting — two bodies, closing. 01 and 02 are only ever those two travelling; nothing between them
+     is drawn, the field closes the gap by itself. At 03 they arrive at the same place and the wave takes over
+     from them, so the fusion IS the transition. */
   var ARCH = [
-    { spread:0.290, wav:0.000, rad:[0.138, 0,     0,     0,     0,     0,     0.138] },  /* 01  apart, level — at this distance the field between them reaches only 0.45, under the 0.55 the surface needs. No bridge is POSSIBLE. */
-    { spread:0.212, wav:0.000, rad:[0.150, 0,     0,     0,     0,     0,     0.150] },  /* 02  drawn close: now it reaches 1.00, just over — a thin bridge appears that nobody drew */
-    { spread:0.335, wav:0.118, rad:[0.076, 0.084, 0.086, 0.088, 0.086, 0.084, 0.076] }   /* 03  fused, and running — radii sized so the chain stays closed even at the wave's steepest */
+    { spread:0.290, rad:0.138, wave:0.0 },   /* 01  apart, level — the field between them reaches only 0.45, under the 0.55 the surface needs. No bridge is POSSIBLE. */
+    { spread:0.212, rad:0.150, wave:0.0 },   /* 02  drawn close: it reaches 1.00, just over — a thin bridge appears that nobody drew. Fusion, one step away. */
+    { spread:0.026, rad:0.132, wave:1.0 }    /* 03  the two arrive at the same place, and what they become is the wave */
   ];
   /* Software Engineering — the same three spheres, recombined. x, y, radius. */
   var SE = [
@@ -1669,9 +1678,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uWav']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadA','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
-    U.uRad=[]; for(var i=0;i<7;i++) U.uRad.push(gl.getUniformLocation(pr,'uRad['+i+']'));
     var se = cv.getAttribute('data-set')==='s';
     gl.uniform1f(U.uSE,   se ? 1.0 : 0.0);
     /* Architecting runs the SAME ramp in light instead of heat, and runs it to the top — thinking, before
@@ -1687,8 +1695,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   function lp(a,b,t){ return a+(b-a)*t; }
   function blendSE(a,b,t){ return [0,1,2].map(function(i){ return [lp(a[i][0],b[i][0],t), lp(a[i][1],b[i][1],t), lp(a[i][2],b[i][2],t)]; }); }
   function blendArch(a,b,t){
-    return { spread:lp(a.spread,b.spread,t), wav:lp(a.wav,b.wav,t),
-             rad:a.rad.map(function(r,i){ return lp(r,b.rad[i],t); }) };
+    return { spread:lp(a.spread,b.spread,t), rad:lp(a.rad,b.rad,t), wave:lp(a.wave,b.wave,t) };
   }
 
   var orbs=[];
@@ -1733,8 +1740,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         gl.uniform3f(o.U.uSpC, o.cur[2][0], o.cur[2][1], o.cur[2][2]);
       } else {
         gl.uniform1f(o.U.uSpread, o.cur.spread);
-        gl.uniform1f(o.U.uWav, o.cur.wav);
-        for(var i=0;i<7;i++) gl.uniform1f(o.U.uRad[i], o.cur.rad[i]);
+        gl.uniform1f(o.U.uRadA, o.cur.rad);
+        gl.uniform1f(o.U.uWave, o.cur.wave);
       }
       gl.uniform2f(o.U.uRes,px,px);
       gl.uniform1f(o.U.uTime,(now-T0)/1000);
