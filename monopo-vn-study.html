@@ -1677,11 +1677,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
    metaballs are close enough that their fields close over the gap. That single fact carries both of
    the first two lines, and it is why they are the same function with different numbers:
 
-     CONNECT    a SWARM — hundreds of points, not one body and not nine marks. An even scatter, then a
-                core condensing inside a thinning halo. Not one particle travels: what changes is which
-                points exist and how hard they burn. A crowd is not organised by someone arriving into
-                it — it organises around one of its own, and the brand arrives because they were already
-                looking that way.
+     CONNECT    ONE DROP, seen from straight above, and the rings it sends out. A circle and a wave,
+                and nothing else. A brand does not arrive everywhere at once by being loud: it lands in
+                one place, on one person, and that is the thing that travels.
      ARCHITECT  the same primitive, ORDERED: a measured array of identical parts. Then the grid breaks,
                 the parts drift and swell, and their fields close over each other WHERE THEY HAPPEN TO
                 MEET — an uneven web, because that is what a network is. Then it runs as a wave.
@@ -1711,8 +1709,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform float uRadR;',                 /* the right one this big (0 for CONNECT — its right is a crowd), */
     'uniform float uRadM;',                 /* a body in the gap, this big (0 = absent), */
     'uniform float uCrowd;',                /* a crowd of marks, this present (0 = absent), */
-    'uniform float uFocus;',                /* one of them, this far grown into someone they know, */
-    'uniform float uTurn;',                 /* and the rest, this far turned to face them, */
+    'uniform float uDrop;',                 /* the drop, this big, */
+    'uniform float uRipple;',               /* and what it sent out, this far arrived, */
     'uniform float uArray;',                /* a measured array of parts, this present (0 = absent), */
     'uniform float uLink;',                 /* the array, this far broken out of its grid and linked up, */
     'uniform float uPull;',                 /* the whole of it, this far pulled together, */
@@ -1739,34 +1737,26 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '          + mball(q, vec2( uSpread, 0.0), uRadR)',
     '          + mball(q, vec2( 0.0,     0.0), uRadM);   /* whoever stands between — present only for CONNECT */',
     '  if(uCrowd > 0.0005){',
-    '    /* A CROWD HAS TO BE UNCOUNTABLE. Nine marks was a diagram of a crowd, not one — and marks aimed',
-    '       at each other draw the word "facing" rather than showing it. So: hundreds of points, and let',
-    '       density carry the whole meaning.',
-    '       Nothing moves here. What changes is which points EXIST. As uFocus rises the centre starts',
-    '       keeping its points and burning brighter; as uTurn rises the halo starts losing its own. A core',
-    '       condenses out of an even scatter without one particle travelling anywhere — which is the claim',
-    '       exactly: a crowd is not organised by someone arriving into it. It organises around one of its',
-    '       own, and the brand arrives because they were already looking that way.',
-    '       Points are looked up per cell rather than summed as bodies: a few hundred metaballs per pixel',
-    '       is not a thing you can afford, and it does not need to be — these are people, not masses that',
-    '       merge. */',
-    '    const float CELLS = 26.0;',   /* more cells, more people: the count is the point */
-    '    vec2 gp = q * CELLS;',
-    '    vec2 gi = floor(gp);',
-    '    for(int yy = -1; yy <= 1; yy++){',
-    '      for(int xx = -1; xx <= 1; xx++){',
-    '        vec2 cell = gi + vec2(float(xx), float(yy));',
-    '        vec2 pt = cell + vec2(hash(cell + 0.13), hash(cell + 3.71));',
-    '        float r = length(pt / CELLS);',
-    '        float shell = (1.0 - smoothstep(0.30, 0.50, r)) * mix(0.74, 0.34, uTurn);   /* the volume they occupy, thinning as the core takes */',
-    '        float core  = (1.0 - smoothstep(0.02, 0.155, r)) * uFocus * 0.92;           /* the one they gather around */',
-    '        float live  = step(hash(cell + 11.37), shell + core);                       /* does this one exist at all */',
-    '        float sz = mix(0.30, 0.72, hash(cell + 13.1));',
-    '        float e = length(gp - pt) / sz;',
-    '        float bright = (0.72 + 0.28 * smoothstep(0.28, 0.02, r) * uFocus) * (0.62 + 0.38 * hash(cell + 17.9));',
-    '        m = max(m, exp(-e * e) * live * bright * uCrowd * 2.9);',
-    '      }',
-    '    }',
+    '    /* ONE DROP, FROM DIRECTLY ABOVE, AND WHAT IT SENDS OUT. That is the whole object: a circle and a',
+    '       wave. It is also the claim, without illustrating it — a brand does not arrive everywhere at',
+    '       once by being loud. It lands in one place, on one person, and that is what travels.',
+    '       The rings are concentric and they travel outward on their own; the drop shrinks as they leave,',
+    '       because what made them came out of it. */',
+    '    float rr = length(q);',
+    '    float dr = rr / max(uDrop, 0.0001);',
+    '    float drop = exp(-dr * dr * 1.8);',
+    '    /* travelling rings. The phase runs on uTime, so uCalm stills them into one fixed frame rather',
+    '       than freezing them wherever they happened to be — the same rule the rest of the page follows. */',
+    '    float ph = rr * 40.0 - uTime * 2.4 * (1.0 - uCalm);',
+    '    float w = 0.5 + 0.5 * sin(ph);',
+    '    w = w * w; w = w * w;                                        /* thin, separate rings, not a blur */',
+    '    float env = smoothstep(0.045, 0.155, rr)                     /* nothing rings inside the drop */',
+    '              * (1.0 - smoothstep(0.26, 0.47, rr));              /* and it spends itself before the edge */',
+    '    /* straight out, NOT through the metaball surface below. That threshold reads a field of summed',
+    '       bodies, where values run 1..6; a drop is one normalised density and 1.0 is its maximum, so it',
+    '       came out clipped to 0.44 and the whole section rendered nearly black. A drop is not a metaball',
+    '       and has no business being surfaced like one. */',
+    '    return max(drop, w * env * uRipple) * uCrowd;',
     '  }',
     '  if(uArray > 0.0005){',
     '    /* A MEASURED ARRAY: even spacing, aligned axes, identical parts. That is the whole of what reads',
@@ -1836,18 +1826,18 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   /* CONNECT — the outer two never move, and at this distance their fields reach 0.35 between them:
      under the 0.55 the surface needs, so they simply cannot touch. Only the body in the middle changes. */
   var CONNECT = [
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:0.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  an even scatter. Many people, and nothing among them is a centre. */
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 02  the middle starts keeping its points, and burning — one of them is becoming someone */
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:1.0, array:0.0, link:0.0, pull:0.0, wave:0.0 }    /* 03  the halo thins and the core holds: a crowd with a centre */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, drop:0.200, ripple:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  the drop, whole. Nothing has happened yet. */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, drop:0.112, ripple:0.6, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 02  it lands, and the first ring leaves it */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, drop:0.068, ripple:1.0, array:0.0, link:0.0, pull:0.0, wave:0.0 }    /* 03  one landing, and it is out across the whole surface */
   ];
   /* ARCHITECT — no third body. The two close on each other instead, and then run. */
   /* ARCHITECT is nothing but the array, all the way through. There are no two circles any more: they
      were a leftover from when this section was three separate steps, and the claim it carries now says
      NETWORK — funnelling twelve parts into two piles is the opposite of one. */
   var ARCH = [
-    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, focus:0.0, turn:0.0, array:1.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  the parts, measured out. Nothing is a structure yet. */
-    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, focus:0.0, turn:0.0, array:1.0, link:1.0, pull:0.0, wave:0.0 },   /* 02  the grid breaks and the fields close over each other where they happen to meet — a network, uneven, because a network is */
-    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, focus:0.0, turn:0.0, array:1.0, link:1.0, pull:1.0, wave:1.0 }    /* 03  and the whole web runs */
+    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, drop:0.0, ripple:0.0, array:1.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  the parts, measured out. Nothing is a structure yet. */
+    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, drop:0.0, ripple:0.0, array:1.0, link:1.0, pull:0.0, wave:0.0 },   /* 02  the grid breaks and the fields close over each other where they happen to meet — a network, uneven, because a network is */
+    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, drop:0.0, ripple:0.0, array:1.0, link:1.0, pull:1.0, wave:1.0 }    /* 03  and the whole web runs */
   ];
   /* BUILD — the same three spheres, recombined. x, y, radius. */
   var SE = [
@@ -1869,7 +1859,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uFocus','uTurn','uArray','uLink','uPull','uWave']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uDrop','uRipple','uArray','uLink','uPull','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
     var set = cv.getAttribute('data-set') || 'a';
     var se = set === 's';
@@ -1907,7 +1897,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var e = ez(t);
     return { spread:lp(a.spread,b.spread,e), radL:lp(a.radL,b.radL,e), radR:lp(a.radR,b.radR,e),
              mid:lp(a.mid,b.mid,e), crowd:lp(a.crowd,b.crowd,e),
-             focus:lp(a.focus,b.focus,e), turn:lp(a.turn,b.turn,e),
+             drop:lp(a.drop,b.drop,e), ripple:lp(a.ripple,b.ripple,e),
              array:lp(a.array,b.array,e), link:lp(a.link,b.link,e), pull:lp(a.pull,b.pull,e),
              wave:lp(a.wave,b.wave,e) };
   }
@@ -1967,8 +1957,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         gl.uniform1f(o.U.uRadR, o.cur.radR);
         gl.uniform1f(o.U.uRadM, o.cur.mid);
         gl.uniform1f(o.U.uCrowd, o.cur.crowd);
-        gl.uniform1f(o.U.uFocus, o.cur.focus);
-        gl.uniform1f(o.U.uTurn, o.cur.turn);
+        gl.uniform1f(o.U.uDrop, o.cur.drop);
+        gl.uniform1f(o.U.uRipple, o.cur.ripple);
         gl.uniform1f(o.U.uArray, o.cur.array);
         gl.uniform1f(o.U.uLink, o.cur.link);
         gl.uniform1f(o.U.uPull, o.cur.pull);
