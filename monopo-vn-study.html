@@ -991,16 +991,12 @@ body.ready .mv-contact-footer {
   letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
 .mv-strengths-eyebrow::before{content:'\2198';font-size:13px;opacity:.65}
 .mv-strengths-row{display:grid;grid-template-columns:0.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:center}
-/* strengths slot: each form is DRAWN as grain dispersion — density dithered against noise, so the core is a
-   dense mass and the edge scatters into particles and dies into black. The hero's own grain language;
-   no masks, no hard-cut shapes. Slightly soft, never crisp. */
+/* the strengths slot IS the hero: it compiles the hero's own field shader (HERO_FIELD) into a small WebGL
+   canvas, sitting on one of the hero's two real blooms, with an object dissolved into it by the hero's
+   own grain. The form morphs 01->02->03 inside the shader, so nothing cross-fades or snaps. */
 .mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;
   transition:transform 1s cubic-bezier(.22,1,.36,1)}   /* barely-there drift toward the cursor (JS, clamped) */
-.orb-form{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;
-  /* softness comes free from drawing at 300px and letting CSS scale it up — no blur filter needed */
-  transition:opacity .9s cubic-bezier(.4,0,.2,1);      /* long dissolve so 01->02->03 never snaps */
-  will-change:opacity}
-.orb-form:first-of-type{opacity:1}
+.orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
 @media (prefers-reduced-motion:reduce){.mv-strengths-orb{transition:none;transform:none!important}}
 
 .mv-str-stage{position:relative;min-height:clamp(220px,34vh,340px)}
@@ -1289,7 +1285,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Architecting</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-form" data-f="a1"></canvas><canvas class="orb-form" data-f="a2"></canvas><canvas class="orb-form" data-f="a3"></canvas></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-field" data-set="a"></canvas></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>문제 정의 (착수·진단)</b> — 브랜드의 니즈를 깊이 있게 이해하고 전체 맥락을 파악해, 근본적인 페인 포인트를 폭넓은 인사이트로 확인합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>계획 설계</b> — IT·제조·아트·패션·뷰티를 아우르는 넓은 네트워크를 기반으로, 실행 가능한 구체적인 계획을 제시합니다.</p>
@@ -1304,7 +1300,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Software Engineering</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-form" data-f="s1"></canvas><canvas class="orb-form" data-f="s2"></canvas><canvas class="orb-form" data-f="s3"></canvas></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><canvas class="orb-field" data-set="s"></canvas></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>서비스 기획</b> — 세상의 문제에서 출발합니다. 페인 포인트를 먼저 정의하고 기획을 시작합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>프로덕트 개발</b> — 상상 속 프로덕트를 가장 빠르게. 핵심 프로토타입을 며칠 만에 구현합니다.</p>
@@ -1544,99 +1540,170 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 /* strengths wheel-step carousel — DOWN-scroll captures a category with a gentle magnetic
    SETTLE (no hard snap) and steps 01->02->03 one item per flick; UP-scroll is frictionless
    (never captures, releases instantly). one flick = one item even on a hard flick / long
-   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slot forms — drawn, not masked ----------------------------------------------
-   Each form is a DENSITY field dithered against noise: where density is 1 the grain packs into a solid
-   mass, and as density falls the particles scatter and dissolve into black (see the references). Colour
-   comes from the hero's own colormap; the two sections sample different bands of it (amber vs pink).
-   Three states tell one story instead of repeating a circle:
-     01  a SHARP circle crossing a BLURRED circle
-     02  those same two elements re-placed — one at the centre, one around it: an eye / a hinted target
-     03  the circle breaks into a LINE — an oscillation (正·反) resolving into a single band (合)
-   ------------------------------------------------------------------------------------------------- */
+   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slots — the hero itself, in miniature -------------------------------------------
+   Not an imitation: this compiles window.__heroFieldGLSL — the EXACT field code the hero runs — and
+   samples it on one of the hero's own two blooms (Architecting sits on the bottom-left amber bloom,
+   Software Engineering on the top-right pink one). uTime drifts it exactly as the hero drifts.
+   An OBJECT is dissolved into that field by the hero's own grain hash, so its edge scatters into
+   particles instead of being cut. The object MORPHS 01->02->03 inside the shader — nothing snaps.
+   Architecting speaks in circles; Software Engineering speaks in vertical structure — not a recolour.
+   ---------------------------------------------------------------------------------------------- */
 (function(){
-  var AM=[1,.78,.05], OR=[1,.42,.13], PK=[.90,.18,.38];
-  function ss(a,b,t){ t=Math.min(1,Math.max(0,(t-a)/(b-a))); return t*t*(3-2*t); }
-  function rnd(x,y){ var n=Math.sin(x*127.1+y*311.7)*43758.5453; return n-Math.floor(n); }
-  function colour(d, pink){
-    var g = pink ? (0.60+0.40*d) : (0.16+0.30*d);          /* SE -> pink band, Architecting -> gold band */
-    var t1=ss(.34,.72,g), t2=ss(.60,.98,g);
-    var r=AM[0]+(OR[0]-AM[0])*t1, gg=AM[1]+(OR[1]-AM[1])*t1, bb=AM[2]+(OR[2]-AM[2])*t1;
-    r+=(PK[0]-r)*t2; gg+=(PK[1]-gg)*t2; bb+=(PK[2]-bb)*t2;
-    return [r,gg,bb];
+  function start(){                                  /* deferred: the hero publishes HERO_FIELD further down the page */
+  var FIELD = window.__heroFieldGLSL;
+  if(!FIELD) return;
+  var VERT = 'attribute vec2 aPos;varying vec2 vUv;void main(){vUv=aPos*0.5+0.5;gl_Position=vec4(aPos,0.0,1.0);}';
+  var HEAD = [
+    'precision highp float;',
+    'varying vec2 vUv;',
+    'uniform vec2 uRes;',
+    'uniform float uTime;',
+    'uniform vec2 uPan;',
+    'uniform float uZoom;',
+    'uniform int uFormA;',
+    'uniform int uFormB;',
+    'uniform float uMix;',
+    ''
+  ].join('\n');
+  var OBJ = [
+    'float dens(int f, vec2 q){',
+    '  if(f==0){                                   /* 01  a sharp circle crossing a blurred one */',
+    '    float a = length(q - vec2(-0.105,-0.015));',
+    '    float b = length(q - vec2( 0.115, 0.010));',
+    '    float sharp = 1.0 - smoothstep(0.195, 0.268, a);',
+    '    float soft  = 1.0 - smoothstep(0.030, 0.310, b);',
+    '    return max(sharp, soft*0.95);',
+    '  } else if(f==1){                            /* 02  one at the centre, one around it — an eye, only hinted */',
+    '    float r = length(q);',
+    '    float halo = (1.0 - smoothstep(0.215, 0.375, r)) * smoothstep(0.115, 0.235, r);',
+    '    float core = 1.0 - smoothstep(0.045, 0.090, r);',
+    '    return max(halo*1.06, core);',
+    '  } else if(f==2){                            /* 03  the circle breaks into a line: oscillation decaying into one band */',
+    '    float t = vUv.x;',
+    '    float amp = 0.155 * (1.0 - smoothstep(0.12, 0.94, t));',
+    '    float wave = sin(t*3.14159*3.0) * amp;',
+    '    float dy = abs(q.y - wave);',
+    '    float th = 0.050 + 0.030*(1.0-t);',
+    '    return (1.0 - smoothstep(th, th+0.085, dy)) * (0.55 + 0.45*smoothstep(0.02,0.30,t)) * (1.0 - smoothstep(0.86,1.02,t));',
+    '  } else if(f==3){                            /* S1  the field condenses into ONE column — the problem, defined */',
+    '    float c = 1.0 - smoothstep(0.055, 0.125, abs(q.x));',
+    '    return c * (0.30 + 0.70*(1.0 - smoothstep(0.16, 0.42, abs(q.y))));',
+    '  } else if(f==4){                            /* S2  the column multiplies — parallel builds, offset, in motion */',
+    '    float d = 0.0;',
+    '    d = max(d, (1.0-smoothstep(0.028,0.078,abs(q.x+0.16))) * (1.0-smoothstep(0.14,0.38,abs(q.y-0.07))));',
+    '    d = max(d, (1.0-smoothstep(0.028,0.078,abs(q.x     ))) * (1.0-smoothstep(0.17,0.42,abs(q.y+0.02))));',
+    '    d = max(d, (1.0-smoothstep(0.028,0.078,abs(q.x-0.16))) * (1.0-smoothstep(0.12,0.35,abs(q.y-0.11))));',
+    '    return d;',
+    '  }                                           /* S3  they fuse into one broad coherent mass — the system */',
+    '  float w = 1.0 - smoothstep(0.145, 0.245, abs(q.x));',
+    '  return w * (0.36 + 0.64*(1.0 - smoothstep(0.15, 0.40, abs(q.y))));',
+    '}',
+    'void main(){',
+    '  vec2 q = vUv - 0.5;',
+    '  vec3 field = background((vUv - 0.5) * uZoom + uPan);          /* the hero\'s OWN background, on its own bloom */',
+    '  float d = clamp(mix(dens(uFormA,q), dens(uFormB,q), uMix), 0.0, 1.0);',
+    '  vec2 fc = vUv * uRes;',
+    '  float lit = step(hash(floor(fc/2.2)), pow(d, 0.78));          /* the object dissolves into the hero\'s grain */',
+    '  vec3 col = field * lit;',
+    '  float gA = hash(fc*0.58), gB = hash(fc*0.31 + 19.0);          /* the hero\'s own static film grain, on top */',
+    '  float grain = (gA*0.55 + gB*0.45) - 0.5;',
+    '  float glum = max(col.r, max(col.g, col.b));',
+    '  col += grain * (0.12 + 0.27*smoothstep(0.0, 0.55, glum));',
+    '  gl_FragColor = vec4(col, 1.0);',
+    '}'
+  ].join('\n');
+  var FRAG = HEAD + FIELD + '\n' + OBJ;
+
+  function build(cv){
+    var gl = cv.getContext('webgl', {antialias:false, alpha:false});
+    if(!gl){ cv.style.background='#000'; return null; }
+    function sh(t,s){ var o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o);
+      if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){ console.warn('orb shader:', gl.getShaderInfoLog(o)); return null; } return o; }
+    var vs=sh(gl.VERTEX_SHADER,VERT), fsh=sh(gl.FRAGMENT_SHADER,FRAG);
+    if(!vs||!fsh) return null;
+    var pr=gl.createProgram(); gl.attachShader(pr,vs); gl.attachShader(pr,fsh); gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){ console.warn('orb link:', gl.getProgramInfoLog(pr)); return null; }
+    gl.useProgram(pr);
+    var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    var U={}; ['uRes','uTime','uPan','uZoom','uFormA','uFormB','uMix'].forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
+    var se = cv.getAttribute('data-set')==='s';
+    /* Both of the hero's blooms share ONE colormap (amber at the faint outskirts -> orange -> pink at the core),
+       so the split is by BAND, not by corner: Architecting sits out on the amber shoulder of the bottom-left
+       bloom, Software Engineering sits on the pink core of the top-right one. Same field, two bands. */
+    gl.uniform2f(U.uPan, se?0.91:0.33, se?0.92:0.32);
+    gl.uniform1f(U.uZoom, 0.55);
+    gl.uniform1f(U.uMix, 0.0);
+    return {gl:gl, U:U, base:se?3:0, a:se?3:0, b:se?3:0, mix:1, t0:0};
   }
-  /* --- density fields (x,y in -0.5..0.5) --- */
-  function d1(x,y){                                        /* 01 — sharp circle x blurred circle */
-    var a=Math.sqrt((x+0.105)*(x+0.105)+(y+0.015)*(y+0.015));
-    var b=Math.sqrt((x-0.115)*(x-0.115)+(y-0.010)*(y-0.010));
-    var sharp = 1-ss(0.195,0.268,a);                       /* a defined edge */
-    var soft  = 1-ss(0.030,0.310,b);                       /* dissolves the whole way out */
-    return Math.min(1, Math.max(sharp, soft*0.95));
+
+  var orbs=[];
+  [].slice.call(document.querySelectorAll('canvas.orb-field')).forEach(function(cv){
+    var r=build(cv); if(!r) return;
+    r.cv=cv; r.host=cv.closest('.mv-strengths-orb'); orbs.push(r);
+    r.host.__setForm=function(i){
+      var want=r.base+i; if(want===r.b) return;
+      r.a=r.b; r.b=want; r.mix=0; r.t0=performance.now();   /* morph, never cut */
+    };
+  });
+  if(!orbs.length) return;
+
+  function size(o){
+    var w=Math.max(1,Math.round(o.cv.getBoundingClientRect().width||440));
+    var px=Math.round(w*Math.min(window.devicePixelRatio||1,1.5));
+    if(o.cv.width!==px){ o.cv.width=px; o.cv.height=px; o.gl.viewport(0,0,px,px); }
+    return px;
   }
-  function d2(x,y){                                        /* 02 — one at the centre, one around it */
-    var r=Math.sqrt(x*x+y*y);
-    var halo = (1-ss(0.215,0.375,r)) * ss(0.115,0.235,r);  /* the blurred one, now a surrounding band */
-    var core = 1-ss(0.045,0.090,r);                        /* the sharp one, now the pupil */
-    return Math.min(1, Math.max(halo*1.06, core));
-  }
-  function d3(x,y){                                        /* 03 — 正·反 oscillation resolving into 合 */
-    var t=x+0.5;
-    var amp=0.155*(1-ss(0.12,0.94,t));                     /* the swing decays into one line */
-    var wave=Math.sin(t*Math.PI*3.0)*amp;
-    var dy=Math.abs(y-wave);
-    var thick=0.050+0.030*(1-t);
-    var body=1-ss(thick, thick+0.085, dy);
-    return body * (0.55+0.45*ss(0.02,0.30,t)) * (1-ss(0.86,1.02,t));   /* fades in at the left, out at the right */
-  }
-  var DENS={a1:d1,a2:d2,a3:d3,s1:d1,s2:d2,s3:d3};
-  function draw(cv){
-    var f=cv.getAttribute('data-f')||'a1', pink=f.charAt(0)==='s', dens=DENS[f]||d1;
-    var size=300;   /* drawn small and scaled up by CSS: coarser particles + the soft focus the hero has */
-    cv.width=size; cv.height=size;
-    var ctx=cv.getContext('2d'), im=ctx.createImageData(size,size), out=im.data, px, py;
-    for(py=0; py<size; py++) for(px=0; px<size; px++){
-      var x=(px+0.5)/size-0.5, y=(py+0.5)/size-0.5;
-      var d=Math.min(1,Math.max(0,dens(x,y)));
-      var i=(py*size+px)*4;
-      if(d<=0.004){ out[i+3]=255; continue; }              /* black */
-      /* grain dispersion: coarse particles, lit stochastically in proportion to density */
-      var gx=Math.floor(px/1.15), gy=Math.floor(py/1.15);
-      var n=rnd(gx,gy);
-      if(n > Math.pow(d,0.78)){ out[i+3]=255; continue; }   /* particle not lit -> black */
-      var c=colour(d,pink), b=(0.42+0.58*d)*(0.72+0.5*rnd(gx+7.3,gy+2.1));
-      out[i]=Math.min(255,c[0]*b*255); out[i+1]=Math.min(255,c[1]*b*255); out[i+2]=Math.min(255,c[2]*b*255); out[i+3]=255;
+  var vis=new WeakMap();
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis.set(e.target, e.isIntersecting); }); },{rootMargin:'280px'});
+  orbs.forEach(function(o){ vis.set(o.host,false); io.observe(o.host); });
+
+  var T0=performance.now();
+  function frame(now){
+    for(var k=0;k<orbs.length;k++){
+      var o=orbs[k];
+      if(!vis.get(o.host)) continue;
+      var px=size(o), gl=o.gl;
+      if(o.mix<1){ o.mix=Math.min(1,(now-o.t0)/900); var m=o.mix; gl.uniform1f(o.U.uMix, m*m*(3.0-2.0*m)); }
+      gl.uniform2f(o.U.uRes,px,px);
+      gl.uniform1f(o.U.uTime,(now-T0)/1000);
+      gl.uniform1i(o.U.uFormA,o.a); gl.uniform1i(o.U.uFormB,o.b);
+      gl.drawArrays(gl.TRIANGLES,0,3);
     }
-    ctx.putImageData(im,0,0);
+    requestAnimationFrame(frame);
   }
-  function paintAll(){ [].slice.call(document.querySelectorAll('canvas.orb-form')).forEach(draw); }
-  /* the object drifts a few px toward the cursor — very slight, and clamped inside its own box */
-  function follow(){
-    [].slice.call(document.querySelectorAll('.mv-strengths-orb')).forEach(function(orb){
-      orb.addEventListener('mousemove', function(e){
-        var r=orb.getBoundingClientRect();
-        var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
-        orb.style.transform='translate3d('+(dx*9).toFixed(1)+'px,'+(dy*9).toFixed(1)+'px,0)';   /* max ~4.5px */
+  requestAnimationFrame(frame);
+
+  /* the object drifts a few px toward the cursor — very slight, always inside its own box */
+  if(!matchMedia('(pointer:coarse)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches){
+    orbs.forEach(function(o){
+      o.host.addEventListener('mousemove', function(e){
+        var b=o.host.getBoundingClientRect();
+        var dx=(e.clientX-b.left)/b.width-0.5, dy=(e.clientY-b.top)/b.height-0.5;
+        o.host.style.transform='translate3d('+(dx*9).toFixed(1)+'px,'+(dy*9).toFixed(1)+'px,0)';
       });
-      orb.addEventListener('mouseleave', function(){ orb.style.transform=''; });
+      o.host.addEventListener('mouseleave', function(){ o.host.style.transform=''; });
     });
   }
-  function boot(){ paintAll(); if(!matchMedia('(pointer:coarse)').matches) follow(); }
-  if(window.requestIdleCallback) requestIdleCallback(boot,{timeout:2600}); else setTimeout(boot,400);
-  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt=setTimeout(paintAll, 350); });
+  }
+  if(window.requestIdleCallback) requestIdleCallback(start,{timeout:2600}); else addEventListener('load', start);
 })();
+
 
 /* strengths wheel-step module (desktop only) */
 (function(){
   if(matchMedia('(prefers-reduced-motion:reduce)').matches || matchMedia('(pointer:coarse)').matches) return;
   var secs = [].slice.call(document.querySelectorAll('[data-str-pin]')).map(function(sec){
     var items=[].slice.call(sec.querySelectorAll('.mv-str-item'));
-    var forms=[].slice.call(sec.querySelectorAll('.orb-form'));
+    var orbEl=sec.querySelector('.mv-strengths-orb');
     items.forEach(function(it,i){
       it.style.opacity = i===0?'1':'0';
       it.style.transform = i===0?'none':'translate3d(0,26px,0)';
       it.style.transition = 'opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
     });
-    forms.forEach(function(el,i){ el.style.opacity = i===0?'1':'0'; });   /* the form cross-fades in sync with its text item */
-    return { sec:sec, items:items, forms:forms, idx:0 };
+    if(orbEl && orbEl.__setForm) orbEl.__setForm(0);
+    return { sec:sec, items:items, orbEl:orbEl, idx:0 };
   });
   if(!secs.length) return;
   window.__mvStrLock = false;
@@ -1651,7 +1718,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     for(var i=0;i<S.items.length;i++){ var on=i===S.idx;
       S.items[i].style.opacity = on?'1':'0';
       S.items[i].style.transform = on?'none':('translate3d(0,'+(i<S.idx?-26:26)+'px,0)');
-      if(S.forms[i]) S.forms[i].style.opacity = on?'1':'0'; }
+      }
+    if(S.orbEl && S.orbEl.__setForm) S.orbEl.__setForm(S.idx);   /* the object morphs to the active item */
   }
   function armIdle(){ if(idleT) clearTimeout(idleT); idleT = setTimeout(function(){ canStep = true; }, IDLE_GAP); }
   /* gentle eased glide that fills the viewport with the captured category — replaces the instant "턱" snap.
@@ -1860,18 +1928,9 @@ void main(){
   gl_Position = vec4(aPos, 0.0, 1.0);
 }`;
 
-  const FRAG = `
-precision highp float;
-varying vec2 vUv;
-uniform vec2  uRes;
-uniform float uTime;
-uniform float uReveal;    // 0..1 intro reveal
-uniform vec2  uMouse;     // eased pointer (y up) — warm centre of the grain gradient
-uniform float uExit;      // 0..1 hero scroll-out (idle while cathydolle is hidden)
-uniform sampler2D uTex0, uTex1, uTex2, uTex3, uTex4, uTex5;   // 6-language headline
-uniform int   uCurA, uCurB;   // current + next language index
-uniform float uMix;           // 0..1 crossfade current -> next
-
+  /* the hero's FIELD — hash/noise/fbm + the amber->orange->pink corner blooms. Kept as its own source so the
+     strengths slots can compile the SAME code instead of imitating it. */
+  const HERO_FIELD = `
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
   p += dot(p, p + 45.32);
@@ -1937,7 +1996,21 @@ vec3 background(vec2 uv){
   vec3 col = cm * glow;
   return col;
 }
+`;
+  window.__heroFieldGLSL = HERO_FIELD;
 
+  const FRAG = `
+precision highp float;
+varying vec2 vUv;
+uniform vec2  uRes;
+uniform float uTime;
+uniform float uReveal;    // 0..1 intro reveal
+uniform vec2  uMouse;     // eased pointer (y up) — warm centre of the grain gradient
+uniform float uExit;      // 0..1 hero scroll-out (idle while cathydolle is hidden)
+uniform sampler2D uTex0, uTex1, uTex2, uTex3, uTex4, uTex5;   // 6-language headline
+uniform int   uCurA, uCurB;   // current + next language index
+uniform float uMix;           // 0..1 crossfade current -> next
+` + HERO_FIELD + `
 float rrect(vec2 p, vec2 b, float r){
   vec2 q = abs(p) - b + r;
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
