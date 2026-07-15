@@ -1675,8 +1675,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
      CONNECT    a body on the left and a CROWD on the right — a brand is not reaching one thing. Nothing
                 moves: they simply cannot reach each other. Then a person appears in the gap, and the
                 whole thing is one. The creator IS the connection.
-     ARCHITECT  no third body. Instead the two close on each other until the field bridges by itself,
-                and then what they became runs as a wave.
+     ARCHITECT  the same primitive, ORDERED: a measured array of identical parts. No third body and no
+                drawn line — order alone is what reads as engineered. The array gathers into two, the
+                field bridges them by itself, and what they became runs as a wave.
      BUILD      three spheres whose combination changes. Their densities SUM the way the hero sums
                 its two blooms, so every overlap doubles and turns pink on its own. Integration is
                 literally the heat.
@@ -1703,6 +1704,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform float uRadR;',                 /* the right one this big (0 for CONNECT — its right is a crowd), */
     'uniform float uRadM;',                 /* a body in the gap, this big (0 = absent), */
     'uniform float uCrowd;',                /* an audience of many, this present (0 = absent), */
+    'uniform float uArray;',                /* a measured array of parts, this present (0 = absent), */
+    'uniform float uGather;',               /* the array, this far gathered into the two, */
     'uniform float uWave;',                 /* and this far into having become a wave. */
     ''
   ].join('\n');
@@ -1734,6 +1737,20 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '    m += mball(q, vec2( 0.330, -0.030), 0.045 * uCrowd);',
     '    m += mball(q, vec2( 0.205, -0.145), 0.048 * uCrowd);',
     '    m += mball(q, vec2( 0.365,  0.140), 0.036 * uCrowd);',
+    '  }',
+    '  if(uArray > 0.0005){',
+    '    /* A MEASURED ARRAY: even spacing, aligned axes, identical parts. That is the whole of what reads',
+    '       as technical here, and it needs no drawn line to do it — CONNECT is this same primitive',
+    '       scattered, and ARCHITECT is it ordered. Human against engineered, in one shape language.',
+    '       Then it GATHERS. The two bodies of 02 are not new arrivals: they are these twelve, come',
+    '       together. Structure is not delivered beside the parts, it is assembled out of them. */',
+    '    for(int i = 0; i < 4; i++){',
+    '      for(int j = 0; j < 3; j++){',
+    '        vec2 g = vec2((float(i) - 1.5) * 0.185, (float(j) - 1.0) * 0.185);',
+    '        vec2 t = vec2(g.x < 0.0 ? -uSpread : uSpread, 0.0);   /* each part goes to its own side */',
+    '        m += mball(q, mix(g, t, uGather), mix(0.029, 0.055, uGather) * uArray);',   /* a field is the sum of ALL twelve, not of the nearest pair: at 0.042 the array fused into slabs */
+    '      }',
+    '    }',
     '  }',
     '  float surf  = smoothstep(0.55, 1.45, m);      /* the surface. where two bodies both reach, it closes over. */',
     '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — volume, without every',
@@ -1775,15 +1792,17 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   /* CONNECT — the outer two never move, and at this distance their fields reach 0.35 between them:
      under the 0.55 the surface needs, so they simply cannot touch. Only the body in the middle changes. */
   var CONNECT = [
-    { spread:0.300, radL:0.150, radR:0.0, mid:0.000, crowd:1.0, wave:0.0 },   /* 01  a brand, and the people it wants. Nothing crosses. */
-    { spread:0.300, radL:0.150, radR:0.0, mid:0.032, crowd:1.0, wave:0.0 },   /* 02  someone appears between them — still too small to join anything */
-    { spread:0.300, radL:0.150, radR:0.0, mid:0.110, crowd:1.0, wave:0.0 }    /* 03  and now it is one thing. Nobody moved except the person in the middle. */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.000, crowd:1.0, array:0.0, gather:0.0, wave:0.0 },   /* 01  a brand, and the people it wants. Nothing crosses. */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.032, crowd:1.0, array:0.0, gather:0.0, wave:0.0 },   /* 02  someone appears between them — still too small to join anything */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.132, crowd:1.0, array:0.0, gather:0.0, wave:0.0 }    /* 03  and now it is one thing — big enough to reach the crowd as well as the brand, or the chain never closes. */
   ];
   /* ARCHITECT — no third body. The two close on each other instead, and then run. */
+  /* ARCHITECT is nothing but the array. There is no separate pair of bodies to fade in: 02's two masses
+     ARE the twelve parts, gathered. */
   var ARCH = [
-    { spread:0.290, radL:0.138, radR:0.138, mid:0.0, crowd:0.0, wave:0.0 },   /* 01  apart — the field between them reaches only 0.45 */
-    { spread:0.212, radL:0.150, radR:0.150, mid:0.0, crowd:0.0, wave:0.0 },   /* 02  drawn close: it reaches 1.00, just over — a bridge nobody drew */
-    { spread:0.026, radL:0.132, radR:0.132, mid:0.0, crowd:0.0, wave:1.0 }    /* 03  the two arrive at the same place, and become the wave */
+    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, array:1.0, gather:0.0, wave:0.0 },   /* 01  the parts, measured out. Nothing is a structure yet. */
+    { spread:0.215, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, array:1.0, gather:1.0, wave:0.0 },   /* 02  gathered into two, close enough that a bridge appears which nobody drew */
+    { spread:0.030, radL:0.0, radR:0.0, mid:0.0, crowd:0.0, array:1.0, gather:1.0, wave:1.0 }    /* 03  the two arrive at the same place, and become the wave */
   ];
   /* BUILD — the same three spheres, recombined. x, y, radius. */
   var SE = [
@@ -1805,7 +1824,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uWave']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uArray','uGather','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
     var set = cv.getAttribute('data-set') || 'a';
     var se = set === 's';
@@ -1839,7 +1858,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var tw = ez(cl(into ? (t - 0.46) / 0.54 : t / 0.52));
     if(a.wave === b.wave){ tp = ez(t); tw = tp; }        /* CONNECT never waves, so it just eases */
     return { spread:lp(a.spread,b.spread,tp), radL:lp(a.radL,b.radL,tp), radR:lp(a.radR,b.radR,tp),
-             mid:lp(a.mid,b.mid,tp), crowd:lp(a.crowd,b.crowd,tp), wave:lp(a.wave,b.wave,tw) };
+             mid:lp(a.mid,b.mid,tp), crowd:lp(a.crowd,b.crowd,tp),
+             array:lp(a.array,b.array,tp), gather:lp(a.gather,b.gather,tp), wave:lp(a.wave,b.wave,tw) };
   }
 
   var orbs=[];
@@ -1892,6 +1912,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         gl.uniform1f(o.U.uRadR, o.cur.radR);
         gl.uniform1f(o.U.uRadM, o.cur.mid);
         gl.uniform1f(o.U.uCrowd, o.cur.crowd);
+        gl.uniform1f(o.U.uArray, o.cur.array);
+        gl.uniform1f(o.U.uGather, o.cur.gather);
         gl.uniform1f(o.U.uWave, o.cur.wave);
       }
       gl.uniform2f(o.U.uRes,px,px);
