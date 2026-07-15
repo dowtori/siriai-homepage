@@ -620,7 +620,9 @@ body{cursor:none;background:#000}
 
 /* ===== section: frames (robust rotated tiles) ===== */
 .mv-frames{position:relative;background:#000;color:#f5f5f4;overflow:hidden;
-  height:100svh;margin-top:clamp(60px,12vh,180px);margin-bottom:clamp(120px,18vh,240px);
+  height:100svh;margin-top:clamp(60px,12vh,180px);margin-bottom:0;   /* was clamp(120px,18vh,240px) — 171px on a
+     950px screen, and nothing was in it. That was a footer buffer standing in for a section I never wrote; the
+     closing below carries its own 171px of padding under its own rule, exactly as every other section does. */
   font-family:"Inter Tight",Helvetica,Arial,sans-serif}
 .cv-stage{position:absolute;inset:0;z-index:2;display:block}
 .cv-stage canvas{position:absolute;inset:0;display:block}
@@ -1131,6 +1133,32 @@ body.ready .mv-contact-footer {
 
 /* ===== footer — real Siriai footer info (ported from siriai-homepage), dark-adapted ===== */
 .mv-contact{display:none}   /* "Keep in touch" hidden — replaced by the real footer below */
+/* THE CLOSING. This stretch used to be 171px of nothing — a footer "buffer" that read as a mistake
+   because it was one: 171px is exactly the top padding of .closing on siriai.co.kr, the 513px section
+   that carries the site's last invitation. I had shipped the padding without the content.
+   Scale is measured off that section (2.759vw lead / 1.008vw sub / 0.849vw buttons), but it sits at the
+   gutter rather than centred, because everything else on this page does. */
+.mv-closing{position:relative;z-index:2;background:#000;color:#f5f5f4;
+  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+  padding:clamp(92px,9.5vw,171px) var(--pad-x) clamp(80px,8.4vw,152px)}   /* vw, not vh: on a 950px-tall
+     screen 9.1vh resolved to 86px and the clamp took the 92px floor, nowhere near the 171px measured on the
+     real site. Width is what this scales with, so width is what it should read. */
+.mv-closing::before{content:'';position:absolute;top:0;left:var(--pad-x);right:var(--pad-x);height:1px;
+  background:rgba(245,245,244,.20)}
+.mv-closing-lead{margin:0;font-size:max(21px,2.76vw);font-weight:500;line-height:1.12;
+  letter-spacing:-.028em;word-break:keep-all}
+.mv-closing-sub{margin:clamp(16px,1.8vw,28px) 0 0;font-size:max(14px,1.01vw);font-weight:400;
+  color:rgba(245,245,245,.6);word-break:keep-all}
+.mv-closing-cta{display:flex;gap:10px;margin-top:clamp(26px,3vw,44px);flex-wrap:wrap}
+.mv-cbtn{display:inline-flex;align-items:center;gap:.55em;font-size:max(13px,.849vw);font-weight:500;
+  letter-spacing:-.01em;text-decoration:none;padding:.86em 1.5em;border-radius:999px;
+  background:#f5f5f4;color:#0a0a0a;border:1px solid #f5f5f4;
+  transition:background .3s,color .3s,border-color .3s}
+.mv-cbtn.ghost{background:transparent;color:#f5f5f4;border-color:rgba(245,245,245,.28)}
+.mv-cbtn:hover{background:rgba(245,245,244,.86)}
+.mv-cbtn.ghost:hover{background:transparent;border-color:rgba(245,245,245,.7)}
+.mv-cbtn svg{width:1em;height:1em;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.mv-cbtn:hover svg{transform:translate3d(.16em,-.16em,0)}
 .mv-foot{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif}
 .mv-foot-cols{position:relative;z-index:1;padding:clamp(56px,9vh,110px) var(--pad-x) clamp(40px,6vh,70px);
@@ -1514,7 +1542,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="cv-stage" id="cvStage" aria-hidden="true"><canvas id="cvCanvas"></canvas></div>
   <nav class="cv-groups" id="cvGroups" aria-label="brands"></nav>
   <nav class="cv-brands" id="cvBrands" aria-label="categories"></nav>
-  <p class="mv-frames-cap">Trusted network</p>
 </section>
 <script src="creator-cards.js"></script>
 <script src="sphere-study.js"></script>
@@ -1611,6 +1638,16 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 
 <!-- FOOTER — real Siriai footer (ported from siriai-homepage index.html, dark-adapted).
      Links point at the live homepage since the study has no sub-pages. -->
+<!-- CLOSING — the last invitation, where the real site puts its own. Copy and scale are siriai.co.kr's. -->
+<section class="mv-closing">
+  <h2 class="mv-closing-lead">가장 쉬운 방법으로 인사이트를 발견해보세요.</h2>
+  <p class="mv-closing-sub">소개서를 살펴보거나, 세일즈 팀에 문의할 수 있습니다.</p>
+  <div class="mv-closing-cta">
+    <a class="mv-cbtn" href="https://siriai-qa-deck.vercel.app/" target="_blank" rel="noopener"><span>사업소개서 보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a class="mv-cbtn ghost" href="https://siriai.co.kr/Contact.html"><span>서비스 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
 <footer class="mv-foot">
   <div class="mv-foot-cols">
     <img class="mv-foot-logo" src="assets/siriai-word-ink.png" alt="Siriai">
