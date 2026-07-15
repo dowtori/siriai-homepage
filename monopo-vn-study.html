@@ -1553,20 +1553,25 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
    (never captures, releases instantly). one flick = one item even on a hard flick / long
    trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slots — the hero's field, given a controlled silhouette ---------------------------
    Built only out of the hero's own primitives (warp / bloom / colormap / grain, straight from
-   HERO_FIELD). The slot supplies a DENSITY, exactly as the hero does: dense -> pink core, thin ->
-   amber shoulder, none -> true black, so the canvas leaves no rectangle and the object floats in the
-   page's own black.
+   HERO_FIELD). The slot supplies a DENSITY, exactly as the hero does: dense -> core, thin -> shoulder,
+   none -> true black, so the canvas leaves no rectangle and the object floats in the page's own black.
 
    EVERYTHING THAT MOVES IS A DEVIATION FROM A FIXED SILHOUETTE, never the silhouette itself. uCalm
    scales those deviations to nothing, so hovering does not freeze the object mid-drift — it lets it
-   settle back into the exact shape it is supposed to be. Off the pointer, it breathes again.
+   settle back into the exact shape it is supposed to be.
 
-     Architecting  01 a lit sphere crossing a second, barely-there one — the need against its context
-                   02 a network: many bodies, organically linked (IT / manufacturing / art / fashion / beauty)
-                   03 a waveform, running — support, measure, repeat
-     Software Eng. three spheres whose COMBINATION changes: apart -> intersecting -> one mass.
-                   Their densities SUM, exactly as the hero sums its two blooms, so every overlap
-                   burns through the colormap into a pink lens. Integration is literally the heat.
+   BOTH SECTIONS NOW SPEAK ONE LANGUAGE: round bodies whose combination changes, summed into a single
+   field. Nothing is ever drawn between them. A link, a neck, a lens — those are not shapes, they are
+   what HAPPENS when two bodies are brought close enough, and letting the field say it is the whole
+   point. The sections differ in what they are made of, not in how they are made.
+
+     Architecting (metaballs — bodies that actually merge)
+       01  two circles, apart, level with each other        문제 정의: the need, and its context
+       02  drawn close: a thin bridge appears in the gap     계획 설계: the plan is what forms between them
+       03  they fuse, and the fused thing runs as a wave     실행 & 팔로업: it moves, and it repeats
+     Software Engineering (spheres — bodies that overlap)
+       three spheres, apart -> intersecting -> one mass. Densities SUM, so every overlap doubles and
+       the colormap turns it pink on its own. Integration is literally the heat.
    ---------------------------------------------------------------------------------------------- */
 (function(){
   function start(){
@@ -1578,89 +1583,53 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'varying vec2 vUv;',
     'uniform vec2 uRes;',
     'uniform float uTime;',
-    'uniform int uFormA;',
-    'uniform int uFormB;',
-    'uniform float uMix;',
     'uniform float uAmp;',
     'uniform float uCalm;',                 /* 0 = alive, 1 = settled into the fixed silhouette */
-    'uniform vec3 uSpA;',                   /* Software Engineering: three spheres, x / y / radius, */
-    'uniform vec3 uSpB;',                   /* lerped on the JS side so they genuinely travel and */
-    'uniform vec3 uSpC;',                   /* resize between states instead of cross-fading. */
-    ''
+    'uniform float uLight;',                /* 1 = Architecting, on the light ramp; 0 = SE, on the heat ramp */
+    'uniform float uSE;',
+    'uniform vec3 uSpA;',                   /* SE: three spheres, x / y / radius */
+    'uniform vec3 uSpB;',
+    'uniform vec3 uSpC;',
+    'uniform float uRad[7];',               /* Architecting: seven metaballs on a line — radius each, */
+    'uniform float uSpread;',               /* how far the line reaches, */
+    'uniform float uWav;',                  /* and how hard it waves. All lerped on the JS side, so the */
+    ''                                      /* bodies genuinely travel, meet and merge. */
   ].join('\n');
   var OBJ = [
-    /* a sphere: a boundary that still exists but breathes, carrying its own volume. */
+    /* a sphere with a boundary that breathes, carrying its own volume — Software Engineering */
     'float sph(vec2 q, vec2 c, float R){',
     '  float r = length(q - c) / R;',
     '  float body = 1.0 - smoothstep(0.78, 1.06, r);',
     '  float vol  = 1.0 - smoothstep(0.0, 1.30, r);',
     '  return body * (0.16 + 0.84 * vol);',
     '}',
-    /* distance to a segment — for the links in the network */
-    'float seg(vec2 p, vec2 a, vec2 b){',
-    '  vec2 pa = p - a, ba = b - a;',
-    '  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);',
-    '  return length(pa - ba * h);',
+    '/* a metaball: a body with an infinite tail, so two of them REACH for each other. This is the only',
+    '   reason the bridge in 02 can exist without being drawn. */',
+    'float mball(vec2 q, vec2 c, float r){',
+    '  if(r < 0.0005) return 0.0;',
+    '  vec2 v = q - c;',
+    '  return (r * r) / max(dot(v, v), r * r * 0.16);   /* capped: an uncapped 1/d^2 spikes at every centre, which is what turned the wave into a string of beads */',
     '}',
-    'float link(vec2 q, vec2 a, vec2 b, float w){',
-    '  float d = seg(q, a, b) / w;',
-    '  return exp(-d * d);',
-    '}',
-    'float dens(int f, vec2 q){',
-    '  if(f == 0){                 /* A01  a lit sphere crossing a second, barely-there one */',
-    '    float R = 0.230;',
-    '    float rA = length(q - vec2(-0.086,  0.012)) / R;',
-    '    float rB = length(q - vec2( 0.094, -0.012)) / R;',
-    '    float bA = 1.0 - smoothstep(0.74, 1.08, rA);   /* soft enough to belong beside 02 and 03 */',
-    '    float bB = 1.0 - smoothstep(0.74, 1.08, rB);',
-    '    float lit = bloom(q, vec2(-0.250, -0.150), vec2(0.310));   /* lit from the lower left, falling away */',
-    '    return max(bA * (0.10 + 0.90 * lit), bB * 0.26);',
+    'float architecting(vec2 q){',
+    '  float m = 0.0;',
+    '  for(int i = 0; i < 7; i++){',
+    '    float f = float(i) / 6.0;',
+    '    float x = mix(-uSpread, uSpread, f);',
+    '    float base = sin(float(i) * 1.15);                                   /* THE fixed wave */',
+    '    float flow = sin(float(i) * 0.95 + uTime * 0.80) * 0.28 * (1.0 - uCalm);   /* only ever a deviation from it */',
+    '    m += mball(q, vec2(x, uWav * (base + flow)), uRad[i]);',
     '  }',
-    '  if(f == 1){                 /* A02  a NETWORK: many bodies, organically linked */',
-    '    vec2 n0 = vec2(-0.205,  0.098);',
-    '    vec2 n1 = vec2(-0.020,  0.192);',
-    '    vec2 n2 = vec2( 0.196,  0.086);',
-    '    vec2 n3 = vec2( 0.052, -0.058);',
-    '    vec2 n4 = vec2(-0.148, -0.164);',
-    '    vec2 n5 = vec2( 0.210, -0.182);',
-    '    float d = 0.0;',
-    '    d = max(d, link(q, n0, n1, 0.0135) * 0.42);    /* the links sit under the bodies they join */',
-    '    d = max(d, link(q, n1, n2, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n0, n3, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n2, n3, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n3, n4, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n0, n4, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n3, n5, 0.0135) * 0.42);',
-    '    d = max(d, link(q, n2, n5, 0.0135) * 0.42);',
-    '    d = max(d, bloom(q, n0, vec2(0.056)));         /* different weights — a network of unlike things */',
-    '    d = max(d, bloom(q, n1, vec2(0.038)) * 0.86);',
-    '    d = max(d, bloom(q, n2, vec2(0.062)));',
-    '    d = max(d, bloom(q, n3, vec2(0.049)) * 0.94);',
-    '    d = max(d, bloom(q, n4, vec2(0.042)) * 0.88);',
-    '    d = max(d, bloom(q, n5, vec2(0.033)) * 0.80);',
-    '    return d;',
-    '  }',
-    '  if(f == 2){                 /* A03  a waveform, running — the reference is a radio trace */',
-    '    float t = q.x + 0.5;',
-    '    float ph = uTime * 0.62;',
-    '    float env = sin(t * 3.14159);                                  /* dies at both ends, so it never hits the edge */',
-    '    float base = sin(t * 6.28318 * 1.55) * 0.150;                  /* THE fixed silhouette */',
-    '    float flow = (sin(t * 6.28318 * 2.70 + ph * 1.7) * 0.062',
-    '               +  sin(t * 6.28318 * 1.05 - ph * 1.1) * 0.050)',
-    '               * (1.0 - uCalm);                                    /* ...and this is only ever a deviation from it */',
-    '    float sw = (base + flow) * env * 1.16;',
-    '    float e = (q.y - sw) / 0.082;',
-    '    return exp(-e * e) * smoothstep(0.0, 0.11, t) * (1.0 - smoothstep(0.90, 1.0, t));',
-    '  }',
-    '  /* Software Engineering: three spheres, SUMMED the way the hero sums its two blooms, so where',
-    '     they intersect the density doubles and the colormap turns it pink. The lens is not drawn;',
-    '     it is what happens when two bodies occupy the same place. */',
-    '  return sph(q, uSpA.xy, uSpA.z) + sph(q, uSpB.xy, uSpB.z) + sph(q, uSpC.xy, uSpC.z);',
+    '  float surf  = smoothstep(0.55, 1.45, m);      /* the surface. where two bodies both reach, it closes over. */',
+    '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — enough for volume, not so much',
+    '                                                   that every body centre becomes its own hot spot */',
+    '  return surf * (0.72 + 0.28 * depth);',
     '}',
     'void main(){',
     '  vec2 q = warp(vUv - 0.5, 0.052 * (1.0 - uCalm));   /* the hero\'s own warp — and it, too, is only a deviation */',
-    '  float d = mix(dens(uFormA, q), dens(uFormB, q), uMix);',
-    '  vec3 col = colormap(d * uAmp);            /* the hero\'s own colormap — density IS the colour, as in the hero */',
+    '  float d = uSE > 0.5',
+    '    ? sph(q, uSpA.xy, uSpA.z) + sph(q, uSpB.xy, uSpB.z) + sph(q, uSpC.xy, uSpC.z)',
+    '    : architecting(q);',
+    '  vec3 col = uLight > 0.5 ? colormapLight(d * uAmp) : colormap(d * uAmp);',
     '  vec2 fc = vUv * uRes;',
     '  float gA = hash(fc * 0.58);',
     '  float gB = hash(fc * 0.31 + 19.0);',
@@ -1673,6 +1642,13 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   ].join('\n');
   var FRAG = HEAD + FIELD + '\n' + OBJ;
 
+  /* Architecting — one line of seven bodies. At 01 and 02 only the two ends exist; the middle five are
+     nothing at all. They only grow when the two ends have already met, and what they grow into is the wave. */
+  var ARCH = [
+    { spread:0.290, wav:0.000, rad:[0.138, 0,     0,     0,     0,     0,     0.138] },  /* 01  apart, level — at this distance the field between them reaches only 0.45, under the 0.55 the surface needs. No bridge is POSSIBLE. */
+    { spread:0.212, wav:0.000, rad:[0.150, 0,     0,     0,     0,     0,     0.150] },  /* 02  drawn close: now it reaches 1.00, just over — a thin bridge appears that nobody drew */
+    { spread:0.335, wav:0.118, rad:[0.076, 0.084, 0.086, 0.088, 0.086, 0.084, 0.076] }   /* 03  fused, and running — radii sized so the chain stays closed even at the wave's steepest */
+  ];
   /* Software Engineering — the same three spheres, recombined. x, y, radius. */
   var SE = [
     [[-0.100,-0.092, 0.212], [ 0.132, 0.110, 0.162], [-0.058, 0.152, 0.104]],  /* 01  apart, touching — distinct parts */
@@ -1693,21 +1669,27 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uFormA','uFormB','uMix','uAmp','uCalm','uSpA','uSpB','uSpC']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uWav']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
+    U.uRad=[]; for(var i=0;i<7;i++) U.uRad.push(gl.getUniformLocation(pr,'uRad['+i+']'));
     var se = cv.getAttribute('data-set')==='s';
-    /* one colormap serves the whole page — amber where the field is thin, pink where it burns. Architecting
-       is held on the amber shoulder; Software Engineering runs hot enough that its overlaps reach pink. */
-    gl.uniform1f(U.uAmp, se ? 0.74 : 0.52);
-    gl.uniform1f(U.uMix, 0.0);
+    gl.uniform1f(U.uSE,   se ? 1.0 : 0.0);
+    /* Architecting runs the SAME ramp in light instead of heat, and runs it to the top — thinking, before
+       anything is made. Software Engineering stays on the page's heat, held so that a lone sphere is warm
+       and only an overlap is hot. */
+    gl.uniform1f(U.uLight, se ? 0.0 : 1.0);
+    gl.uniform1f(U.uAmp,   se ? 0.74 : 1.0);
     gl.uniform1f(U.uCalm, 0.0);
-    var base = se ? 3 : 0;
-    return {gl:gl, U:U, se:se, base:base, a:base, b:base, mix:1, t0:0, active:0,
-            spFrom:SE[0], spTo:SE[0], spCur:SE[0], spMix:1, sp0:0, calm:0, want:0};
+    return {gl:gl, U:U, se:se, active:0, calm:0, want:0,
+            from:(se?SE[0]:ARCH[0]), to:(se?SE[0]:ARCH[0]), cur:(se?SE[0]:ARCH[0]), mix:1, t0:0};
   }
 
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function blendSp(a,b,t){ return [0,1,2].map(function(i){ return [lerp(a[i][0],b[i][0],t), lerp(a[i][1],b[i][1],t), lerp(a[i][2],b[i][2],t)]; }); }
+  function lp(a,b,t){ return a+(b-a)*t; }
+  function blendSE(a,b,t){ return [0,1,2].map(function(i){ return [lp(a[i][0],b[i][0],t), lp(a[i][1],b[i][1],t), lp(a[i][2],b[i][2],t)]; }); }
+  function blendArch(a,b,t){
+    return { spread:lp(a.spread,b.spread,t), wav:lp(a.wav,b.wav,t),
+             rad:a.rad.map(function(r,i){ return lp(r,b.rad[i],t); }) };
+  }
 
   var orbs=[];
   [].slice.call(document.querySelectorAll('canvas.orb-field')).forEach(function(cv){
@@ -1715,13 +1697,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     r.cv=cv; r.host=cv.closest('.mv-strengths-orb'); orbs.push(r);
     r.host.__setForm=function(i){
       var k=Math.max(0,Math.min(2,i)); r.active=k;
-      if(r.se){                                        /* the spheres travel to their new arrangement */
-        if(SE[k]===r.spTo) return;
-        r.spFrom=r.spCur; r.spTo=SE[k]; r.spMix=0; r.sp0=performance.now();
-      } else {                                         /* Architecting morphs form to form */
-        var w=r.base+k; if(w===r.b) return;
-        r.a=r.b; r.b=w; r.mix=0; r.t0=performance.now();
-      }
+      var want=(r.se?SE:ARCH)[k];
+      if(want===r.to) return;
+      r.from=r.cur; r.to=want; r.mix=0; r.t0=performance.now();   /* the bodies travel — nothing cross-fades */
     };
   });
   if(!orbs.length) return;
@@ -1743,22 +1721,23 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       var o=orbs[k];
       if(!vis.get(o.host)) continue;
       var px=size(o), gl=o.gl;
-      /* ease toward / away from the fixed silhouette */
       o.calm += (o.want - o.calm) * Math.min(1, dt * 5.2);
       gl.uniform1f(o.U.uCalm, o.calm);
-      if(o.mix<1){ o.mix=Math.min(1,(now-o.t0)/900); var m=o.mix; gl.uniform1f(o.U.uMix, m*m*m*(m*(m*6.0-15.0)+10.0)); }
-      if(o.se && o.spMix<1){
-        o.spMix=Math.min(1,(now-o.sp0)/1000); var s=o.spMix; s=s*s*s*(s*(s*6.0-15.0)+10.0);
-        o.spCur=blendSp(o.spFrom,o.spTo,s);
+      if(o.mix<1){
+        o.mix=Math.min(1,(now-o.t0)/1000); var m=o.mix; m=m*m*m*(m*(m*6.0-15.0)+10.0);
+        o.cur = o.se ? blendSE(o.from,o.to,m) : blendArch(o.from,o.to,m);
       }
       if(o.se){
-        gl.uniform3f(o.U.uSpA, o.spCur[0][0], o.spCur[0][1], o.spCur[0][2]);
-        gl.uniform3f(o.U.uSpB, o.spCur[1][0], o.spCur[1][1], o.spCur[1][2]);
-        gl.uniform3f(o.U.uSpC, o.spCur[2][0], o.spCur[2][1], o.spCur[2][2]);
+        gl.uniform3f(o.U.uSpA, o.cur[0][0], o.cur[0][1], o.cur[0][2]);
+        gl.uniform3f(o.U.uSpB, o.cur[1][0], o.cur[1][1], o.cur[1][2]);
+        gl.uniform3f(o.U.uSpC, o.cur[2][0], o.cur[2][1], o.cur[2][2]);
+      } else {
+        gl.uniform1f(o.U.uSpread, o.cur.spread);
+        gl.uniform1f(o.U.uWav, o.cur.wav);
+        for(var i=0;i<7;i++) gl.uniform1f(o.U.uRad[i], o.cur.rad[i]);
       }
       gl.uniform2f(o.U.uRes,px,px);
       gl.uniform1f(o.U.uTime,(now-T0)/1000);
-      gl.uniform1i(o.U.uFormA,o.a); gl.uniform1i(o.U.uFormB,o.b);
       gl.drawArrays(gl.TRIANGLES,0,3);
     }
     requestAnimationFrame(frame);
@@ -2047,10 +2026,15 @@ float fbm(vec2 p){
        ground): soft orange / amber / pink blooms drift from the corners,
        and a warm centre eases after the pointer (uMouse) — liveliness +
        warmth. base stays near-white so black type reads clean. --- */
-const vec3 PAPER  = vec3(0.972);
+const vec3 PAPER  = vec3(0.980, 0.968, 0.945);   /* a WARM white — paper under the same lamp, not an LED */
 const vec3 ORANGE = vec3(1.00, 0.42, 0.13);
 const vec3 AMBER  = vec3(1.00, 0.78, 0.05);
 const vec3 PINK   = vec3(0.90, 0.18, 0.38);
+/* THE SAME LIGHT, BEFORE IT CATCHES. ASH -> HAZE -> PAPER is the heat ramp's exact twin: identical
+   stops, identical glow, only the three colours swapped. Architecting is the thinking half of the
+   work, so it runs in light; Software Engineering makes things, so it runs in heat. */
+const vec3 ASH    = vec3(0.42, 0.375, 0.330);
+const vec3 HAZE   = vec3(0.80, 0.755, 0.700);
 /* THE FIELD, BROKEN INTO THE PRIMITIVES IT IS ACTUALLY MADE OF, so that anything else on the page which
    wants to look like the hero is BUILT FROM THE HERO rather than re-implementing it. The hero composes
    them below with its own numbers and its output is unchanged; the strengths slots compose the same
@@ -2077,6 +2061,15 @@ vec3 colormap(float g){
   cm = mix(cm, ORANGE, smoothstep(0.34, 0.72, g));
   cm = mix(cm, PINK,   smoothstep(0.60, 0.98, g));
   return cm * smoothstep(0.02, 0.74, g);         // BLACK ground -> amber/pink bloom
+}
+
+/* colormap()'s twin, in light. Same ramp, same stops, same glow — heat swapped for paper. */
+vec3 colormapLight(float g){
+  g = clamp(g, 0.0, 1.0);
+  vec3 cm = ASH;
+  cm = mix(cm, HAZE,  smoothstep(0.34, 0.72, g));
+  cm = mix(cm, PAPER, smoothstep(0.60, 0.98, g));
+  return cm * smoothstep(0.02, 0.74, g);         // BLACK ground -> ash/paper bloom
 }
 
 /* the field as an arrangement of two blooms — the hero passes its corners, and it is the only caller. */
