@@ -1003,7 +1003,8 @@ body.ready .mv-contact-footer {
   letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(26px,3.4vw,48px)}
 .mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
 .mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}
-.mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:center}
+.mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start}   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
+      column. Centring it left a slab of black on the left and pushed the whole composition inward. */
 .orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mv-biz-copy{position:relative;font-size:clamp(16px,1.98vw,30px)}   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
 .mv-biz-num{position:absolute;left:-2.3em;top:.62em;font-size:.419em;font-weight:300;line-height:1;
@@ -1671,8 +1672,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
    metaballs are close enough that their fields close over the gap. That single fact carries both of
    the first two lines, and it is why they are the same function with different numbers:
 
-     CONNECT    the two never move. They cannot reach each other at this distance — and then a third
-                body appears in the gap, and now there is one chain. The creator IS the connection.
+     CONNECT    a body on the left and a CROWD on the right — a brand is not reaching one thing. Nothing
+                moves: they simply cannot reach each other. Then a person appears in the gap, and the
+                whole thing is one. The creator IS the connection.
      ARCHITECT  no third body. Instead the two close on each other until the field bridges by itself,
                 and then what they became runs as a wave.
      BUILD      three spheres whose combination changes. Their densities SUM the way the hero sums
@@ -1696,9 +1698,11 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform vec3 uSpA;',                   /* BUILD: three spheres, x / y / radius */
     'uniform vec3 uSpB;',
     'uniform vec3 uSpC;',
-    'uniform float uSpread;',               /* CONNECT/ARCHITECT: the outer pair, this far apart, */
-    'uniform float uRadA;',                 /* this big, */
-    'uniform float uRadM;',                 /* a third body in the gap, this big (0 = absent), */
+    'uniform float uSpread;',               /* CONNECT/ARCHITECT: the outer bodies, this far out, */
+    'uniform float uRadL;',                 /* the left one this big, */
+    'uniform float uRadR;',                 /* the right one this big (0 for CONNECT — its right is a crowd), */
+    'uniform float uRadM;',                 /* a body in the gap, this big (0 = absent), */
+    'uniform float uCrowd;',                /* an audience of many, this present (0 = absent), */
     'uniform float uWave;',                 /* and this far into having become a wave. */
     ''
   ].join('\n');
@@ -1718,9 +1722,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '  return (r * r) / max(dot(v, v), r * r * 0.16);   /* capped: an uncapped 1/d^2 spikes at every centre */',
     '}',
     'float bodies(vec2 q){',
-    '  float m = mball(q, vec2(-uSpread, 0.0), uRadA)',
-    '          + mball(q, vec2( uSpread, 0.0), uRadA)',
-    '          + mball(q, vec2( 0.0,     0.0), uRadM);   /* the one in the middle — present only for CONNECT */',
+    '  float m = mball(q, vec2(-uSpread, 0.0), uRadL)',
+    '          + mball(q, vec2( uSpread, 0.0), uRadR)',
+    '          + mball(q, vec2( 0.0,     0.0), uRadM);   /* whoever stands between — present only for CONNECT */',
+    '  if(uCrowd > 0.0005){',
+    '    /* the audience. A brand is not trying to reach ONE thing, so CONNECT does not open on a pair — it',
+    '       opens on a body and a crowd. These four sit far enough apart that the field between them reaches',
+    '       0.54, under the 0.55 the surface needs: they stay people, never a crowd-shaped blob. And nothing',
+    '       here can touch the body on the left. That is the whole problem, stated. */',
+    '    m += mball(q, vec2( 0.230,  0.130), 0.052 * uCrowd);',
+    '    m += mball(q, vec2( 0.330, -0.030), 0.045 * uCrowd);',
+    '    m += mball(q, vec2( 0.205, -0.145), 0.048 * uCrowd);',
+    '    m += mball(q, vec2( 0.365,  0.140), 0.036 * uCrowd);',
+    '  }',
     '  float surf  = smoothstep(0.55, 1.45, m);      /* the surface. where two bodies both reach, it closes over. */',
     '  float depth = smoothstep(1.00, 4.50, m);      /* a gentle lift toward the core — volume, without every',
     '                                                   body centre becoming its own hot spot */',
@@ -1761,15 +1775,15 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   /* CONNECT — the outer two never move, and at this distance their fields reach 0.35 between them:
      under the 0.55 the surface needs, so they simply cannot touch. Only the body in the middle changes. */
   var CONNECT = [
-    { spread:0.300, rad:0.125, mid:0.000, wave:0.0 },   /* 01  two, and a gap that nothing crosses */
-    { spread:0.300, rad:0.125, mid:0.022, wave:0.0 },   /* 02  someone appears in it — still too small to join anything */
-    { spread:0.300, rad:0.125, mid:0.105, wave:0.0 }    /* 03  and now the three are one chain. Nobody moved. */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.000, crowd:1.0, wave:0.0 },   /* 01  a brand, and the people it wants. Nothing crosses. */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.032, crowd:1.0, wave:0.0 },   /* 02  someone appears between them — still too small to join anything */
+    { spread:0.300, radL:0.150, radR:0.0, mid:0.110, crowd:1.0, wave:0.0 }    /* 03  and now it is one thing. Nobody moved except the person in the middle. */
   ];
   /* ARCHITECT — no third body. The two close on each other instead, and then run. */
   var ARCH = [
-    { spread:0.290, rad:0.138, mid:0.0, wave:0.0 },     /* 01  apart — the field between them reaches only 0.45 */
-    { spread:0.212, rad:0.150, mid:0.0, wave:0.0 },     /* 02  drawn close: it reaches 1.00, just over — a bridge nobody drew */
-    { spread:0.026, rad:0.132, mid:0.0, wave:1.0 }      /* 03  the two arrive at the same place, and become the wave */
+    { spread:0.290, radL:0.138, radR:0.138, mid:0.0, crowd:0.0, wave:0.0 },   /* 01  apart — the field between them reaches only 0.45 */
+    { spread:0.212, radL:0.150, radR:0.150, mid:0.0, crowd:0.0, wave:0.0 },   /* 02  drawn close: it reaches 1.00, just over — a bridge nobody drew */
+    { spread:0.026, radL:0.132, radR:0.132, mid:0.0, crowd:0.0, wave:1.0 }    /* 03  the two arrive at the same place, and become the wave */
   ];
   /* BUILD — the same three spheres, recombined. x, y, radius. */
   var SE = [
@@ -1791,15 +1805,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadA','uRadM','uWave']
+    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
     var set = cv.getAttribute('data-set') || 'a';
     var se = set === 's';
     gl.uniform1f(U.uSE, se ? 1.0 : 0.0);
-    /* CONNECT and ARCHITECT are the thinking half of the work, and thinking happens before anything is
-       made, so they run the same ramp in light. BUILD makes, and its overlaps reach the page's heat. */
-    gl.uniform1f(U.uLight, se ? 0.0 : 1.0);
-    gl.uniform1f(U.uAmp,   se ? 0.74 : 1.0);
+    /* Three lines of work, three depths into the SAME two ramps. No new colour is invented for any of
+       them, because the page has one lamp and they are only ever standing at different distances from it.
+         CONNECT   the heat ramp, held on its amber shoulder: warm, and it never burns. This one is about
+                   being known by people, not about making a thing.
+         ARCHITECT the light ramp, run to the top: thinking, which happens before anything is made.
+         BUILD     the heat ramp at full, so an overlap reaches pink. Integration is the heat. */
+    gl.uniform1f(U.uLight, set === 'a' ? 1.0 : 0.0);
+    gl.uniform1f(U.uAmp,   set === 'a' ? 1.0 : (set === 'c' ? 0.50 : 0.74));
     gl.uniform1f(U.uCalm, 0.0);
     var states = se ? SE : (set === 'c' ? CONNECT : ARCH);
     return {gl:gl, U:U, se:se, states:states, calm:0, want:0,
@@ -1820,8 +1838,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var tp = ez(cl(into ? t / 0.52 : (t - 0.46) / 0.54));
     var tw = ez(cl(into ? (t - 0.46) / 0.54 : t / 0.52));
     if(a.wave === b.wave){ tp = ez(t); tw = tp; }        /* CONNECT never waves, so it just eases */
-    return { spread:lp(a.spread,b.spread,tp), rad:lp(a.rad,b.rad,tp),
-             mid:lp(a.mid,b.mid,tp), wave:lp(a.wave,b.wave,tw) };
+    return { spread:lp(a.spread,b.spread,tp), radL:lp(a.radL,b.radL,tp), radR:lp(a.radR,b.radR,tp),
+             mid:lp(a.mid,b.mid,tp), crowd:lp(a.crowd,b.crowd,tp), wave:lp(a.wave,b.wave,tw) };
   }
 
   var orbs=[];
@@ -1870,8 +1888,10 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         gl.uniform3f(o.U.uSpC, o.cur[2][0], o.cur[2][1], o.cur[2][2]);
       } else {
         gl.uniform1f(o.U.uSpread, o.cur.spread);
-        gl.uniform1f(o.U.uRadA, o.cur.rad);
+        gl.uniform1f(o.U.uRadL, o.cur.radL);
+        gl.uniform1f(o.U.uRadR, o.cur.radR);
         gl.uniform1f(o.U.uRadM, o.cur.mid);
+        gl.uniform1f(o.U.uCrowd, o.cur.crowd);
         gl.uniform1f(o.U.uWave, o.cur.wave);
       }
       gl.uniform2f(o.U.uRes,px,px);
