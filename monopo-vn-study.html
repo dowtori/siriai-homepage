@@ -991,19 +991,30 @@ body.ready .mv-contact-footer {
   letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
 .mv-strengths-eyebrow::before{content:'\2198';font-size:13px;opacity:.65}
 .mv-strengths-row{display:grid;grid-template-columns:0.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:center}
-.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;overflow:hidden;
-  transform:perspective(1000px);transform-origin:center;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform}
-.mv-strengths-orb:hover{transform:perspective(1000px) scale(1.05)}   /* object steps forward (JS adds a cursor tilt) */
-.mv-strengths-orb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:translate3d(0,18px,0) scale(1.03);
-  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
-.mv-strengths-orb img:first-child{opacity:1;transform:none}   /* fallback + mobile */
-/* frosted veil: blur + dim ONLY (no flat tint -> black margin stays black -> NO visible square box).
-   hover dissolves the WHOLE veil at once (generous reveal, not a circular spotlight) -> the object lights up. */
-.orb-frost{position:absolute;inset:0;z-index:2;pointer-events:none;
-  -webkit-backdrop-filter:blur(12px) brightness(.58) saturate(.96);backdrop-filter:blur(12px) brightness(.58) saturate(.96);
-  transition:opacity .5s cubic-bezier(.22,1,.36,1)}
-.mv-strengths-orb:hover .orb-frost{opacity:0}
-@media (pointer:coarse){.orb-frost{display:none}}
+/* strengths slot = a MINIATURE HERO: the hero's own bloom field (its shader math painted once into --field)
+   drifting slowly behind a STATIC grain overlay, seen through a circular FORM. 2D, abstract — no photos. */
+.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;
+  transition:filter .34s cubic-bezier(.22,1,.36,1)}
+.orb-form{position:absolute;inset:0;opacity:0;background-image:var(--field);background-size:118% 118%;
+  background-repeat:no-repeat;animation:orbDrift 30s ease-in-out infinite alternate;
+  transition:opacity .6s cubic-bezier(.22,1,.36,1);will-change:background-position,opacity}
+.orb-form:first-of-type{opacity:1}
+@keyframes orbDrift{from{background-position:14% 86%}to{background-position:86% 14%}}
+/* the six forms — silhouette only (circular language) */
+.orb-form[data-f='a1']{clip-path:circle(36% at 50% 50%)}                                              /* 진단: one whole disc */
+.orb-form[data-f='a2']{-webkit-mask:radial-gradient(circle at 50% 50%,#000 0 14%,transparent 14% 26%,#000 26% 36%,transparent 36%);
+                    mask:radial-gradient(circle at 50% 50%,#000 0 14%,transparent 14% 26%,#000 26% 36%,transparent 36%)}   /* 설계: hub + reach */
+.orb-form[data-f='a3']{-webkit-mask:radial-gradient(circle at 50% 50%,transparent 0 22%,#000 22% 36%,transparent 36%);
+                    mask:radial-gradient(circle at 50% 50%,transparent 0 22%,#000 22% 36%,transparent 36%)}                /* 실행: a cycle */
+.orb-form[data-f='s1']{clip-path:circle(14% at 50% 50%)}                                              /* 기획: the first spark */
+.orb-form[data-f='s2']{clip-path:ellipse(37% 14% at 50% 50%)}                                         /* 개발: motion */
+.orb-form[data-f='s3']{-webkit-mask:radial-gradient(circle at 50% 50%,transparent 0 11%,#000 11% 16%,transparent 16% 24%,#000 24% 29%,transparent 29% 33%,#000 33% 38%,transparent 38%);
+                    mask:radial-gradient(circle at 50% 50%,transparent 0 11%,#000 11% 16%,transparent 16% 24%,#000 24% 29%,transparent 29% 33%,#000 33% 38%,transparent 38%)}   /* UX·UI: one system */
+/* the hero's signature: STATIC grain, strong on lit areas, quiet on black (overlay blend does exactly that) */
+.orb-grain{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:overlay;opacity:.92;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'180'%20height%3D'180'%3E%3Cfilter%20id%3D'n'%20x%3D'0'%20y%3D'0'%20width%3D'100%25'%20height%3D'100%25'%3E%3CfeTurbulence%20type%3D'fractalNoise'%20baseFrequency%3D'0.62'%20numOctaves%3D'2'%20stitchTiles%3D'stitch'%20result%3D't'%2F%3E%3CfeColorMatrix%20in%3D't'%20type%3D'saturate'%20values%3D'0'%20result%3D'g'%2F%3E%3CfeComponentTransfer%20in%3D'g'%3E%3CfeFuncR%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncG%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncB%20type%3D'linear'%20slope%3D'2.4'%20intercept%3D'-0.7'%2F%3E%3CfeFuncA%20type%3D'linear'%20slope%3D'0'%20intercept%3D'1'%2F%3E%3C%2FfeComponentTransfer%3E%3C%2Ffilter%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20filter%3D'url(%23n)'%2F%3E%3C%2Fsvg%3E")}
+@media (hover:hover){.mv-strengths-orb:hover{filter:brightness(1.18) saturate(1.06)}}
+@media (prefers-reduced-motion:reduce){.orb-form{animation:none}}
 
 .mv-str-stage{position:relative;min-height:clamp(220px,34vh,340px)}
 .mv-str-item{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;will-change:opacity,transform;
@@ -1291,7 +1302,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Architecting</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><img src="assets/strengths/A1.png" alt=""><img src="assets/strengths/A2.png" alt=""><img src="assets/strengths/A3.png" alt=""><div class="orb-frost"></div></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><i class="orb-form" data-f="a1"></i><i class="orb-form" data-f="a2"></i><i class="orb-form" data-f="a3"></i><div class="orb-grain"></div></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>문제 정의 (착수·진단)</b> — 브랜드의 니즈를 깊이 있게 이해하고 전체 맥락을 파악해, 근본적인 페인 포인트를 폭넓은 인사이트로 확인합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>계획 설계</b> — IT·제조·아트·패션·뷰티를 아우르는 넓은 네트워크를 기반으로, 실행 가능한 구체적인 계획을 제시합니다.</p>
@@ -1306,7 +1317,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-str-inner">
       <span class="mv-strengths-eyebrow">Software Engineering</span>
       <div class="mv-strengths-row">
-        <div class="mv-strengths-orb" aria-hidden="true"><img src="assets/strengths/S1.png" alt=""><img src="assets/strengths/S2.png" alt=""><img src="assets/strengths/S3.png" alt=""><div class="orb-frost"></div></div>
+        <div class="mv-strengths-orb" aria-hidden="true"><i class="orb-form" data-f="s1"></i><i class="orb-form" data-f="s2"></i><i class="orb-form" data-f="s3"></i><div class="orb-grain"></div></div>
         <div class="mv-str-stage">
           <p class="mv-str-item"><sup class="mv-strengths-num">01</sup><b>서비스 기획</b> — 세상의 문제에서 출발합니다. 페인 포인트를 먼저 정의하고 기획을 시작합니다.</p>
           <p class="mv-str-item"><sup class="mv-strengths-num">02</sup><b>프로덕트 개발</b> — 상상 속 프로덕트를 가장 빠르게. 핵심 프로토타입을 며칠 만에 구현합니다.</p>
@@ -1546,26 +1557,59 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 /* strengths wheel-step carousel — DOWN-scroll captures a category with a gentle magnetic
    SETTLE (no hard snap) and steps 01->02->03 one item per flick; UP-scroll is frictionless
    (never captures, releases instantly). one flick = one item even on a hard flick / long
-   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). desktop only. */
+   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slot field: the HERO's own shader math (fbm-warped corner blooms -> amber->orange->pink
+   colormap -> glow), painted ONCE per section into a data-URL and handed to CSS as --field. The CSS then
+   drifts it slowly behind a static grain overlay, through a circular form. No WebGL, no image downloads. ---- */
+(function(){
+  function heroField(size, pink){
+    var c=document.createElement('canvas'); c.width=c.height=size;
+    var x=c.getContext('2d'), im=x.createImageData(size,size), d=im.data;
+    function hash(a,b){ var n=Math.sin(a*12.9898+b*78.233)*43758.5453; return n-Math.floor(n); }
+    function noise(a,b){ var i=Math.floor(a),j=Math.floor(b),f=a-i,g=b-j,u=f*f*(3-2*f),v=g*g*(3-2*g);
+      return hash(i,j)*(1-u)*(1-v)+hash(i+1,j)*u*(1-v)+hash(i,j+1)*(1-u)*v+hash(i+1,j+1)*u*v; }
+    function fbm(a,b){ var s=0,m=0.5,k; for(k=0;k<3;k++){ s+=m*noise(a,b); a*=2; b*=2; m*=0.5; } return s; }
+    function ss(e0,e1,t){ t=Math.min(1,Math.max(0,(t-e0)/(e1-e0))); return t*t*(3-2*t); }
+    var AM=[1,.78,.05], OR=[1,.42,.13], PK=[.90,.18,.38], px,py;
+    for(py=0;py<size;py++) for(px=0;px<size;px++){
+      var p0=(px+0.5)/size-0.5, p1=(py+0.5)/size-0.5;
+      var w0=p0+(fbm(p0*1.6+2.3,p1*1.6+1.7)-0.5)*0.34, w1=p1+(fbm(p0*1.6+4.0,p1*1.6+3.1)-0.5)*0.34;
+      /* The mini slot shows a BLOOM ITSELF (the hero's corner-bloom composition has a dark centre that a
+         circular crop would land on). The two sections sample DIFFERENT BANDS of the hero's own colormap —
+         exactly like the hero's amber bottom-left bloom vs its pink top-right one. */
+      var d0=w0-0.06, d1=w1+0.05;
+      var bloom=Math.exp(-(d0*d0+d1*d1)/0.16);                    /* 0..1 */
+      var g=pink ? (0.58+0.42*bloom) : (0.30+0.34*bloom);         /* SE -> orange..pink band, Arch -> gold..amber band */
+      var t1=ss(.34,.72,g), t2=ss(.60,.98,g);
+      var r=AM[0]+(OR[0]-AM[0])*t1, gg=AM[1]+(OR[1]-AM[1])*t1, bb=AM[2]+(OR[2]-AM[2])*t1;
+      r+=(PK[0]-r)*t2; gg+=(PK[1]-gg)*t2; bb+=(PK[2]-bb)*t2;
+      var glow=0.26+0.66*bloom, i=(py*size+px)*4;
+      d[i]=r*glow*255; d[i+1]=gg*glow*255; d[i+2]=bb*glow*255; d[i+3]=255;
+    }
+    x.putImageData(im,0,0); return c.toDataURL('image/png');
+  }
+  function paint(){
+    [].slice.call(document.querySelectorAll('.mv-strengths-orb')).forEach(function(orb){
+      var f=orb.querySelector('.orb-form'); if(!f) return;
+      var pink=(f.getAttribute('data-f')||'').charAt(0)==='s';   /* SE reads pink, Architecting amber */
+      orb.style.setProperty('--field', 'url('+heroField(320, pink)+')');
+    });
+  }
+  if(window.requestIdleCallback) requestIdleCallback(paint, {timeout:2500}); else setTimeout(paint, 400);
+})();
+
+/* strengths wheel-step module (desktop only) */
 (function(){
   if(matchMedia('(prefers-reduced-motion:reduce)').matches || matchMedia('(pointer:coarse)').matches) return;
   var secs = [].slice.call(document.querySelectorAll('[data-str-pin]')).map(function(sec){
     var items=[].slice.call(sec.querySelectorAll('.mv-str-item'));
-    var imgs=[].slice.call(sec.querySelectorAll('.mv-strengths-orb img'));
+    var forms=[].slice.call(sec.querySelectorAll('.orb-form'));
     items.forEach(function(it,i){
       it.style.opacity = i===0?'1':'0';
       it.style.transform = i===0?'none':'translate3d(0,26px,0)';
       it.style.transition = 'opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
     });
-    imgs.forEach(function(im,i){ im.style.opacity = i===0?'1':'0'; im.style.transform = i===0?'none':'translate3d(0,18px,0) scale(1.03)'; });   /* image settles in sync with its text item */
-    var orb = sec.querySelector('.mv-strengths-orb');
-    if(orb){
-      orb.addEventListener('mousemove', function(e){ var r=orb.getBoundingClientRect();   /* subtle 3D tilt toward the cursor */
-        var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
-        orb.style.transform='perspective(1000px) rotateY('+(dx*9).toFixed(2)+'deg) rotateX('+(-dy*9).toFixed(2)+'deg) scale(1.05)'; });
-      orb.addEventListener('mouseleave', function(){ orb.style.transform=''; });
-    }
-    return { sec:sec, items:items, imgs:imgs, idx:0 };
+    forms.forEach(function(el,i){ el.style.opacity = i===0?'1':'0'; });   /* the form cross-fades in sync with its text item */
+    return { sec:sec, items:items, forms:forms, idx:0 };
   });
   if(!secs.length) return;
   window.__mvStrLock = false;
@@ -1580,8 +1624,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     for(var i=0;i<S.items.length;i++){ var on=i===S.idx;
       S.items[i].style.opacity = on?'1':'0';
       S.items[i].style.transform = on?'none':('translate3d(0,'+(i<S.idx?-26:26)+'px,0)');
-      if(S.imgs[i]){ S.imgs[i].style.opacity = on?'1':'0';
-        S.imgs[i].style.transform = on?'none':('translate3d(0,'+(i<S.idx?-18:18)+'px,0) scale(1.03)'); } }
+      if(S.forms[i]) S.forms[i].style.opacity = on?'1':'0'; }
   }
   function armIdle(){ if(idleT) clearTimeout(idleT); idleT = setTimeout(function(){ canStep = true; }, IDLE_GAP); }
   /* gentle eased glide that fills the viewport with the captured category — replaces the instant "턱" snap.
