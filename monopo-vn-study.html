@@ -1008,9 +1008,13 @@ body.ready .mv-contact-footer {
   letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(26px,3.4vw,48px)}
 .mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
 .mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}
-.mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start}   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
+.mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start;
+  transition:transform 1.15s cubic-bezier(.22,1,.36,1)}   /* hover leans it a few px toward the pointer. The long
+     ease is the whole effect: the object keeps arriving after the pointer has stopped, which reads as following
+     rather than tracking. Max travel is 6.5px — it never leaves its own box. */   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
       column. Centring it left a slab of black on the left and pushed the whole composition inward. */
 .orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
+@media (prefers-reduced-motion:reduce){.mv-biz-orb{transition:none;transform:none!important}}
 .mv-biz-copy{position:relative;font-size:clamp(16px,1.98vw,30px)}   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
 .mv-biz-num{position:absolute;left:-2.3em;top:.62em;font-size:.419em;font-weight:300;line-height:1;
   color:rgba(245,245,245,.5)}   /* .83vw / 1.98vw = .419 — monopo's index, to the same ratio. It hangs in
@@ -1661,9 +1665,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
    shoulder, none -> true black, so the canvas leaves no rectangle and the object floats in the
    page's own black.
 
-   EVERYTHING THAT MOVES IS A DEVIATION FROM A FIXED SILHOUETTE, never the silhouette itself. uCalm
-   scales those deviations to nothing, so hovering does not freeze the object mid-drift — it lets it
-   settle back into the exact shape it is meant to be.
+   Hovering does not change the object. It only leans it a few pixels toward the pointer, slowly, and
+   lets it come back. There is no settling and nothing to undo — an object that has to be unwound on
+   hover will unwind everything it has accumulated, which is exactly what happened here.
 
    Nothing between two bodies is ever DRAWN. A bridge is not a shape, it is what happens when two
    metaballs are close enough that their fields close over the gap. That single fact carries both of
@@ -1690,7 +1694,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'uniform vec2 uRes;',
     'uniform float uTime;',
     'uniform float uAmp;',
-    'uniform float uCalm;',                 /* 0 = alive, 1 = settled into the fixed silhouette */
     'uniform float uLight;',                /* 1 = the light ramp; 0 = the page heat ramp */
     'uniform float uSE;',                   /* 1 = spheres (BUILD); 0 = metaballs (CONNECT/ARCHITECT) */
     'uniform vec3 uSpA;',                   /* BUILD: three spheres, x / y / radius */
@@ -1737,9 +1740,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '    float rr = length(q);',
     '    float dr = rr / max(uDrop, 0.0001);',
     '    float drop = exp(-dr * dr * 1.8);',
-    '    /* travelling rings. The phase runs on uTime, so uCalm stills them into one fixed frame rather',
-    '       than freezing them wherever they happened to be — the same rule the rest of the page follows. */',
-    '    float ph = rr * 40.0 - uTime * 2.4 * (1.0 - uCalm);',
+    '    float ph = rr * 40.0 - uTime * 2.4;   /* the rings just travel. Scaling this term to still them',
+    '                                              rewound every second it had ever accumulated. */',
     '    float w = 0.5 + 0.5 * sin(ph);',
     '    w = w * w;                                                   /* soft bands. At the fourth power these were',
     '                                                                    hard thin lines — drawn, not rippled. */',
@@ -1797,14 +1799,14 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '  float base = sin(t * 6.28318 * 1.55) * 0.150;                  /* THE fixed silhouette */',
     '  float flow = (sin(t * 6.28318 * 2.70 + ph * 1.7) * 0.062',
     '             +  sin(t * 6.28318 * 1.05 - ph * 1.1) * 0.050)',
-    '             * (1.0 - uCalm);                                    /* ...and this is only ever a deviation from it */',
+    '             ;',
     '  float sw = (base + flow) * env * 1.16;',
     '  float e = (q.y - sw) / 0.082;',
     '  float wave = exp(-e * e) * smoothstep(0.0, 0.11, t) * (1.0 - smoothstep(0.90, 1.0, t));',
     '  return mix(body, wave, uWave);',
     '}',
     'void main(){',
-    '  vec2 q = warp(vUv - 0.5, 0.052 * (1.0 - uCalm));   /* the hero\'s own warp — and it, too, is only a deviation */',
+    '  vec2 q = warp(vUv - 0.5, 0.052);   /* the hero\'s own warp */',
     '  float d = uSE > 0.5',
     '    ? sph(q, uSpA.xy, uSpA.z) + sph(q, uSpB.xy, uSpB.z) + sph(q, uSpC.xy, uSpC.z)',
     '    : bodies(q);',
@@ -1857,7 +1859,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uAmp','uCalm','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uDrop','uRipple','uArray','uLink','uPull','uWave']
+    var U={}; ['uRes','uTime','uAmp','uLight','uSE','uSpA','uSpB','uSpC','uSpread','uRadL','uRadR','uRadM','uCrowd','uDrop','uRipple','uArray','uLink','uPull','uWave']
       .forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
     var set = cv.getAttribute('data-set') || 'a';
     var se = set === 's';
@@ -1872,9 +1874,8 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     gl.uniform1f(U.uAmp,   set === 'a' ? 1.0 : (set === 'c' ? 0.62 : 0.74));   /* .62: on this ramp brightness and hue share an
                                                                                   axis, and .50 capped the glow at .68 — too dim
                                                                                   for points. Pink does not start until ~.75. */
-    gl.uniform1f(U.uCalm, 0.0);
     var states = se ? SE : (set === 'c' ? CONNECT : ARCH);
-    return {gl:gl, U:U, se:se, states:states, calm:0, want:0,
+    return {gl:gl, U:U, se:se, states:states,
             from:states[0], to:states[0], cur:states[0], mix:1, t0:0,
             idx:0, dir:1, holdUntil:0};
   }
@@ -1930,8 +1931,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       var o=orbs[k];
       if(!vis.get(o.host)) continue;
       var px=size(o), gl=o.gl;
-      o.calm += (o.want - o.calm) * Math.min(1, dt * 5.2);
-      gl.uniform1f(o.U.uCalm, o.calm);
 
       if(o.mix < 1){
         o.mix = Math.min(1, (now - o.t0) / MORPH);
@@ -1971,12 +1970,19 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   orbs.forEach(function(o){ o.holdUntil = T0; });
   requestAnimationFrame(frame);
 
-  /* Hovering does not move the object and does not jump it anywhere. It stills it: the drift and the
-     flow are only ever deviations, so taking them to zero leaves the shape it was always meant to be. */
+  /* Hover leans the object a few pixels toward the pointer and no more. It does not reset, it does not
+     jump, and it does not have to be undone — the drift is the whole gesture. The easing lives in CSS
+     so the object keeps following after the pointer has stopped, which is what makes it read as slow
+     rather than as tracking. */
   if(!matchMedia('(pointer:coarse)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     orbs.forEach(function(o){
-      o.host.addEventListener('mouseenter', function(){ o.want=1; });
-      o.host.addEventListener('mouseleave', function(){ o.want=0; });
+      o.host.addEventListener('mousemove', function(e){
+        var b = o.host.getBoundingClientRect();
+        var dx = (e.clientX - b.left) / b.width - 0.5;
+        var dy = (e.clientY - b.top) / b.height - 0.5;
+        o.host.style.transform = 'translate3d(' + (dx * 13).toFixed(1) + 'px,' + (dy * 13).toFixed(1) + 'px,0)';
+      });
+      o.host.addEventListener('mouseleave', function(){ o.host.style.transform = ''; });
     });
   }
   }
