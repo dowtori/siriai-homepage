@@ -17,7 +17,7 @@
 <meta name="twitter:image" content="https://cd-study-deploy.vercel.app/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    monopo.vn (monopo saigon) home — design training reproduction
@@ -45,7 +45,11 @@ body{
   cursor:default;
 }
 :root{
-  --pad-x:40px;
+  /* the page gutter. monopo.vn holds its content off the edge by 12.58% of the viewport and lets that
+     scale (measured live at 1200px -> 151px and 1512px -> 190px). This page had it pinned at a flat
+     40px, which is what made everything read as a prototype: the type was monopo's, the margins were a
+     wireframe's. Floors at 24px so narrow screens do not lose their content. */
+  --pad-x:max(24px, 12.58vw);
   --ink:#f4f4f3;
   --ink-soft:rgba(244,244,243,.58);
   --paper:#000;   /* dark ground shared by the hero + intro (study flipped from light to black) */
@@ -280,7 +284,7 @@ body{cursor:none;background:#000}
   background: #000;
   color: #f5f5f4;
   font-family: "Inter Tight", Helvetica, Arial, sans-serif;
-  padding: clamp(60px, 8vw, 100px) clamp(20px, 5vw, 40px);
+  padding: clamp(60px, 8vw, 100px) var(--pad-x);
   overflow-x: hidden;
 }
 
@@ -928,7 +932,7 @@ body.ready .mv-contact-footer {
 /* ===== section: WORKS — "Selected project" (staggered 2-col) ===== */
 .mv-works{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
-  padding:clamp(70px,10vw,130px) clamp(20px,5vw,40px)}
+  padding:clamp(70px,10vw,130px) var(--pad-x)}
 .mv-works-head{max-width:none;margin:0 0 clamp(40px,5vw,72px)}
 .mv-works-grid{max-width:none;margin:0;display:grid;
   grid-template-columns:1fr 1fr;column-gap:clamp(24px,4vw,64px);row-gap:clamp(46px,7vw,104px)}
@@ -982,27 +986,31 @@ body.ready .mv-contact-footer {
    Each .mv-str-pin is a tall track; .mv-str-sticky is position:sticky so the frame stays put while the 3
    items (01/02/03) cycle in place on scroll (driven by the scroll-fx module). Then the next category takes
    over. .mv-strengths-orb is a placeholder bloom — swap your own image later. */
+/* Typography here is measured off the real monopo.vn manifesto section (live, at both 1200px and
+   1512px, so the vw figures are exact rather than eyeballed): body 1.98vw / weight 300 / line-height
+   1.581 / no tracking, index 0.83vw, label 0.83vw weight 400 with NO tracking, and a text column that
+   is 47% of the content starting at 53% of it. The study had been running 2.4vw / weight 450 / 1.4 /
+   -.01em with a 700 lead-in, which is what read as a prototype next to it. */
 .mv-str-pin{position:relative;z-index:2;height:100vh;background:#000;
-  font-family:"Inter Tight",Helvetica,Arial,sans-serif}
+  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif}   /* Inter Tight has no Hangul — name the Korean face rather than falling back to whatever the OS has */
 .mv-str-sticky{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden;
-  padding:0 clamp(20px,5vw,40px)}
+  padding:0 var(--pad-x)}
 .mv-str-inner{max-width:none;width:100%;margin:0}
-.mv-strengths-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
-  letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
-.mv-strengths-eyebrow::before{content:'\2198';font-size:13px;opacity:.65}
-.mv-strengths-row{display:grid;grid-template-columns:0.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:center}
-/* the strengths slot IS the hero's field, re-arranged: it compiles fieldCore() out of HERO_FIELD — the
-   hero's own code — and gives it a different arrangement of the hero's own two blooms. Nothing is
-   masked or cut; the states ARE the field, and the transition is its anchors easing across. */
-.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center;
-  transition:transform 1s cubic-bezier(.22,1,.36,1)}   /* barely-there drift toward the cursor (JS, clamped) */
+.mv-strengths-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:clamp(10px,.83vw,15px);font-weight:400;
+  letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(28px,4vw,52px)}
+.mv-strengths-eyebrow::before{content:'\2198';font-size:1.08em;opacity:.65}
+.mv-strengths-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}   /* the gap is inside the 53/47 split, as it is on monopo */
+/* the strengths slot is built from the hero's own primitives (warp/colormap/grain) and supplies only a
+   density, so it renders TRUE BLACK wherever there is no object — the canvas leaves no rectangle on the
+   page, and the object simply floats in the same black as everything around it. */
+.mv-strengths-orb{position:relative;width:100%;max-width:min(470px,40vw);aspect-ratio:1/1;justify-self:center}
 .orb-field{position:absolute;inset:0;width:100%;height:100%;display:block}
-@media (prefers-reduced-motion:reduce){.mv-strengths-orb{transition:none;transform:none!important}}
 
-.mv-str-stage{position:relative;min-height:clamp(220px,34vh,340px)}
+.mv-str-stage{position:relative;min-height:clamp(248px,38vh,384px)}   /* line-height went 1.4 -> 1.581, so the stage has to grow with it or the items clip */
 .mv-str-item{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;will-change:opacity,transform;
-  font-size:clamp(19px,2.4vw,32px);font-weight:450;line-height:1.4;letter-spacing:-.01em;color:#f5f5f4}
-.mv-strengths-num{font-size:.5em;font-weight:600;vertical-align:top;color:rgba(245,245,245,.5);margin-right:.7em;line-height:1}
+  font-size:clamp(16px,1.98vw,30px);font-weight:300;line-height:1.581;letter-spacing:0;color:#f5f5f4;word-break:keep-all}
+.mv-str-item b{font-weight:500}   /* the step name still leads, but at 500 rather than the browser default 700 — monopo never goes bold */
+.mv-strengths-num{font-size:.419em;font-weight:300;vertical-align:top;color:rgba(245,245,245,.5);margin-right:.7em;line-height:1}   /* .83vw / 1.98vw = .419 */
 @media (max-width:768px){.mv-strengths-row{grid-template-columns:1fr;gap:clamp(20px,4vw,30px)}
   .mv-strengths-orb{max-width:140px;justify-self:start}
   .mv-str-stage{min-height:clamp(240px,42vh,360px)}}
@@ -1017,7 +1025,7 @@ body.ready .mv-contact-footer {
 /* ===== section: SAIGON SOUL video ===== */
 .mv-saigonvideo{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
-  padding:clamp(20px,4vw,50px) clamp(20px,5vw,40px) clamp(70px,10vw,120px)}
+  padding:clamp(20px,4vw,50px) var(--pad-x) clamp(70px,10vw,120px)}
 .mv-saigonvideo-inner{max-width:none;margin:0}
 .mv-saigonvideo-title{font-size:clamp(64px,15.6vw,225px);font-weight:600;line-height:1.02;
   letter-spacing:-.02em;color:#f5f5f4;margin-bottom:clamp(28px,4vw,48px)}
@@ -1035,7 +1043,10 @@ body.ready .mv-contact-footer {
   letter-spacing:.04em;color:rgba(255,255,255,.75)}
 @media (max-width:640px){.mv-saigonvideo-media{aspect-ratio:4/3}}
 /* relocated Trusted-by: BIG brand marquee (brand font = Saigon-title scale) */
+/* the marquee has to break OUT of the page gutter and run to both edges — a marquee that starts and
+   ends 190px inside the viewport reads as a clipping bug, not as movement. */
 .mv-trust-marquee{position:relative;display:flex;overflow:hidden;margin-top:clamp(18px,2.4vw,36px);
+  margin-left:calc(-1 * var(--pad-x));margin-right:calc(-1 * var(--pad-x));
   -webkit-mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 .mv-trust-track{display:flex;align-items:center;flex-shrink:0;gap:clamp(30px,4vw,70px);padding-right:clamp(30px,4vw,70px);
   white-space:nowrap;animation:mvLogoFlow 84s linear infinite;will-change:transform}   /* relaxed pace (was 42s) — no pause on hover */
@@ -1540,13 +1551,16 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 /* strengths wheel-step carousel — DOWN-scroll captures a category with a gentle magnetic
    SETTLE (no hard snap) and steps 01->02->03 one item per flick; UP-scroll is frictionless
    (never captures, releases instantly). one flick = one item even on a hard flick / long
-   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slots — the hero's field, re-arranged --------------------------------------------
-   Nothing is masked, dithered or cut here. The hero's field already contains exactly two blooms —
-   one narrow (sigma .374) and one wide (sigma .447): a sharp circle and a blurred circle. The three
-   states are simply those same two blooms MOVED and STRETCHED, and the transition is their anchors
-   easing from one arrangement to the next. Same fieldCore(), same colormap, same grain as the hero.
-     Architecting  01 the two crossing · 02 both to the centre — a pupil inside its halo · 03 stretched into a line
-     Software Eng. 01 fused into one column · 02 split into parallel columns · 03 merged into one broad mass
+   trackpad momentum tail (coalesced by an idle-gap, not a fixed timer). /* ---- strengths slots — the hero's field, given a controlled silhouette ---------------------------
+   Built only out of the hero's own primitives (warp / colormap / grain, straight from HERO_FIELD).
+   What the slot supplies is a DENSITY, exactly as the hero supplies one: dense -> pink core, thin ->
+   amber shoulder, none -> true black. Nothing is masked and nothing is cut, so the canvas has no edge
+   and the object simply floats in the page's black.
+     Architecting  01 two discs crossing, one lit · 02 a ring, dense on top, scattering below
+                   03 the ring opens into an oscillation that settles into one line
+     Software Eng. 01 one column · 02 parallel columns · 03 one broad fused mass
+   The silhouettes are held: the hero warps its field by 0.34, the slot by 0.05, so these read as the
+   shapes they are instead of drifting into abstraction.
    ---------------------------------------------------------------------------------------------- */
 (function(){
   function start(){
@@ -1558,38 +1572,57 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     'varying vec2 vUv;',
     'uniform vec2 uRes;',
     'uniform float uTime;',
-    'uniform vec2 uA1; uniform vec2 uS1;',
-    'uniform vec2 uA2; uniform vec2 uS2;',
+    'uniform int uFormA;',
+    'uniform int uFormB;',
+    'uniform float uMix;',
     'uniform float uAmp;',
     ''
   ].join('\n');
-  var MAIN = [
+  var OBJ = [
+    'float dens(int f, vec2 q){',
+    '  if(f == 0){                 /* A01  a lit disc crossing a second, barely-there one */',
+    '    float R = 0.222;',
+    '    float a = length(q - vec2(-0.082,  0.010));',
+    '    float b = length(q - vec2( 0.092, -0.010));',
+    '    float dA = 1.0 - smoothstep(R - 0.010, R + 0.016, a);      /* a defined edge, not a cloud */',
+    '    float dB = 1.0 - smoothstep(R - 0.010, R + 0.016, b);',
+    '    float lit = bloom(q, vec2(-0.255, -0.155), vec2(0.300));   /* lit from the lower left, falling away */',
+    '    return max(dA * (0.10 + 0.90 * lit), dB * 0.26);',
+    '  }',
+    '  if(f == 1){                 /* A02  a ring: dense along its line, scattering away underneath */',
+    '    float e = (length(q) - 0.203) / 0.070;',
+    '    return exp(-e * e) * (0.09 + 0.91 * smoothstep(-0.30, 0.26, q.y));   /* the reference dissolves hard toward the bottom */',
+    '  }',
+    '  if(f == 2){                 /* A03  the ring opens: an oscillation that settles into one line */',
+    '    float t = q.x + 0.5;',
+    '    float sw = sin(t * 6.28318 * 1.25 - 0.85) * 0.170 * (1.0 - 0.62 * smoothstep(0.18, 1.0, t));',
+    '    float e = (q.y - sw) / 0.100;',
+    '    return exp(-e * e) * smoothstep(0.0, 0.13, t) * (1.0 - smoothstep(0.87, 1.0, t));',
+    '  }',
+    '  /* Software Engineering speaks in vertical structure, and speaks it with bloom() — the hero primitive:',
+    '     a bloom stretched on one axis IS a column, and it arrives already carrying the gradient the',
+    '     colormap needs — pink at the core, amber as it thins out. No plateaus, no edges, no boxes. */',
+    '  if(f == 3) return bloom(q, vec2(0.0, 0.0), vec2(0.060, 0.235));          /* S01  one column */',
+    '  if(f == 4) return max(bloom(q, vec2(-0.170, 0.050), vec2(0.038, 0.180)), /* S02  parallel columns */',
+    '                   max(bloom(q, vec2( 0.000,-0.020), vec2(0.038, 0.220)),',
+    '                       bloom(q, vec2( 0.170, 0.085), vec2(0.038, 0.160))));',
+    '  return bloom(q, vec2(0.0, 0.0), vec2(0.255, 0.198));                     /* S03  one broad fused mass — wider than tall, so it never lands back on Architecting\'s circle */',
+    '}',
     'void main(){',
-    '  /* the hero\'s own field, with this slot\'s arrangement of its two blooms */',
-    '  vec3 col = fieldCore(vUv, uA1, uS1, uA2, uS2, uAmp);',
-    '  /* and the hero\'s own static film grain, unchanged: strong through the lit mid-tones, silent on black */',
+    '  vec2 q = warp(vUv - 0.5, 0.050);          /* the hero\'s own warp, held tight so the silhouette reads */',
+    '  float d = mix(dens(uFormA, q), dens(uFormB, q), uMix);',
+    '  vec3 col = colormap(d * uAmp);            /* the hero\'s own colormap — density IS the colour, as in the hero */',
     '  vec2 fc = vUv * uRes;',
     '  float gA = hash(fc * 0.58);',
     '  float gB = hash(fc * 0.31 + 19.0);',
     '  float grain = (gA * 0.55 + gB * 0.45) - 0.5;',
     '  float glum = max(col.r, max(col.g, col.b));',
-    '  col += grain * (0.12 + 0.27 * smoothstep(0.0, 0.55, glum));',
+    '  col += grain * (0.34 * smoothstep(0.0, 0.50, glum));   /* SILENT ON BLACK: no lit pixels outside the object,',
+    '                                                            so the canvas leaves no rectangle on the page */',
     '  gl_FragColor = vec4(col, 1.0);',
     '}'
   ].join('\n');
-  var FRAG = HEAD + FIELD + '\n' + MAIN;
-
-  /* each state = where the hero's two blooms sit and how they are stretched. a=anchor, s=sigma(x,y) */
-  var ARCH = [
-    { a1:[-0.150,-0.050], s1:[0.074,0.074], a2:[ 0.110, 0.048], s2:[0.250,0.250] },  /* 01  a tight, defined disc crossing a wide soft one */
-    { a1:[ 0.000, 0.000], s1:[0.072,0.072], a2:[ 0.000, 0.000], s2:[0.300,0.300] },  /* 02  both to the centre — a pupil in its halo */
-    { a1:[-0.140, 0.000], s1:[0.210,0.080], a2:[ 0.140, 0.000], s2:[0.250,0.100] }   /* 03  stretched apart until they are one line */
-  ];
-  var SE = [
-    { a1:[ 0.000, 0.000], s1:[0.052,0.230], a2:[ 0.000, 0.000], s2:[0.080,0.290] },  /* 01  fused into a single column */
-    { a1:[-0.135, 0.020], s1:[0.048,0.215], a2:[ 0.135,-0.020], s2:[0.052,0.235] },  /* 02  split into parallel columns */
-    { a1:[ 0.000, 0.000], s1:[0.185,0.255], a2:[ 0.000, 0.000], s2:[0.235,0.300] }   /* 03  merged into one broad mass */
-  ];
+  var FRAG = HEAD + FIELD + '\n' + OBJ;
 
   function build(cv){
     var gl = cv.getContext('webgl', {antialias:false, alpha:false});
@@ -1604,35 +1637,26 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(pr,'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var U={}; ['uRes','uTime','uA1','uS1','uA2','uS2','uAmp'].forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
+    var U={}; ['uRes','uTime','uFormA','uFormB','uMix','uAmp'].forEach(function(n){ U[n]=gl.getUniformLocation(pr,n); });
     var se = cv.getAttribute('data-set')==='s';
-    /* both of the hero's blooms run through ONE colormap (amber on the faint shoulder -> pink at the core),
-       so the two sections are told apart by how hard their blooms burn: Architecting stays on the amber
-       shoulder, Software Engineering reaches the pink core. */
-    gl.uniform1f(U.uAmp, se ? 1.0 : 0.50);
-    return {gl:gl, U:U, set:se?SE:ARCH, from:(se?SE:ARCH)[0], to:(se?SE:ARCH)[0], cur:(se?SE:ARCH)[0], mix:1, t0:0};
-  }
-
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function put(o, c){
-    var gl=o.gl, U=o.U;
-    gl.uniform2f(U.uA1, c.a1[0], c.a1[1]); gl.uniform2f(U.uS1, c.s1[0], c.s1[1]);
-    gl.uniform2f(U.uA2, c.a2[0], c.a2[1]); gl.uniform2f(U.uS2, c.s2[0], c.s2[1]);
-  }
-  function blend(a,b,t){
-    return { a1:[lerp(a.a1[0],b.a1[0],t), lerp(a.a1[1],b.a1[1],t)], s1:[lerp(a.s1[0],b.s1[0],t), lerp(a.s1[1],b.s1[1],t)],
-             a2:[lerp(a.a2[0],b.a2[0],t), lerp(a.a2[1],b.a2[1],t)], s2:[lerp(a.s2[0],b.s2[0],t), lerp(a.s2[1],b.s2[1],t)] };
+    /* one colormap serves both of the hero's blooms — amber on the faint shoulder, pink at the core — so the
+       two sections are told apart by how hard they burn: Architecting stays gold, SE reaches pink. */
+    gl.uniform1f(U.uAmp, se ? 1.0 : 0.52);
+    gl.uniform1f(U.uMix, 0.0);
+    var base = se ? 3 : 0;
+    return {gl:gl, U:U, base:base, a:base, b:base, mix:1, t0:0, active:0};
   }
 
   var orbs=[];
   [].slice.call(document.querySelectorAll('canvas.orb-field')).forEach(function(cv){
     var r=build(cv); if(!r) return;
     r.cv=cv; r.host=cv.closest('.mv-strengths-orb'); orbs.push(r);
-    r.host.__setForm=function(i){
-      var want=r.set[Math.max(0,Math.min(r.set.length-1,i))];
-      if(want===r.to) return;
-      r.from=r.cur; r.to=want; r.mix=0; r.t0=performance.now();   /* the blooms ease across, they never cut */
+    r.go=function(i){                                  /* morph, never cut */
+      var want=r.base+Math.max(0,Math.min(2,i));
+      if(want===r.b) return;
+      r.a=r.b; r.b=want; r.mix=0; r.t0=performance.now();
     };
+    r.host.__setForm=function(i){ r.active=Math.max(0,Math.min(2,i)); r.go(r.active); };
   });
   if(!orbs.length) return;
 
@@ -1652,29 +1676,22 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
       var o=orbs[k];
       if(!vis.get(o.host)) continue;
       var px=size(o), gl=o.gl;
-      if(o.mix<1){
-        o.mix=Math.min(1,(now-o.t0)/1100);
-        var m=o.mix; m=m*m*m*(m*(m*6.0-15.0)+10.0);        /* long, eased — the arrangement flows over */
-        o.cur=blend(o.from,o.to,m);
-      }
-      put(o,o.cur);
+      if(o.mix<1){ o.mix=Math.min(1,(now-o.t0)/900); var m=o.mix; gl.uniform1f(o.U.uMix, m*m*m*(m*(m*6.0-15.0)+10.0)); }
       gl.uniform2f(o.U.uRes,px,px);
       gl.uniform1f(o.U.uTime,(now-T0)/1000);
+      gl.uniform1i(o.U.uFormA,o.a); gl.uniform1i(o.U.uFormB,o.b);
       gl.drawArrays(gl.TRIANGLES,0,3);
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
-  /* the field drifts a few px toward the cursor — very slight, always inside its own box */
+  /* hover returns the object to where it began — 01 — and releasing it lets the object settle back
+     onto whichever step the reader is actually on. No drift, no flash. */
   if(!matchMedia('(pointer:coarse)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     orbs.forEach(function(o){
-      o.host.addEventListener('mousemove', function(e){
-        var b=o.host.getBoundingClientRect();
-        var dx=(e.clientX-b.left)/b.width-0.5, dy=(e.clientY-b.top)/b.height-0.5;
-        o.host.style.transform='translate3d('+(dx*9).toFixed(1)+'px,'+(dy*9).toFixed(1)+'px,0)';
-      });
-      o.host.addEventListener('mouseleave', function(){ o.host.style.transform=''; });
+      o.host.addEventListener('mouseenter', function(){ o.go(0); });
+      o.host.addEventListener('mouseleave', function(){ o.go(o.active); });
     });
   }
   }
@@ -1955,23 +1972,39 @@ const vec3 PAPER  = vec3(0.972);
 const vec3 ORANGE = vec3(1.00, 0.42, 0.13);
 const vec3 AMBER  = vec3(1.00, 0.78, 0.05);
 const vec3 PINK   = vec3(0.90, 0.18, 0.38);
-/* THE FIELD, PARAMETERISED. The hero passes its own two corner blooms; the strengths slots pass their
-   own arrangement of the SAME two blooms. One implementation, one colormap — so a slot is never an
-   imitation of the hero, it IS the hero's field standing in a different arrangement.
-     a  = anchor            s = sigma per axis (the hero's exp(-d*d/0.14) == sigma 0.374166)
-     amp= how hard the blooms burn — which band of the colormap the arrangement lands on. */
+/* THE FIELD, BROKEN INTO THE PRIMITIVES IT IS ACTUALLY MADE OF, so that anything else on the page which
+   wants to look like the hero is BUILT FROM THE HERO rather than re-implementing it. The hero composes
+   them below with its own numbers and its output is unchanged; the strengths slots compose the same
+   three with a density of their own. */
+
+/* the drift: the whole field is pushed around by fbm, which is why the hero breathes. amt is how far —
+   the hero uses 0.34 because it wants clouds; anything that needs to keep a silhouette passes less. */
+vec2 warp(vec2 p, float amt){
+  float t = uTime * 0.11;
+  return p + (vec2(fbm(p * 1.6 + t), fbm(p * 1.6 + 4.0 - t * 0.8)) - 0.5) * amt;
+}
+
+/* one bloom: a gaussian mass at a, with a sigma per axis. the hero sums two of these. */
+float bloom(vec2 w, vec2 a, vec2 s){
+  vec2 d = (w - a) / s;
+  return exp(-dot(d, d));
+}
+
+/* THE colormap — the one thing that makes this page look like this page. Density in, colour out:
+   nothing -> black, a thin edge -> amber, denser -> orange, a burning core -> pink. */
+vec3 colormap(float g){
+  g = clamp(g, 0.0, 1.0);
+  vec3 cm = AMBER;
+  cm = mix(cm, ORANGE, smoothstep(0.34, 0.72, g));
+  cm = mix(cm, PINK,   smoothstep(0.60, 0.98, g));
+  return cm * smoothstep(0.02, 0.74, g);         // BLACK ground -> amber/pink bloom
+}
+
+/* the field as an arrangement of two blooms — the hero passes its corners, and it is the only caller. */
 vec3 fieldCore(vec2 uv, vec2 a1, vec2 s1, vec2 a2, vec2 s2, float amp){
   float aspect = uRes.x / uRes.y;
-  vec2  p  = (uv - 0.5) * vec2(aspect, 1.0);
-  float t  = uTime * 0.11;   /* colour blooms drift behind the static grain */
-
-  /* two blooms with the SAME colour recipe: one warped scalar field (fbm-distorted, so the shapes
-     breathe) peaked at the two anchors, then run through ONE colormap. */
-  vec2 w = p + (vec2(fbm(p * 1.6 + t), fbm(p * 1.6 + 4.0 - t * 0.8)) - 0.5) * 0.34;
-  vec2 d1 = (w - a1) / s1;
-  vec2 d2 = (w - a2) / s2;
-  float g = (exp(-dot(d1, d1)) + exp(-dot(d2, d2))) * amp;
-  g = clamp(g, 0.0, 1.0);
+  vec2  p = (uv - 0.5) * vec2(aspect, 1.0);
+  vec2  w = warp(p, 0.34);
 
   /* pointer eraser — clears the bloom to black near the cursor (grain-scattered).
      DISABLED per request; to re-enable, uncomment these 4 lines (hero only — uMouse lives there).
@@ -1980,12 +2013,7 @@ vec3 fieldCore(vec2 uv, vec2 a1, vec2 s1, vec2 a2, vec2 s2, float amp){
   clear = clamp(clear + (fbm(p * 6.0 + t * 2.0) - 0.5) * 0.18, 0.0, 1.0);
   g *= clear; */
 
-  /* one colormap for BOTH blooms (amber -> orange -> pink) */
-  vec3 cm = AMBER;
-  cm = mix(cm, ORANGE, smoothstep(0.34, 0.72, g));
-  cm = mix(cm, PINK,   smoothstep(0.60, 0.98, g));
-  float glow = smoothstep(0.02, 0.74, g);          // BLACK ground -> amber/pink bloom
-  return cm * glow;
+  return colormap((bloom(w, a1, s1) + bloom(w, a2, s2)) * amp);
 }
 
 vec3 background(vec2 uv){
