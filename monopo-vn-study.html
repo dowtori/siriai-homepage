@@ -1677,10 +1677,11 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
    metaballs are close enough that their fields close over the gap. That single fact carries both of
    the first two lines, and it is why they are the same function with different numbers:
 
-     CONNECT    not circles — MARKS. A circle has no front, and facing is the whole subject here. Nine
-                short strokes, each pointing wherever it happened to be pointing; then one of THEM grows,
-                and the rest turn to face them. The creator was never a bridge dropped into a gap: they
-                were already one of the audience, and that is why the audience turns.
+     CONNECT    a SWARM — hundreds of points, not one body and not nine marks. An even scatter, then a
+                core condensing inside a thinning halo. Not one particle travels: what changes is which
+                points exist and how hard they burn. A crowd is not organised by someone arriving into
+                it — it organises around one of its own, and the brand arrives because they were already
+                looking that way.
      ARCHITECT  the same primitive, ORDERED: a measured array of identical parts. Then the grid breaks,
                 the parts drift and swell, and their fields close over each other WHERE THEY HAPPEN TO
                 MEET — an uneven web, because that is what a network is. Then it runs as a wave.
@@ -1738,34 +1739,33 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     '          + mball(q, vec2( uSpread, 0.0), uRadR)',
     '          + mball(q, vec2( 0.0,     0.0), uRadM);   /* whoever stands between — present only for CONNECT */',
     '  if(uCrowd > 0.0005){',
-    '    /* CONNECT does not get circles. Every other object on this page is one, and a circle has no',
-    '       front — it cannot be facing anything, and facing is the entire subject here. These are MARKS:',
-    '       short strokes that point somewhere, which is the least a shape can do and still be a person.',
-    '       The one they turn to is not an outsider dropped into the gap. It is mark number four — one of',
-    '       THEM, who simply grows. That is what the claim beside this actually says: not a bridge built',
-    '       between a brand and an audience, but someone the audience already listens to. A brand reaches',
-    '       them because they were already facing that way. */',
-    '    vec2 fc = vec2(0.045, -0.020);',
-    '    for(int i = 0; i < 9; i++){',
-    '      float fi = float(i);',
-    '      float me = step(3.5, fi) * step(fi, 4.5);                   /* mark 4 is the one of them */',
-    '      /* a jittered spread rather than a raw hash — two hashes of consecutive small integers came out',
-    '         correlated and piled the crowd into the middle. The jitter is large against the pitch so this',
-    '         never reads as the measured array next door: it just guarantees they are actually spread. */',
-    '      vec2 cell = (vec2(mod(fi, 3.0), floor(fi / 3.0)) - 1.0) * vec2(0.27, 0.215);',
-    '      vec2 jit = (vec2(hash(vec2(fi * 2.13 + 1.7, 5.3)), hash(vec2(9.1, fi * 1.77 + 2.4))) - 0.5) * 0.21;',
-    '      vec2 c = mix(cell + jit, fc, me);',
-    '      float own = hash(vec2(fi, 11.3)) * 6.28318;                 /* the way they happened to be facing */',
-    '      vec2 d0 = vec2(cos(own), sin(own));',
-    '      vec2 dv = fc - c;',
-    '      vec2 d1 = dot(dv, dv) > 1.0e-5 ? normalize(dv) : d0;',
-    '      vec2 dir = mix(d0, d1, uTurn * (1.0 - me));                 /* the one they face does not turn */',
-    '      dir = dot(dir, dir) > 1.0e-4 ? normalize(dir) : d0;',
-    '      vec2 v = q - c;',
-    '      vec2 r = vec2(v.x * dir.x + v.y * dir.y, -v.x * dir.y + v.y * dir.x);   /* into the mark\'s own frame */',
-    '      vec2 sz = vec2(0.115, 0.034) * (1.0 + me * uFocus * 0.85);   /* a mark reads out to ~1.8 sigma, so this is the stroke you actually see */',
-    '      vec2 e = r / sz;',
-    '      m = max(m, exp(-dot(e, e)) * uCrowd * (0.74 + 0.26 * me * uFocus) * 2.1);',
+    '    /* A CROWD HAS TO BE UNCOUNTABLE. Nine marks was a diagram of a crowd, not one — and marks aimed',
+    '       at each other draw the word "facing" rather than showing it. So: hundreds of points, and let',
+    '       density carry the whole meaning.',
+    '       Nothing moves here. What changes is which points EXIST. As uFocus rises the centre starts',
+    '       keeping its points and burning brighter; as uTurn rises the halo starts losing its own. A core',
+    '       condenses out of an even scatter without one particle travelling anywhere — which is the claim',
+    '       exactly: a crowd is not organised by someone arriving into it. It organises around one of its',
+    '       own, and the brand arrives because they were already looking that way.',
+    '       Points are looked up per cell rather than summed as bodies: a few hundred metaballs per pixel',
+    '       is not a thing you can afford, and it does not need to be — these are people, not masses that',
+    '       merge. */',
+    '    const float CELLS = 26.0;',   /* more cells, more people: the count is the point */
+    '    vec2 gp = q * CELLS;',
+    '    vec2 gi = floor(gp);',
+    '    for(int yy = -1; yy <= 1; yy++){',
+    '      for(int xx = -1; xx <= 1; xx++){',
+    '        vec2 cell = gi + vec2(float(xx), float(yy));',
+    '        vec2 pt = cell + vec2(hash(cell + 0.13), hash(cell + 3.71));',
+    '        float r = length(pt / CELLS);',
+    '        float shell = (1.0 - smoothstep(0.30, 0.50, r)) * mix(0.74, 0.34, uTurn);   /* the volume they occupy, thinning as the core takes */',
+    '        float core  = (1.0 - smoothstep(0.02, 0.155, r)) * uFocus * 0.92;           /* the one they gather around */',
+    '        float live  = step(hash(cell + 11.37), shell + core);                       /* does this one exist at all */',
+    '        float sz = mix(0.30, 0.72, hash(cell + 13.1));',
+    '        float e = length(gp - pt) / sz;',
+    '        float bright = (0.72 + 0.28 * smoothstep(0.28, 0.02, r) * uFocus) * (0.62 + 0.38 * hash(cell + 17.9));',
+    '        m = max(m, exp(-e * e) * live * bright * uCrowd * 2.9);',
+    '      }',
     '    }',
     '  }',
     '  if(uArray > 0.0005){',
@@ -1836,9 +1836,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   /* CONNECT — the outer two never move, and at this distance their fields reach 0.35 between them:
      under the 0.55 the surface needs, so they simply cannot touch. Only the body in the middle changes. */
   var CONNECT = [
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:0.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  people, each facing their own way. Nobody is listening to anything. */
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 02  one of them grows — not an arrival, one of them */
-    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:1.0, array:0.0, link:0.0, pull:0.0, wave:0.0 }    /* 03  and every one of the rest turns to face them */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:0.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 01  an even scatter. Many people, and nothing among them is a centre. */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:0.0, array:0.0, link:0.0, pull:0.0, wave:0.0 },   /* 02  the middle starts keeping its points, and burning — one of them is becoming someone */
+    { spread:0.0, radL:0.0, radR:0.0, mid:0.0, crowd:1.0, focus:1.0, turn:1.0, array:0.0, link:0.0, pull:0.0, wave:0.0 }    /* 03  the halo thins and the core holds: a crowd with a centre */
   ];
   /* ARCHITECT — no third body. The two close on each other instead, and then run. */
   /* ARCHITECT is nothing but the array, all the way through. There are no two circles any more: they
@@ -1881,7 +1881,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
          ARCHITECT the light ramp, run to the top: thinking, which happens before anything is made.
          BUILD     the heat ramp at full, so an overlap reaches pink. Integration is the heat. */
     gl.uniform1f(U.uLight, set === 'a' ? 1.0 : 0.0);
-    gl.uniform1f(U.uAmp,   set === 'a' ? 1.0 : (set === 'c' ? 0.50 : 0.74));
+    gl.uniform1f(U.uAmp,   set === 'a' ? 1.0 : (set === 'c' ? 0.62 : 0.74));   /* .62: on this ramp brightness and hue share an
+                                                                                  axis, and .50 capped the glow at .68 — too dim
+                                                                                  for points. Pink does not start until ~.75. */
     gl.uniform1f(U.uCalm, 0.0);
     var states = se ? SE : (set === 'c' ? CONNECT : ARCH);
     return {gl:gl, U:U, se:se, states:states, calm:0, want:0,
