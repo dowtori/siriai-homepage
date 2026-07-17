@@ -331,15 +331,14 @@ body{cursor:none;background:#000}
 /* one uniform manifesto statement (monopo-style top-down reading highlight) */
 /* NB: distinct class from the legacy .mv-manifesto-statement (principles text) to avoid a cascade collision */
 .mv-manifesto-lead{
-  font-size: max(24px, 4.25vw);   /* MEASURED, not guessed. The constraint is Korean, not English: a Hangul glyph is square and eats
-     about twice the width of a Latin one, so "브랜드의 감각적인 니즈를 정확히 이해하고" is 1346px where the
-     longest English line is 956px. The largest size where NOTHING wraps in either language is 4.341vw;
-     this is that with a little air. monopo runs 6.56vw, but every line they set is Latin.
-     The comment that used to sit here claimed this was sized to stay single-line. It was not — it
-     wrapped, and I had never measured it. No cap: a cap freezes the type while the column keeps
-     widening, which is what left the hole beside the business copy at 1885px. */
+  font-size: max(30px, 6.56vw);   /* monopo's own: 6.56vw / 400 / line-height .762, in a 958px column — and this column is 958px too,
+     measured on both. The reason this used to sit at 4.25vw was never the column and never the type: a
+     Hangul glyph is square and runs 41.3px per character where Latin averages ~24, so only 14 Hangul fit
+     a line here at this size, and the copy had lines of 22. The words are not mine to cut, so they are
+     broken across more lines instead — same words, same order, 12 lines rather than 7. monopo sets 10.
+     No cap: a cap freezes the type while the column keeps widening. */
   font-weight: 400;
-  line-height: 1.04;
+  line-height: 0.95;   /* monopo runs .762; Hangul needs more room than Latin for its descenders */
   letter-spacing: -0.02em;
   color: #f5f5f4;
   max-width: 1500px;
@@ -1243,28 +1242,48 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이(しりあい)는</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">through</span> <span class="mv-w">the</span> <span class="mv-w">easiest</span> <span class="mv-w">AI</span> <span class="mv-w">literacy,</span></span>
-        <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉬운</span> <span class="mv-w">AI</span> <span class="mv-w">리터러시를</span> <span class="mv-w">통해</span></span>
+        <span class="mv-en-line"><span class="mv-w">through</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉬운</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">reads</span> <span class="mv-w">what</span> <span class="mv-w">a</span> <span class="mv-w">brand</span> <span class="mv-w">needs,</span></span>
-        <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드의</span> <span class="mv-w">감각적인</span> <span class="mv-w">니즈를</span> <span class="mv-w">정확히</span> <span class="mv-w">이해하고</span></span>
+        <span class="mv-en-line"><span class="mv-w">the</span> <span class="mv-w">easiest</span> <span class="mv-w">AI</span> <span class="mv-w">literacy,</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">AI</span> <span class="mv-w">리터러시를</span> <span class="mv-w">통해</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">spreads</span> <span class="mv-w">its</span> <span class="mv-w">influence.</span></span>
-        <span class="mv-ko-line" lang="ko"><span class="mv-w">문화적</span> <span class="mv-w">영향력을</span> <span class="mv-w">퍼트립니다.</span></span>
+        <span class="mv-en-line"><span class="mv-w">reads</span> <span class="mv-w">what</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드의</span> <span class="mv-w">감각적인</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">Architecting</span> <span class="mv-w">that</span> <span class="mv-w">reaches</span></span>
-        <span class="mv-ko-line" lang="ko"><span class="mv-w">사람의</span> <span class="mv-w">마음에</span> <span class="mv-w">닿는</span> <span class="mv-w">아키텍처링을</span> <span class="mv-w">통해</span></span>
+        <span class="mv-en-line"><span class="mv-w">a</span> <span class="mv-w">brand</span> <span class="mv-w">truly</span> <span class="mv-w">needs,</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">니즈를</span> <span class="mv-w">정확히</span> <span class="mv-w">이해하고</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">the</span> <span class="mv-w">heart</span> <span class="mv-w">cuts</span> <span class="mv-w">decision</span> <span class="mv-w">costs</span></span>
+        <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">spreads</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">문화적</span> <span class="mv-w">영향력을</span></span>
+      </span>
+      <span class="mv-line">
+        <span class="mv-en-line"><span class="mv-w">its</span> <span class="mv-w">influence.</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">퍼트립니다.</span></span>
+      </span>
+      <span class="mv-line">
+        <span class="mv-en-line"><span class="mv-w">Architecting</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">사람의</span> <span class="mv-w">마음에</span> <span class="mv-w">닿는</span></span>
+      </span>
+      <span class="mv-line">
+        <span class="mv-en-line"><span class="mv-w">that</span> <span class="mv-w">reaches</span> <span class="mv-w">the</span> <span class="mv-w">heart</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">아키텍처링을</span> <span class="mv-w">통해</span></span>
+      </span>
+      <span class="mv-line">
+        <span class="mv-en-line"><span class="mv-w">cuts</span> <span class="mv-w">decision</span> <span class="mv-w">costs</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">평균</span> <span class="mv-w">+32%</span> <span class="mv-w">이상의</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">by</span> <span class="mv-w">32%</span> <span class="mv-w">on</span> <span class="mv-w">average.</span></span>
-        <span class="mv-ko-line" lang="ko"><span class="mv-w">의사결정</span> <span class="mv-w">비용</span> <span class="mv-w">감소를</span> <span class="mv-w">체험해보세요.</span></span>
+        <span class="mv-en-line"><span class="mv-w">by</span> <span class="mv-w">32%</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">의사결정</span> <span class="mv-w">비용</span> <span class="mv-w">감소를</span></span>
+      </span>
+      <span class="mv-line">
+        <span class="mv-en-line"><span class="mv-w">on</span> <span class="mv-w">average.</span></span>
+        <span class="mv-ko-line" lang="ko"><span class="mv-w">체험해보세요.</span></span>
       </span>
     </h2>
   </div>
