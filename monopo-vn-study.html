@@ -271,12 +271,9 @@ body{cursor:none;background:#000}
 
 /* ===== shared scroll-reveal (monopo.vn sections) ===== */
 .mv-manifesto .reveal, .mv-saigon-souls .reveal, .mv-tiles-novanish .reveal,
-.mv-team .reveal, .mv-contact .reveal{opacity:0;transform:translateY(16px);
   transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
 .mv-manifesto .reveal.in, .mv-saigon-souls .reveal.in, .mv-tiles-novanish .reveal.in,
-.mv-team .reveal.in, .mv-contact .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){
-  .mv-manifesto .reveal, .mv-saigon-souls .reveal, .mv-tiles-novanish .reveal, .mv-team .reveal, .mv-contact .reveal{opacity:1;transform:none;transition:none}
 }
 
 /* ===== section: mv-manifesto-values ===== */
@@ -334,7 +331,13 @@ body{cursor:none;background:#000}
 /* one uniform manifesto statement (monopo-style top-down reading highlight) */
 /* NB: distinct class from the legacy .mv-manifesto-statement (principles text) to avoid a cascade collision */
 .mv-manifesto-lead{
-  font-size: clamp(28px, 4.85vw, 72px);   /* sized so the 7-line Siriai statement stays single-line per row (its lines run longer than monopo's) */
+  font-size: max(24px, 4.25vw);   /* MEASURED, not guessed. The constraint is Korean, not English: a Hangul glyph is square and eats
+     about twice the width of a Latin one, so "브랜드의 감각적인 니즈를 정확히 이해하고" is 1346px where the
+     longest English line is 956px. The largest size where NOTHING wraps in either language is 4.341vw;
+     this is that with a little air. monopo runs 6.56vw, but every line they set is Latin.
+     The comment that used to sit here claimed this was sized to stay single-line. It was not — it
+     wrapped, and I had never measured it. No cap: a cap freezes the type while the column keeps
+     widening, which is what left the hole beside the business copy at 1885px. */
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -653,9 +656,7 @@ body{cursor:none;background:#000}
 @media (prefers-reduced-motion:reduce){.mv-frames-tile{animation:none}}
 @media (max-width:700px){.mv-frames-tile.l{width:72vw}.mv-frames-tile.p{width:46vw}}
 
-/* ===== section: mv-team ===== */
 
-.mv-team {
   position: relative;
   z-index: 1;
   background: #000000;
@@ -663,12 +664,10 @@ body{cursor:none;background:#000}
   color: var(--ink);
 }
 
-.mv-team-intro {
   max-width: 100%;
   margin-bottom: clamp(50px, 6vw, 80px);
 }
 
-.mv-team-eyebrow {
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
@@ -680,12 +679,10 @@ body{cursor:none;background:#000}
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
-body.ready .mv-team-eyebrow {
   opacity: 1;
   transform: none;
 }
 
-.mv-team-heading {
   font-size: clamp(32px, 5.5vw, 56px);
   font-weight: 400;
   line-height: 1.15;
@@ -698,12 +695,10 @@ body.ready .mv-team-eyebrow {
   transition-delay: 0.15s;
 }
 
-body.ready .mv-team-heading {
   opacity: 1;
   transform: none;
 }
 
-.mv-team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: clamp(20px, 3vw, 32px);
@@ -711,38 +706,25 @@ body.ready .mv-team-heading {
 }
 
 @media (min-width: 768px) {
-  .mv-team-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media (min-width: 1200px) {
-  .mv-team-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-.mv-team-card {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
-body.ready .mv-team-card {
   opacity: 1;
   transform: none;
 }
 
-.mv-team-card:nth-child(1) { transition-delay: 0.3s; }
-.mv-team-card:nth-child(2) { transition-delay: 0.38s; }
-.mv-team-card:nth-child(3) { transition-delay: 0.46s; }
-.mv-team-card:nth-child(4) { transition-delay: 0.54s; }
-.mv-team-card:nth-child(5) { transition-delay: 0.62s; }
-.mv-team-card:nth-child(6) { transition-delay: 0.7s; }
-.mv-team-card:nth-child(7) { transition-delay: 0.78s; }
-.mv-team-card:nth-child(8) { transition-delay: 0.86s; }
 
-.mv-team-portrait {
   position: relative;
   width: 100%;
   aspect-ratio: 3/4;
@@ -758,7 +740,6 @@ body.ready .mv-team-card {
   font-weight: 400;
 }
 
-.mv-team-name {
   font-size: clamp(13px, 1.8vw, 15px);
   font-weight: 500;
   letter-spacing: -0.005em;
@@ -767,7 +748,6 @@ body.ready .mv-team-card {
   line-height: 1.2;
 }
 
-.mv-team-role {
   font-size: 12px;
   font-weight: 400;
   color: var(--ink-soft);
@@ -777,16 +757,13 @@ body.ready .mv-team-card {
 }
 
 @media (max-width: 700px) {
-  .mv-team {
     padding: clamp(40px, 6vw, 60px) var(--pad-x);
   }
 
-  .mv-team-heading {
     max-width: 100%;
     font-size: clamp(28px, 4.5vw, 40px);
   }
 
-  .mv-team-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: clamp(12px, 2.5vw, 20px);
   }
@@ -796,7 +773,6 @@ body.ready .mv-team-card {
 /* ===== section: contact ===== */
 
 /* monopo contact closing block */
-.mv-contact {
   position: relative;
   z-index: 1;
   padding: clamp(80px, 12vw, 160px) var(--pad-x);
@@ -805,13 +781,11 @@ body.ready .mv-team-card {
   overflow: hidden;
 }
 
-.mv-contact-inner {
   max-width: 720px;
   margin: 0 auto;
 }
 
 /* eyebrow / label */
-.mv-contact-eyebrow {
   font-size: clamp(11px, 1.2vw, 13px);
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -824,7 +798,6 @@ body.ready .mv-team-card {
 }
 
 /* main headline */
-.mv-contact-headline {
   font-size: clamp(36px, 6.5vw, 72px);
   font-weight: 300;
   line-height: 1.15;
@@ -837,7 +810,6 @@ body.ready .mv-team-card {
 }
 
 /* email link — oversized, editorial */
-.mv-contact-email {
   display: inline-block;
   font-size: clamp(28px, 5vw, 56px);
   font-weight: 400;
@@ -857,13 +829,11 @@ body.ready .mv-team-card {
   overflow-wrap: break-word;
 }
 
-.mv-contact-email:hover {
   border-color: rgba(245, 245, 245, 0.5);
   color: var(--ink);
 }
 
 /* footer meta row */
-.mv-contact-footer {
   display: flex;
   flex-wrap: wrap;
   gap: clamp(28px, 6vw, 60px);
@@ -880,13 +850,9 @@ body.ready .mv-team-card {
   transition-delay: 0.24s;
 }
 
-.mv-contact-location,
-.mv-contact-copyright {
   flex: 0 0 auto;
 }
 
-.mv-contact-location strong,
-.mv-contact-copyright strong {
   display: block;
   font-weight: 500;
   color: var(--ink);
@@ -894,27 +860,19 @@ body.ready .mv-team-card {
 }
 
 /* scroll reveal trigger */
-body.ready .mv-contact-eyebrow,
-body.ready .mv-contact-headline,
-body.ready .mv-contact-email,
-body.ready .mv-contact-footer {
   opacity: 1;
   transform: none;
 }
 
 /* responsive layout */
 @media (max-width: 640px) {
-  .mv-contact {
     padding: clamp(60px, 10vw, 120px) var(--pad-x);
   }
 
-  .mv-contact-footer {
     flex-direction: column;
     gap: clamp(20px, 4vw, 32px);
   }
 
-  .mv-contact-location,
-  .mv-contact-copyright {
     flex: 0 0 100%;
   }
 }
@@ -930,10 +888,13 @@ body.ready .mv-contact-footer {
 /* shared eyebrow with arrow (matches real "-> Selected project") */
 .mv-sec-eyebrow{
   display:inline-flex;align-items:center;gap:10px;
-  font-size:clamp(11px,1.1vw,14px);font-weight:600;letter-spacing:.08em;
+  font-size:max(10px,.83vw);font-weight:400;letter-spacing:0;   /* the page's label: 0.83vw / 400, no tracking.
+     This was a fixed 14px at weight 600 with .08em of tracking — the only label on the page that was not. */
   text-transform:uppercase;color:rgba(245,245,245,.55);
 }
-.mv-sec-eyebrow svg{width:15px;height:15px;flex:0 0 auto;opacity:.65}
+.mv-sec-eyebrow svg{width:1.08em;height:1.08em;flex:0 0 auto;opacity:.65}   /* em, not a fixed 15px: the arrow
+     was sized independently of its own label, so it grew relative to the text as the text shrank. The
+     business labels already set their mark at 1.08em. */
 
 /* ===== section: WORKS — "Selected project" (staggered 2-col) ===== */
 .mv-works{position:relative;z-index:2;background:#000;color:#f5f5f4;
@@ -964,7 +925,6 @@ body.ready .mv-contact-footer {
 }
 
 /* Works + Team sections hidden per request (markup preserved for later) */
-.mv-works, .mv-team, .mv-clients{display:none}   /* Works, Team, and the small clients-slot Trusted-by hidden (Trusted-by moved to the Saigon spot below) */
 
 /* ===== section: TRUSTED BY — Siriai logo marquee (ported from index.html) ===== */
 .mv-clients{position:relative;z-index:2;background:#000;text-align:center;
@@ -1090,26 +1050,13 @@ body.ready .mv-contact-footer {
   .mv-trust-track span:hover{animation:none;background-image:linear-gradient(90deg,#f5f5f4,#f5f5f4)}}
 
 /* ===== section: TEAM — rebuilt (portrait + real bios) ===== */
-.mv-team-title{font-size:clamp(30px,5.2vw,54px);font-weight:400;line-height:1.14;
   letter-spacing:-.01em;max-width:16ch;color:var(--ink);margin-top:14px}
-.mv-team-members{max-width:none;margin:clamp(24px,3vw,44px) 0 0;
   display:flex;flex-direction:column;gap:clamp(52px,8vw,110px)}
-.mv-team-member{display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(28px,5vw,72px);align-items:center}
-.mv-team-member:nth-child(even){grid-template-columns:1.18fr 0.82fr}
-.mv-team-member:nth-child(even) .mv-team-figure{order:2}
-.mv-team-figure{position:relative;width:100%;aspect-ratio:4/5;border-radius:3px;overflow:hidden;
   background:linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 100%);border:1px solid rgba(245,245,245,.07)}
-.mv-team-figure::after{content:attr(data-label);position:absolute;left:14px;bottom:12px;font-size:11px;
   font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,245,245,.32)}
-.mv-team-member-name{font-size:clamp(24px,3.4vw,40px);font-weight:600;letter-spacing:-.015em;line-height:1.08;color:var(--ink)}
-.mv-team-member-role{margin-top:9px;font-size:12.5px;font-weight:500;letter-spacing:.05em;
   text-transform:uppercase;color:rgba(245,245,245,.5)}
-.mv-team-member-bio{margin-top:clamp(16px,2vw,24px);font-size:clamp(14px,1.6vw,17px);font-weight:400;
   line-height:1.72;color:rgba(245,245,245,.72);max-width:46ch}
 @media (max-width:760px){
-  .mv-team-member,.mv-team-member:nth-child(even){grid-template-columns:1fr;gap:clamp(18px,4vw,26px)}
-  .mv-team-member:nth-child(even) .mv-team-figure{order:0}
-  .mv-team-figure{max-width:320px}
 }
 
 /* manifesto now statement-only (principles moved to Strengths) */
@@ -1132,7 +1079,6 @@ body.ready .mv-contact-footer {
 }
 
 /* ===== footer — real Siriai footer info (ported from siriai-homepage), dark-adapted ===== */
-.mv-contact{display:none}   /* "Keep in touch" hidden — replaced by the real footer below */
 /* THE CLOSING. This stretch used to be 171px of nothing — a footer "buffer" that read as a mistake
    because it was one: 171px is exactly the top padding of .closing on siriai.co.kr, the 513px section
    that carries the site's last invitation. I had shipped the padding without the content.
@@ -1317,23 +1263,23 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉬운</span> <span class="mv-w">AI</span> <span class="mv-w">리터러시를</span> <span class="mv-w">통해</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">reads</span> <span class="mv-w">a</span> <span class="mv-w">brand's</span> <span class="mv-w">nuanced</span> <span class="mv-w">needs</span> <span class="mv-w">precisely,</span></span>
+        <span class="mv-en-line"><span class="mv-w">reads</span> <span class="mv-w">what</span> <span class="mv-w">a</span> <span class="mv-w">brand</span> <span class="mv-w">needs,</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드의</span> <span class="mv-w">감각적인</span> <span class="mv-w">니즈를</span> <span class="mv-w">정확히</span> <span class="mv-w">이해하고</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">spreads</span> <span class="mv-w">cultural</span> <span class="mv-w">influence.</span></span>
+        <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">spreads</span> <span class="mv-w">its</span> <span class="mv-w">influence.</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">문화적</span> <span class="mv-w">영향력을</span> <span class="mv-w">퍼트립니다.</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">Through</span> <span class="mv-w">architecting</span> <span class="mv-w">that</span> <span class="mv-w">reaches</span> <span class="mv-w">the</span> <span class="mv-w">heart,</span></span>
+        <span class="mv-en-line"><span class="mv-w">Architecting</span> <span class="mv-w">that</span> <span class="mv-w">reaches</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">사람의</span> <span class="mv-w">마음에</span> <span class="mv-w">닿는</span> <span class="mv-w">아키텍처링을</span> <span class="mv-w">통해</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">see</span> <span class="mv-w">a</span> <span class="mv-w">32%+</span> <span class="mv-w">average</span></span>
+        <span class="mv-en-line"><span class="mv-w">the</span> <span class="mv-w">heart</span> <span class="mv-w">cuts</span> <span class="mv-w">decision</span> <span class="mv-w">costs</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">평균</span> <span class="mv-w">+32%</span> <span class="mv-w">이상의</span></span>
       </span>
       <span class="mv-line">
-        <span class="mv-en-line"><span class="mv-w">cut</span> <span class="mv-w">in</span> <span class="mv-w">decision</span> <span class="mv-w">costs.</span></span>
+        <span class="mv-en-line"><span class="mv-w">by</span> <span class="mv-w">32%</span> <span class="mv-w">on</span> <span class="mv-w">average.</span></span>
         <span class="mv-ko-line" lang="ko"><span class="mv-w">의사결정</span> <span class="mv-w">비용</span> <span class="mv-w">감소를</span> <span class="mv-w">체험해보세요.</span></span>
       </span>
     </h2>
@@ -1545,96 +1491,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </section>
 <script src="creator-cards.js"></script>
 <script src="sphere-study.js"></script>
-
-<!-- TEAM — portrait + real bios -->
-<section class="mv-team">
-  <div class="mv-team-intro">
-    <span class="mv-sec-eyebrow reveal">
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 8h13M14 8l-5-5M14 8l-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Team
-    </span>
-    <h2 class="mv-team-title reveal">From Tokyo to Saigon, we come from all over the world</h2>
-  </div>
-
-  <div class="mv-team-members">
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Saigon"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Vicki Dang <span style="opacity:.5">a.k.a Wii-ki</span></div>
-        <div class="mv-team-member-role">3D Animator &amp; Art Director</div>
-        <p class="mv-team-member-bio">Vicki Dang a.k.a Wii-ki is a self-taught 3D motion designer / director. Originally from Saigon, she has been working as a 3D animator and art director ever since — for clients such as Maserati and Louis Vuitton.</p>
-      </div>
-    </article>
-
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Asia"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Robin</div>
-        <div class="mv-team-member-role">Film Director &amp; Creative Director</div>
-        <p class="mv-team-member-bio">Robin is a multi-disciplinary artist focused on Film Direction and Creative Direction. Although he grew up in a multicultural family, he has found his home in Asia — fascinated by traditions and the ever-changing present.</p>
-      </div>
-    </article>
-
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Tokyo"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Yoshi</div>
-        <div class="mv-team-member-role">Co-founder</div>
-        <p class="mv-team-member-bio">Yoshi started out as a professional bassist before co-founding monopo while attending Waseda University in Tokyo with fellow bassist Shun. At monopo he leads the group’s client and business relationships.</p>
-      </div>
-    </article>
-
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Tokyo"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Shun</div>
-        <div class="mv-team-member-role">Co-founder</div>
-        <p class="mv-team-member-bio">Shun co-founded monopo in 2011 alongside his friend Yoshiyuki, whom he met in band club while studying at Waseda University in Tokyo. He brings a profound knowledge of web marketing and system development.</p>
-      </div>
-    </article>
-
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Cape Town"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Georgi</div>
-        <div class="mv-team-member-role">Branch Director</div>
-        <p class="mv-team-member-bio">British born, South African raised, Japan nurtured. Georgi studied film and media at the University of Cape Town before a career spanning theatre and film production management and advertising.</p>
-      </div>
-    </article>
-
-    <article class="mv-team-member reveal">
-      <div class="mv-team-figure" data-mv-speed="0.1" data-label="Paris → Tokyo"></div>
-      <div class="mv-team-member-text">
-        <div class="mv-team-member-name">Tran Minh</div>
-        <div class="mv-team-member-role">Art Director &amp; Designer</div>
-        <p class="mv-team-member-bio">Tran Minh is an art director and designer at monopo, born in France and based in Tokyo. He holds a master’s degree in digital communication, where he established his skills in web development and product design.</p>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="mv-contact">
-  <div class="mv-contact-inner">
-    <div class="mv-contact-eyebrow">Keep in touch</div>
-    <h2 class="mv-contact-headline">Start a conversation</h2>
-    <a href="mailto:contact@monopo.vn" class="mv-contact-email">contact@monopo.vn</a>
-    <div class="mv-contact-footer">
-      <div class="mv-contact-location">
-        <strong>Saigon</strong>
-        <span>Ho Chi Minh City, Vietnam</span>
-      </div>
-      <div class="mv-contact-location">
-        <strong>Tokyo</strong>
-        <span>Shibuya, Japan</span>
-      </div>
-      <div class="mv-contact-copyright">
-        <strong>Legal</strong>
-        <span>© monopo saigon</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- FOOTER — real Siriai footer (ported from siriai-homepage index.html, dark-adapted).
      Links point at the live homepage since the study has no sub-pages. -->
