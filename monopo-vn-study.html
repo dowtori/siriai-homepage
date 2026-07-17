@@ -897,6 +897,7 @@ body{cursor:none;background:#000}
      business labels already set their mark at 1.08em. */
 
 /* ===== section: WORKS — "Selected project" (staggered 2-col) ===== */
+.mv-works{display:none}   /* "Selected project" hidden — monopo's own works grid (Canada Goose, FreeFire): their projects, their images */
 .mv-works{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
   padding:clamp(70px,10vw,130px) var(--pad-x)}
@@ -927,26 +928,19 @@ body{cursor:none;background:#000}
 /* Works + Team sections hidden per request (markup preserved for later) */
 
 /* ===== section: TRUSTED BY — Siriai logo marquee (ported from index.html) ===== */
-.mv-clients{position:relative;z-index:2;background:#000;text-align:center;
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
   padding:clamp(80px,14vh,180px) 0 clamp(64px,10vh,140px)}
-.mv-clients-k{display:inline-block;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
   color:rgba(245,245,245,.55);padding:7px 16px;border:1px solid rgba(245,245,245,.14);border-radius:100px;
   margin-bottom:clamp(40px,6vh,66px)}
-.mv-clients-marquee{position:relative;display:flex;overflow:hidden;
   -webkit-mask:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
           mask:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
-.mv-clients-track{display:flex;align-items:center;flex-shrink:0;gap:clamp(34px,4vw,64px);
   padding-right:clamp(34px,4vw,64px);white-space:nowrap;animation:mvLogoFlow 64s linear infinite;will-change:transform}
 @keyframes mvLogoFlow{to{transform:translateX(-50%)}}
-.mv-clients-track span{font-size:clamp(19px,1.86vw,25px);font-weight:500;letter-spacing:-.006em;
   color:rgba(245,245,245,.5);flex-shrink:0;cursor:default;transition:color .3s ease}
-.mv-clients-track span:hover{
   background:linear-gradient(110deg,rgba(245,245,245,.5) 0%,rgba(245,245,245,.5) 28%,#ff8a5c 43%,#ff6a4d 50%,#b06cff 58%,rgba(245,245,245,.5) 73%,rgba(245,245,245,.5) 100%);
   background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
   animation:mvLogoSweep 1.5s ease infinite}
 @keyframes mvLogoSweep{0%{background-position:150% 0}100%{background-position:-150% 0}}
-@media (prefers-reduced-motion:reduce){.mv-clients-track{animation:none;flex-wrap:wrap;justify-content:center;white-space:normal}}
 
 /* THE BUSINESS LINES. Three sections, one per line of work, built to the monopo.vn geometry measured
    live at 1200px AND 1512px so the figures are exact rather than eyeballed: a 1px rule across the
@@ -1234,16 +1228,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </section>
 
 <!-- CLIENTS — They trust us -->
-<!-- TRUSTED BY — Siriai logo marquee (from index.html) -->
-<section class="mv-clients">
-  <span class="mv-clients-k reveal">Trusted by</span>
-  <div class="mv-clients-marquee reveal">
-    <div class="mv-clients-track">
-      <span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>Neverust</span><span>QUADTHERA</span><span>TOOMUCHTAX</span><span>TOCOBO</span><span>HARIM</span><span>OJOS</span><span>GANGNEUNG CITY</span><span>NONGSHIM</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">Neverust</span><span aria-hidden="true">QUADTHERA</span><span aria-hidden="true">TOOMUCHTAX</span><span aria-hidden="true">TOCOBO</span><span aria-hidden="true">HARIM</span><span aria-hidden="true">OJOS</span><span aria-hidden="true">GANGNEUNG CITY</span><span aria-hidden="true">NONGSHIM</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span>
-    </div>
-  </div>
-</section>
-
 <!-- MANIFESTO — statement -->
 <section class="mv-manifesto">
   <div class="mv-manifesto-intro">
