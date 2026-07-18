@@ -347,6 +347,21 @@ body{cursor:none;background:#000}
 /* each line overlays its EN + KO version in ONE grid cell; both flow with NATURAL spacing (left-aligned),
    so no forced per-word gaps. Words fade EN->KO on scroll; KO appears early so you read the Korean. */
 .mv-line{display:grid}
+/* the paragraphs of one business line stack in a single spot; the cycler shows one at a time and the
+   next RISES IN FROM BELOW, so the section reads as a business being built up, one thought laid on the
+   last. The copy holds the height of its TALLEST paragraph (via a sizer) so nothing below it jumps. */
+.mv-lens{position:relative}
+.mv-para{position:absolute;left:0;right:0;top:0;
+  opacity:0;transform:translateY(1.1em);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;will-change:opacity,transform}
+.mv-para[data-active]{opacity:1;transform:none;pointer-events:auto}
+.mv-para[data-leaving]{opacity:0;transform:translateY(-1.1em)}   /* the outgoing one lifts up and away */
+.mv-para-sizer{position:relative;visibility:hidden;pointer-events:none}   /* reserves the tallest paragraph's height */
+/* one Connect line is 22 Hangul and just tops the measure at the narrow end; keep the user's break by
+   letting Korean lines hold on a single line and shave tracking a hair before they would wrap. */
+.mv-lens .mv-ko-line{white-space:nowrap;letter-spacing:-.006em}
+@media (prefers-reduced-motion:reduce){ .mv-para{transition:none} }
 /* within one sentence the lines are a single breath; a new sentence gets air above it. Korean often
    cannot break on sentence boundaries in a fixed measure, so this spacing is what tells the reader
    where one thought ends and the next begins. */
@@ -953,7 +968,8 @@ body{cursor:none;background:#000}
    said it twice in the same shape — so the second one read as an echo rather than as information. */
 .mv-biz{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
-  padding:clamp(54px,7vh,96px) var(--pad-x) clamp(62px,8vh,108px)}
+  min-height:100vh;display:flex;align-items:center;
+  padding:clamp(54px,7vh,96px) var(--pad-x)}   /* one business line = one page, content centred */
 /* The first line of work sat box-to-box against the Manifesto — 0px between them — so the reader was
    asked to change subject with no beat at all. Named by what it actually is (the one after the
    Manifesto) rather than :first-of-type, which matches the first SECTION among its siblings and so
@@ -966,7 +982,7 @@ body{cursor:none;background:#000}
 .mv-biz-label{display:inline-flex;align-items:center;gap:8px;font-size:max(10px,.83vw);font-weight:400;   /* uncapped for the same reason */
   letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5);margin-bottom:clamp(26px,3.4vw,48px)}
 .mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
-.mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center}
+.mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center;width:100%}
 .mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start;
   transition:transform 1.15s cubic-bezier(.22,1,.36,1)}   /* hover leans it a few px toward the pointer. The long
      ease is the whole effect: the object keeps arriving after the pointer has stopped, which reads as following
@@ -1009,11 +1025,13 @@ body{cursor:none;background:#000}
    touched. A block flips to English only when it carries data-lang="en". */
 .mv-lens .mv-ko-line .mv-w{opacity:1}
 .mv-lens .mv-en-line .mv-w{opacity:0}
-.mv-lens[data-lang="en"] .mv-ko-line .mv-w{opacity:0}
-.mv-lens[data-lang="en"] .mv-en-line .mv-w{opacity:1}
+/* hover the copy and the whole thing turns English — no button, the hover IS the control */
+.mv-biz-copy:hover .mv-lens .mv-ko-line .mv-w{opacity:0}
+.mv-biz-copy:hover .mv-lens .mv-en-line .mv-w{opacity:1}
 /* the language toggle, set by the final full stop: right-aligned to the copy column and pulled up
    tight against the last line, not floated down by the CTA. */
-.mv-lang{margin-top:.4em;display:flex;justify-content:flex-end;align-items:center;gap:.5em;
+.mv-lang{display:none}   /* hover converts to English now; the explicit toggle is hidden */
+.mv-lang--legacy{margin-top:.4em;display:flex;justify-content:flex-end;align-items:center;gap:.5em;
   font-size:max(11px,.72vw);font-weight:400;letter-spacing:.04em;color:rgba(245,245,245,.32);
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;user-select:none}
 .mv-lang button{background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;letter-spacing:inherit;
@@ -1429,42 +1447,48 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">01</sup>
       <div class="mv-lens" data-lang="ko">
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">아무리</span> <span class="mv-w">크게</span> <span class="mv-w">외쳐도,</span></span>
-          <span class="mv-en-line"><span class="mv-w">Shout</span> <span class="mv-w">as</span> <span class="mv-w">loud</span> <span class="mv-w">as</span> <span class="mv-w">you</span> <span class="mv-w">like,</span></span>
+        <div class="mv-para" data-active>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">아무리</span> <span class="mv-w">크게</span> <span class="mv-w">외쳐도,</span></span>
+          <span class="mv-en-line"><span class="mv-w">Shout</span> <span class="mv-w">as</span> <span class="mv-w">loud</span> <span class="mv-w">as</span> <span class="mv-w">you</span> <span class="mv-w">like,</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">고객은</span> <span class="mv-w">한</span> <span class="mv-w">눈에</span> <span class="mv-w">끌리는</span> <span class="mv-w">것들에</span> <span class="mv-w">몰입할</span> <span class="mv-w">뿐</span></span>
-          <span class="mv-en-line"><span class="mv-w">a</span> <span class="mv-w">customer</span> <span class="mv-w">only</span> <span class="mv-w">falls</span> <span class="mv-w">for</span> <span class="mv-w">what</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">고객은</span> <span class="mv-w">한</span> <span class="mv-w">눈에</span> <span class="mv-w">끌리는</span> <span class="mv-w">것들에</span> <span class="mv-w">몰입할</span> <span class="mv-w">뿐</span></span>
+          <span class="mv-en-line"><span class="mv-w">a</span> <span class="mv-w">customer</span> <span class="mv-w">only</span> <span class="mv-w">falls</span> <span class="mv-w">for</span> <span class="mv-w">what</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">이해하지</span> <span class="mv-w">않습니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">catches</span> <span class="mv-w">the</span> <span class="mv-w">eye,</span> <span class="mv-w">not</span> <span class="mv-w">the</span> <span class="mv-w">brand.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">이해하지</span> <span class="mv-w">않습니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">catches</span> <span class="mv-w">the</span> <span class="mv-w">eye,</span> <span class="mv-w">not</span> <span class="mv-w">the</span> <span class="mv-w">brand.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">우리는</span> <span class="mv-w">마음을</span> <span class="mv-w">사로잡는</span></span>
-          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">take</span> <span class="mv-w">the</span> <span class="mv-w">voice</span> <span class="mv-w">of</span> <span class="mv-w">the</span> <span class="mv-w">creators</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">우리는</span> <span class="mv-w">마음을</span> <span class="mv-w">사로잡는</span></span>
+          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">take</span> <span class="mv-w">the</span> <span class="mv-w">voice</span> <span class="mv-w">of</span> <span class="mv-w">the</span> <span class="mv-w">creators</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">크리에이터의</span> <span class="mv-w">목소리를</span> <span class="mv-w">통해,</span></span>
-          <span class="mv-en-line"><span class="mv-w">who</span> <span class="mv-w">win</span> <span class="mv-w">those</span> <span class="mv-w">hearts</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">크리에이터의</span> <span class="mv-w">목소리를</span> <span class="mv-w">통해,</span></span>
+          <span class="mv-en-line"><span class="mv-w">who</span> <span class="mv-w">win</span> <span class="mv-w">those</span> <span class="mv-w">hearts</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">세상에</span> <span class="mv-w">전달합니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">carry</span> <span class="mv-w">the</span> <span class="mv-w">brand</span> <span class="mv-w">out</span> <span class="mv-w">to</span> <span class="mv-w">all.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">세상에</span> <span class="mv-w">전달합니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">carry</span> <span class="mv-w">the</span> <span class="mv-w">brand</span> <span class="mv-w">out</span> <span class="mv-w">to</span> <span class="mv-w">all.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">사랑받는</span> <span class="mv-w">법을</span> <span class="mv-w">가장</span> <span class="mv-w">잘</span> <span class="mv-w">아는</span> <span class="mv-w">이들과,</span></span>
-          <span class="mv-en-line"><span class="mv-w">With</span> <span class="mv-w">the</span> <span class="mv-w">people</span> <span class="mv-w">who</span> <span class="mv-w">know</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">사랑받는</span> <span class="mv-w">법을</span> <span class="mv-w">가장</span> <span class="mv-w">잘</span> <span class="mv-w">아는</span> <span class="mv-w">이들과,</span></span>
+          <span class="mv-en-line"><span class="mv-w">With</span> <span class="mv-w">the</span> <span class="mv-w">people</span> <span class="mv-w">who</span> <span class="mv-w">know</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉽고</span> <span class="mv-w">빠르게</span></span>
-          <span class="mv-en-line"><span class="mv-w">being</span> <span class="mv-w">loved</span> <span class="mv-w">best,</span> <span class="mv-w">reach</span> <span class="mv-w">your</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">쉽고</span> <span class="mv-w">빠르게</span></span>
+          <span class="mv-en-line"><span class="mv-w">being</span> <span class="mv-w">loved</span> <span class="mv-w">best,</span> <span class="mv-w">reach</span> <span class="mv-w">your</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">고객에게</span> <span class="mv-w">다가가보세요.</span></span>
-          <span class="mv-en-line"><span class="mv-w">customer</span> <span class="mv-w">the</span> <span class="mv-w">easiest,</span> <span class="mv-w">fastest</span> <span class="mv-w">way.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">고객에게</span> <span class="mv-w">다가가보세요.</span></span>
+          <span class="mv-en-line"><span class="mv-w">customer</span> <span class="mv-w">the</span> <span class="mv-w">easiest,</span> <span class="mv-w">fastest</span> <span class="mv-w">way.</span></span>
         </span>
+        </div>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
       <a class="mv-biz-cta" href="https://featpaper.com/v/7jqtPGf2" target="_blank" rel="noopener"><span>크리에이터 협업 사례보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -1479,46 +1503,52 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">02</sup>
       <div class="mv-lens" data-lang="ko">
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">핵심적인</span> <span class="mv-w">아키텍처링을</span> <span class="mv-w">통해</span></span>
-          <span class="mv-en-line"><span class="mv-w">Build</span> <span class="mv-w">your</span> <span class="mv-w">business</span> <span class="mv-w">on</span></span>
+        <div class="mv-para" data-active>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">가장</span> <span class="mv-w">핵심적인</span> <span class="mv-w">아키텍처링을</span> <span class="mv-w">통해</span></span>
+          <span class="mv-en-line"><span class="mv-w">Build</span> <span class="mv-w">your</span> <span class="mv-w">business</span> <span class="mv-w">on</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">비즈니스를</span> <span class="mv-w">빌드업해보세요.</span></span>
-          <span class="mv-en-line"><span class="mv-w">architecting</span> <span class="mv-w">that</span> <span class="mv-w">holds.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">비즈니스를</span> <span class="mv-w">빌드업해보세요.</span></span>
+          <span class="mv-en-line"><span class="mv-w">architecting</span> <span class="mv-w">that</span> <span class="mv-w">holds.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">IT·제조·아트·패션·뷰티를</span></span>
-          <span class="mv-en-line"><span class="mv-w">On</span> <span class="mv-w">experience</span> <span class="mv-w">spanning</span> <span class="mv-w">IT,</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">IT·제조·아트·패션·뷰티를</span></span>
+          <span class="mv-en-line"><span class="mv-w">On</span> <span class="mv-w">experience</span> <span class="mv-w">spanning</span> <span class="mv-w">IT,</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">아우르는</span> <span class="mv-w">경험과</span></span>
-          <span class="mv-en-line"><span class="mv-w">manufacturing,</span> <span class="mv-w">art,</span> <span class="mv-w">fashion</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">아우르는</span> <span class="mv-w">경험과</span></span>
+          <span class="mv-en-line"><span class="mv-w">manufacturing,</span> <span class="mv-w">art,</span> <span class="mv-w">fashion</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">폭넓은</span> <span class="mv-w">네트워크를</span> <span class="mv-w">기반으로,</span></span>
-          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">beauty,</span> <span class="mv-w">and</span> <span class="mv-w">a</span> <span class="mv-w">wide</span> <span class="mv-w">network,</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">폭넓은</span> <span class="mv-w">네트워크를</span> <span class="mv-w">기반으로,</span></span>
+          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">beauty,</span> <span class="mv-w">and</span> <span class="mv-w">a</span> <span class="mv-w">wide</span> <span class="mv-w">network,</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">빠르게</span> <span class="mv-w">구조를</span> <span class="mv-w">설계합니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">we</span> <span class="mv-w">design</span> <span class="mv-w">structure</span> <span class="mv-w">fast.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">빠르게</span> <span class="mv-w">구조를</span> <span class="mv-w">설계합니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">we</span> <span class="mv-w">design</span> <span class="mv-w">structure</span> <span class="mv-w">fast.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">근본적인</span> <span class="mv-w">페인</span> <span class="mv-w">포인트를</span></span>
-          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">find</span> <span class="mv-w">the</span> <span class="mv-w">root</span> <span class="mv-w">pain</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">근본적인</span> <span class="mv-w">페인</span> <span class="mv-w">포인트를</span></span>
+          <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">find</span> <span class="mv-w">the</span> <span class="mv-w">root</span> <span class="mv-w">pain</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">넓은</span> <span class="mv-w">인사이트로</span> <span class="mv-w">짚어내고,</span></span>
-          <span class="mv-en-line"><span class="mv-w">with</span> <span class="mv-w">broad</span> <span class="mv-w">insight,</span> <span class="mv-w">and</span> <span class="mv-w">stay</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">넓은</span> <span class="mv-w">인사이트로</span> <span class="mv-w">짚어내고,</span></span>
+          <span class="mv-en-line"><span class="mv-w">with</span> <span class="mv-w">broad</span> <span class="mv-w">insight,</span> <span class="mv-w">and</span> <span class="mv-w">stay</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">문제</span> <span class="mv-w">정의부터</span> <span class="mv-w">해결까지,</span></span>
-          <span class="mv-en-line"><span class="mv-w">from</span> <span class="mv-w">defining</span> <span class="mv-w">the</span> <span class="mv-w">problem</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">문제</span> <span class="mv-w">정의부터</span> <span class="mv-w">해결까지,</span></span>
+          <span class="mv-en-line"><span class="mv-w">from</span> <span class="mv-w">defining</span> <span class="mv-w">the</span> <span class="mv-w">problem</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이가</span> <span class="mv-w">끝까지</span> <span class="mv-w">함께합니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">through</span> <span class="mv-w">to</span> <span class="mv-w">solving</span> <span class="mv-w">it.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이가</span> <span class="mv-w">끝까지</span> <span class="mv-w">함께합니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">through</span> <span class="mv-w">to</span> <span class="mv-w">solving</span> <span class="mv-w">it.</span></span>
         </span>
+        </div>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
       <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/#contact" target="_blank" rel="noopener"><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -1533,34 +1563,40 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">03</sup>
       <div class="mv-lens" data-lang="ko">
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">대부분의</span> <span class="mv-w">아이디어는</span></span>
-          <span class="mv-en-line"><span class="mv-w">Most</span> <span class="mv-w">ideas</span> <span class="mv-w">disappear</span></span>
+        <div class="mv-para" data-active>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">대부분의</span> <span class="mv-w">아이디어는</span></span>
+          <span class="mv-en-line"><span class="mv-w">Most</span> <span class="mv-w">ideas</span> <span class="mv-w">disappear</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">금방</span> <span class="mv-w">사라집니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">almost</span> <span class="mv-w">at</span> <span class="mv-w">once.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">금방</span> <span class="mv-w">사라집니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">almost</span> <span class="mv-w">at</span> <span class="mv-w">once.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">사라지는</span> <span class="mv-w">기억보다</span> <span class="mv-w">빠르게</span></span>
-          <span class="mv-en-line"><span class="mv-w">Faster</span> <span class="mv-w">than</span> <span class="mv-w">a</span> <span class="mv-w">fading</span> <span class="mv-w">memory,</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">사라지는</span> <span class="mv-w">기억보다</span> <span class="mv-w">빠르게</span></span>
+          <span class="mv-en-line"><span class="mv-w">Faster</span> <span class="mv-w">than</span> <span class="mv-w">a</span> <span class="mv-w">fading</span> <span class="mv-w">memory,</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">아이디어를</span> <span class="mv-w">검증하고,</span></span>
-          <span class="mv-en-line"><span class="mv-w">we</span> <span class="mv-w">test</span> <span class="mv-w">the</span> <span class="mv-w">idea</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">아이디어를</span> <span class="mv-w">검증하고,</span></span>
+          <span class="mv-en-line"><span class="mv-w">we</span> <span class="mv-w">test</span> <span class="mv-w">the</span> <span class="mv-w">idea</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">화면에</span> <span class="mv-w">감각적으로</span> <span class="mv-w">구현합니다.</span></span>
-          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">build</span> <span class="mv-w">it,</span> <span class="mv-w">on</span> <span class="mv-w">screen,</span> <span class="mv-w">with</span> <span class="mv-w">feel.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">화면에</span> <span class="mv-w">감각적으로</span> <span class="mv-w">구현합니다.</span></span>
+          <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">build</span> <span class="mv-w">it,</span> <span class="mv-w">on</span> <span class="mv-w">screen,</span> <span class="mv-w">with</span> <span class="mv-w">feel.</span></span>
         </span>
-        <span class="mv-line" data-newsent="1">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">단</span> <span class="mv-w">2주</span> <span class="mv-w">만에,</span> <span class="mv-w">상상</span> <span class="mv-w">속</span> <span class="mv-w">프로덕트를</span></span>
-          <span class="mv-en-line"><span class="mv-w">In</span> <span class="mv-w">just</span> <span class="mv-w">two</span> <span class="mv-w">weeks,</span> <span class="mv-w">meet</span> <span class="mv-w">the</span></span>
+        </div>
+        <div class="mv-para">
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">단</span> <span class="mv-w">2주</span> <span class="mv-w">만에,</span> <span class="mv-w">상상</span> <span class="mv-w">속</span> <span class="mv-w">프로덕트를</span></span>
+          <span class="mv-en-line"><span class="mv-w">In</span> <span class="mv-w">just</span> <span class="mv-w">two</span> <span class="mv-w">weeks,</span> <span class="mv-w">meet</span> <span class="mv-w">the</span></span>
         </span>
-        <span class="mv-line">
-          <span class="mv-ko-line" lang="ko"><span class="mv-w">현실로</span> <span class="mv-w">만나보세요.</span></span>
-          <span class="mv-en-line"><span class="mv-w">product</span> <span class="mv-w">you</span> <span class="mv-w">only</span> <span class="mv-w">imagined.</span></span>
+    <span class="mv-line">
+          <span class="mv-ko-line" lang="ko"><span class="mv-w">현실로</span> <span class="mv-w">만나보세요.</span></span>
+          <span class="mv-en-line"><span class="mv-w">product</span> <span class="mv-w">you</span> <span class="mv-w">only</span> <span class="mv-w">imagined.</span></span>
         </span>
+        </div>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
       <a class="mv-biz-cta" href="https://siriai-qa-deck.vercel.app/#contact" target="_blank" rel="noopener"><span>소프트웨어 엔지니어링 함께하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -2682,23 +2718,46 @@ void main(){
 </script>
 
 <script>
-/* ---- business-line language toggle ---------------------------------------------------------------
-   Korean shows by default; a small KR/EN control by the final stop flips one section between the two.
-   The two languages share one grid cell (.mv-line), so only one is ever visible; the toggle just sets
-   data-lang on the block and CSS does the rest. The manifesto keeps its own scroll-driven reveal. */
+/* ---- business-line paragraph cycler ------------------------------------------------------------
+   Each section shows its paragraphs one at a time, like the hero rotates its headline. The next one
+   RISES IN FROM BELOW (CSS handles the motion via [data-active]/[data-leaving]); the copy reserves the
+   height of its tallest paragraph so nothing under it jumps. Language is not handled here — hovering
+   the copy turns it English by CSS, and there is no button anymore. */
 (function(){
-  [].slice.call(document.querySelectorAll('.mv-lang')).forEach(function(ctrl){
-    var lens = ctrl.closest('.mv-biz-copy').querySelector('.mv-lens');
-    var btns = [].slice.call(ctrl.querySelectorAll('button'));
-    if(!lens || !btns.length) return;
-    ctrl.removeAttribute('aria-hidden');
-    btns.forEach(function(b){
-      b.addEventListener('click', function(){
-        var lang = b.getAttribute('data-set-lang');
-        lens.setAttribute('data-lang', lang);
-        btns.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-      });
-    });
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  [].slice.call(document.querySelectorAll('.mv-lens')).forEach(function(lens){
+    var paras = [].slice.call(lens.querySelectorAll('.mv-para'));
+    if(paras.length < 2){ return; }
+
+    // reserve the tallest paragraph's height so the block does not resize as paragraphs swap
+    function fit(){
+      var h = 0;
+      paras.forEach(function(p){ var was = p.style.cssText;
+        p.style.position='static'; p.style.opacity='0'; p.style.transform='none';
+        h = Math.max(h, p.offsetHeight); p.style.cssText = was; });
+      lens.style.minHeight = h + 'px';
+    }
+    fit();
+    var rt; addEventListener('resize', function(){ clearTimeout(rt); rt=setTimeout(fit, 160); });
+
+    if(reduce){ return; }   // reduced motion: leave the first paragraph shown, no cycling
+
+    var idx = 0, HOLD = 3600, running = false, timer = 0;
+    function step(){
+      var cur = paras[idx], nxt = paras[(idx+1) % paras.length];
+      cur.setAttribute('data-leaving','');
+      cur.removeAttribute('data-active');
+      nxt.setAttribute('data-active','');
+      // clear the leaving flag once its transition is done so it can re-enter later from below
+      setTimeout(function(){ cur.removeAttribute('data-leaving'); }, 750);
+      idx = (idx+1) % paras.length;
+    }
+    function start(){ if(running) return; running = true; timer = setInterval(step, HOLD); }
+    function stop(){ running = false; clearInterval(timer); }
+
+    // only run while the section is on screen (frees the main thread elsewhere)
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, {threshold:0.35});
+    io.observe(lens.closest('.mv-biz'));
   });
 })();
 </script>
