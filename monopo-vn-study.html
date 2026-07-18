@@ -1142,6 +1142,47 @@ body{cursor:none;background:#000}
 .mv-topbar-cta svg{width:13px;height:13px;transition:transform .3s cubic-bezier(.22,1,.36,1)}
 .mv-topbar-cta:hover svg{transform:translate3d(.14em,-.14em,0)}
 @media (prefers-reduced-motion:reduce){.mv-topbar{transition:none}}
+/* CONTACT MODAL. The business CTAs open this rather than leaving for the deck (which a junior teammate
+   is still designing). No backend on a static study, so Send composes a mailto to the studio — the same
+   copyable-draft approach the real Contact page takes. Black + grain, so it belongs to this page. */
+.mv-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  padding:clamp(20px,5vw,60px)}
+.mv-modal.open{display:flex}
+.mv-modal-scrim{position:absolute;inset:0;background:rgba(4,4,4,.72);backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .3s}
+.mv-modal.open .mv-modal-scrim{opacity:1}
+.mv-modal-card{position:relative;width:100%;max-width:min(520px,94vw);max-height:90vh;overflow:auto;
+  background:#0c0c0d;border:1px solid rgba(245,245,244,.12);border-radius:14px;
+  padding:clamp(26px,4vw,44px);color:#f5f5f4;
+  font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+  transform:translateY(14px) scale(.985);opacity:0;transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .3s}
+.mv-modal.open .mv-modal-card{transform:none;opacity:1}
+.mv-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;display:flex;
+  align-items:center;justify-content:center;background:none;border:0;color:rgba(245,245,244,.5);
+  cursor:pointer;font-size:22px;line-height:1;border-radius:8px;transition:color .25s,background .25s}
+.mv-modal-close:hover{color:#f5f5f4;background:rgba(245,245,244,.08)}
+.mv-modal-eyebrow{font-size:max(10px,.78vw);letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(245,245,244,.42);margin:0 0 12px}
+.mv-modal-title{margin:0 0 8px;font-size:clamp(24px,3vw,34px);font-weight:500;letter-spacing:-.02em}
+.mv-modal-sub{margin:0 0 clamp(20px,2.6vw,30px);font-size:14px;line-height:1.6;color:rgba(245,245,244,.6);word-break:keep-all}
+.mv-field{margin-bottom:14px}
+.mv-field label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(245,245,244,.4);margin-bottom:6px}
+.mv-field input,.mv-field select,.mv-field textarea{width:100%;box-sizing:border-box;
+  background:rgba(245,245,244,.04);border:1px solid rgba(245,245,244,.14);border-radius:8px;
+  padding:11px 13px;color:#f5f5f4;font:inherit;font-size:14px;transition:border-color .25s,background .25s}
+.mv-field textarea{min-height:96px;resize:vertical;line-height:1.55}
+.mv-field select{appearance:none;cursor:pointer}
+.mv-field input:focus,.mv-field select:focus,.mv-field textarea:focus{outline:none;
+  border-color:rgba(245,245,244,.45);background:rgba(245,245,244,.07)}
+.mv-field input::placeholder,.mv-field textarea::placeholder{color:rgba(245,245,244,.28)}
+.mv-modal-send{width:100%;margin-top:6px;padding:13px;border:0;border-radius:999px;cursor:pointer;
+  background:#f5f5f4;color:#0a0a0a;font:inherit;font-size:14px;font-weight:600;
+  transition:background .25s}
+.mv-modal-send:hover{background:rgba(245,245,244,.86)}
+.mv-modal-alt{margin:16px 0 0;font-size:12px;text-align:center;color:rgba(245,245,244,.4)}
+.mv-modal-alt a{color:rgba(245,245,244,.66);text-decoration:underline;text-underline-offset:2px}
+@media (prefers-reduced-motion:reduce){.mv-modal-scrim,.mv-modal-card{transition:none}}
 .mv-foot{position:relative;z-index:2;background:#000;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif}
 .mv-foot-cols{position:relative;z-index:1;padding:clamp(56px,9vh,110px) var(--pad-x) clamp(40px,6vh,70px);
@@ -1168,6 +1209,27 @@ body{cursor:none;background:#000}
 </style>
 </head>
 <body>
+<!-- CONTACT MODAL — opened by the business CTAs; no backend, composes a mailto -->
+<div class="mv-modal" id="mvContact" role="dialog" aria-modal="true" aria-labelledby="mvContactTitle">
+  <div class="mv-modal-scrim" data-close></div>
+  <div class="mv-modal-card">
+    <button class="mv-modal-close" type="button" data-close aria-label="Close">&times;</button>
+    <p class="mv-modal-eyebrow">Start here</p>
+    <h2 class="mv-modal-title" id="mvContactTitle">함께 시작하기</h2>
+    <p class="mv-modal-sub">무엇을 결정하려 하시는지 들려주세요. 신호를 읽고, 답의 형태를 그려, 영업일 기준 이틀 안에 회신드립니다.</p>
+    <form id="mvContactForm">
+      <div class="mv-field"><label for="mvcName">이름</label><input id="mvcName" name="name" type="text" autocomplete="name" placeholder="성함"></div>
+      <div class="mv-field"><label for="mvcEmail">이메일</label><input id="mvcEmail" name="email" type="email" autocomplete="email" placeholder="you@company.com"></div>
+      <div class="mv-field"><label for="mvcCompany">회사 / 브랜드</label><input id="mvcCompany" name="company" type="text" placeholder="선택"></div>
+      <div class="mv-field"><label for="mvcTopic">무엇에 관한 문의인가요?</label><select id="mvcTopic" name="topic">
+        <option>크리에이터 협업</option><option>비즈니스 컨설팅 (Architecting)</option><option>소프트웨어 엔지니어링</option><option>브랜딩 비즈니스</option><option>파트너십</option><option>그 외</option>
+      </select></div>
+      <div class="mv-field"><label for="mvcMsg">지금 테이블 위의 질문</label><textarea id="mvcMsg" name="message" placeholder="자유롭게 적어주세요"></textarea></div>
+      <button class="mv-modal-send" type="submit">보내기</button>
+    </form>
+    <p class="mv-modal-alt">또는 바로 <a href="mailto:sbsiriai@gmail.com">sbsiriai@gmail.com</a></p>
+  </div>
+</div>
 <!-- FLOATING TOP BAR — appears from the manifesto on; reveals on scroll-up only -->
 <div class="mv-topbar" id="mvTopbar">
   <a class="mv-topbar-brand" href="#top"><span class="b">Siriai</span><span class="bar"></span><span class="c">seoul</span></a>
@@ -1387,7 +1449,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         </span>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
-      <a class="mv-biz-cta" href="https://siriai.co.kr/Cases.html"><span>크리에이터 협업 사례보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="https://featpaper.com/v/7jqtPGf2" target="_blank" rel="noopener"><span>크리에이터 협업 사례보기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1441,7 +1503,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         </span>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
-      <a class="mv-biz-cta" href="https://siriai.co.kr/Contact.html"><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="#contact" data-contact><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1487,7 +1549,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         </span>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
-      <a class="mv-biz-cta" href="https://siriai.co.kr/Contact.html"><span>소프트웨어 엔지니어링 함께하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="#contact" data-contact><span>소프트웨어 엔지니어링 함께하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -2651,6 +2713,56 @@ void main(){
     lastY = y;
   }
   addEventListener('scroll', function(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+})();
+</script>
+
+<script>
+/* contact modal: opened by any [data-contact], closed by the scrim / the X / Escape. It has no server,
+   so submit builds a mailto to the studio prefilled from the fields — the same idea as the real Contact
+   page's copyable draft. The topic is preselected from which CTA opened it, when we can tell. */
+(function(){
+  var modal = document.getElementById('mvContact');
+  if(!modal) return;
+  var form = document.getElementById('mvContactForm');
+  var topic = document.getElementById('mvcTopic');
+  var lastFocus = null;
+  function open(pre){
+    lastFocus = document.activeElement;
+    if(pre && topic){ for(var i=0;i<topic.options.length;i++){ if(topic.options[i].value.indexOf(pre)===0){ topic.selectedIndex=i; break; } } }
+    modal.classList.add('open');
+    document.documentElement.style.overflow='hidden';
+    var f=document.getElementById('mvcName'); if(f) setTimeout(function(){ f.focus(); },60);
+  }
+  function close(){
+    modal.classList.remove('open');
+    document.documentElement.style.overflow='';
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  [].slice.call(document.querySelectorAll('[data-contact]')).forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var lbl = (btn.textContent||'');
+      var pre = lbl.indexOf('컨설팅')>=0 ? '비즈니스 컨설팅' : (lbl.indexOf('엔지니어링')>=0 ? '소프트웨어 엔지니어링' : '');
+      open(pre);
+    });
+  });
+  [].slice.call(modal.querySelectorAll('[data-close]')).forEach(function(el){ el.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && modal.classList.contains('open')) close(); });
+  if(form) form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var g=function(id){ var el=document.getElementById(id); return el?el.value.trim():''; };
+    var name=g('mvcName'), email=g('mvcEmail'), company=g('mvcCompany'), t=topic?topic.value:'', msg=g('mvcMsg');
+    var subject='[문의] '+(t||'Siriai')+(company?(' · '+company):'');
+    var body=['안녕하세요, SIRIAI 팀께','',
+              (company?('['+company+']'):'')+(name?(' '+name):'')+' 드립니다.',
+              '아래 내용으로 문의드립니다.','',
+              '· 관심 서비스 : '+t,
+              '· 문의 내용 :','',
+              (msg||'[자유롭게 작성해 주세요]'),'',
+              '회신 기다리겠습니다. 감사합니다.',
+              (name||'[성함]')+' 드림'+(email?(' · '+email):'')].join('\n');
+    window.location.href='mailto:sbsiriai@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  });
 })();
 </script>
 </body>

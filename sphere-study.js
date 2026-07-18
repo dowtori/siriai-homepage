@@ -38,6 +38,7 @@
   const imgCache={}; function getImg(src){ let im=imgCache[src]; if(im) return im; im=new Image(); im.decoding='async'; im.src=src; imgCache[src]=im; return im; }
   const markImg=getImg('assets/siriai-mark-white.png');
   function thumb(u){ return u.replace('assets/creator/','assets/creator-thumb/').replace(/\.[a-z0-9]+$/i,'.jpg'); }   // 320px thumbnails — ~26x lighter payload
+  function orig(u){ return u; }   // featured.card is already the full-size 'assets/creator/...' path; the cluster elsewhere uses thumb() of it
   let sphereHover=false, coreOp=0;
   /* ── ambient idle life: ghost-hover a random brand + faint twinkles when the user is away ── */
   const AMB = { idle:1500, gap:[5000,8200], hold:1700, twGap:[900,1900], twDur:950 };
@@ -211,7 +212,9 @@
     /* single featured photo — one big image (reference-style) */
     featScale += ((featured?1:0)-featScale)*0.28; if(featScale<0.002) featScale=0;
     if(featScale>0.01 && featured){
-      const im=featured._img || (featured._img=getImg(thumb(featured.card)));
+      const _hi=featured._img || (featured._img=getImg(orig(featured.card)));
+      var _th=featured._thumb || (featured._thumb=getImg(thumb(featured.card)));   // shown until the original decodes
+      const im=(_hi.complete && _hi.naturalWidth) ? _hi : _th;   // original once ready, thumb meanwhile
       if(im.complete && im.naturalWidth){
         const iAR=im.naturalWidth/im.naturalHeight;          // featured shows the image at its ORIGINAL ratio
         const maxW=Math.min(cssW*0.42, 440), maxH=Math.min(innerHeight*0.6, 560);
