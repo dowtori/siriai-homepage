@@ -989,19 +989,26 @@ body{cursor:none;background:#000}
      rather than tracking. Max travel is 6.5px — it never leaves its own box. */   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
       column. Centring it left a slab of black on the left and pushed the whole composition inward. */
 .mv-biz-orb{isolation:isolate}
-/* a real creator photo sits BEHIND the abstract object. At rest it is invisible; on hover it rises,
-   drained to grey and blurred to a wind-worn haze — you get the sense of the actual work under the
-   cover, not its detail. It is a background-image (a thumbnail), so it costs nothing until painted. */
-.mv-biz-photo{position:absolute;inset:0;z-index:0;border-radius:2px;
-  background-size:cover;background-position:center;
-  filter:grayscale(1) blur(11px) contrast(.9) brightness(1.02);
-  opacity:0;transform:scale(1.04);
-  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+/* a real creator photo sits behind the abstract object. NO box: no border, no rounded corner, no
+   backing — the image is feathered to black at its edges by a radial mask, so what shows is the
+   grayscale photo's own silhouette floating on black, not a rectangle. On hover the object slowly
+   dissolves and the photo slowly comes up — never fully sharp, just legible. Off the pointer both snap
+   back fast. Asymmetric timing: the .35s on the base rule governs the RETURN; the slow times live on
+   the :hover rule and govern the ARRIVAL. */
+.mv-biz-photo{position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center center;
+  -webkit-mask:radial-gradient(closest-side, #000 52%, rgba(0,0,0,.35) 78%, transparent 100%);
+          mask:radial-gradient(closest-side, #000 52%, rgba(0,0,0,.35) 78%, transparent 100%);
+  filter:grayscale(1) blur(14px) contrast(.95);
+  opacity:0;
+  transition:opacity .35s cubic-bezier(.4,0,.2,1),filter .35s cubic-bezier(.4,0,.2,1)}   /* RETURN: fast */
 .orb-field{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;
-  transition:opacity .6s cubic-bezier(.22,1,.36,1)}
+  transition:opacity .35s cubic-bezier(.4,0,.2,1),filter .35s cubic-bezier(.4,0,.2,1)}    /* RETURN: fast */
 @media (hover:hover){
-  .mv-biz-orb:hover .mv-biz-photo{opacity:.5;transform:scale(1)}   /* impression only — held well under full */
-  .mv-biz-orb:hover .orb-field{opacity:.82}                        /* the object eases back so the photo reads through */
+  .mv-biz-orb:hover .mv-biz-photo{opacity:.82;filter:grayscale(1) blur(4px) contrast(.98);   /* sharpens, but not fully */
+    transition:opacity 1.2s cubic-bezier(.22,1,.36,1),filter 1.2s cubic-bezier(.22,1,.36,1)}  /* ARRIVAL: slow */
+  .mv-biz-orb:hover .orb-field{opacity:0;filter:blur(7px);                                    /* object dissolves away */
+    transition:opacity 1.2s cubic-bezier(.22,1,.36,1),filter 1.2s cubic-bezier(.22,1,.36,1)}  /* ARRIVAL: slow */
 }
 @media (prefers-reduced-motion:reduce){ .mv-biz-photo,.orb-field{transition:none} }
 @media (prefers-reduced-motion:reduce){ .orb-field{transition:none} }
