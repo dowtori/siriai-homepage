@@ -347,7 +347,11 @@ body{cursor:none;background:#000}
 /* each line overlays its EN + KO version in ONE grid cell; both flow with NATURAL spacing (left-aligned),
    so no forced per-word gaps. Words fade EN->KO on scroll; KO appears early so you read the Korean. */
 .mv-line{display:grid}
-.mv-line + .mv-line{margin-top:.04em}
+/* within one sentence the lines are a single breath; a new sentence gets air above it. Korean often
+   cannot break on sentence boundaries in a fixed measure, so this spacing is what tells the reader
+   where one thought ends and the next begins. */
+.mv-line + .mv-line{margin-top:.02em}
+.mv-lens .mv-line[data-newsent]{margin-top:.66em}
 .mv-en-line,.mv-ko-line{grid-column:1;grid-row:1}
 .mv-ko-line{font-family:"Noto Sans KR","Inter Tight",Helvetica,Arial,sans-serif;font-weight:500;color:#f5f5f4;word-break:keep-all}
 .mv-w{display:inline-block;will-change:opacity,transform;transition:opacity .14s linear,transform .3s cubic-bezier(.22,1,.36,1)}
@@ -983,7 +987,7 @@ body{cursor:none;background:#000}
    cuts words in half and the point here is to be READ, not to look like a lens. The EN and KO of each
    line already live in one grid cell (.mv-line), so a line is either one language or the other, never
    a smear of both. */
-.mv-lens{font-weight:300;line-height:1.581;letter-spacing:0}
+.mv-lens{font-weight:300;line-height:1.5;letter-spacing:0}   /* a touch tighter so intra-sentence lines read as one block; the sentence gap does the separating */
 .mv-lens .mv-ko-line{font-weight:300}
 /* Korean shows by default here; the manifesto (.mv-fill) keeps its own scroll-driven EN->KO and is not
    touched. A block flips to English only when it carries data-lang="en". */
@@ -991,8 +995,9 @@ body{cursor:none;background:#000}
 .mv-lens .mv-en-line .mv-w{opacity:0}
 .mv-lens[data-lang="en"] .mv-ko-line .mv-w{opacity:0}
 .mv-lens[data-lang="en"] .mv-en-line .mv-w{opacity:1}
-/* the tiny language toggle, sitting by the final full stop */
-.mv-lang{margin-top:clamp(18px,2vw,30px);display:inline-flex;align-items:center;gap:.5em;
+/* the language toggle, set by the final full stop: right-aligned to the copy column and pulled up
+   tight against the last line, not floated down by the CTA. */
+.mv-lang{margin-top:.4em;display:flex;justify-content:flex-end;align-items:center;gap:.5em;
   font-size:max(11px,.72vw);font-weight:400;letter-spacing:.04em;color:rgba(245,245,245,.32);
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;user-select:none}
 .mv-lang button{background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;letter-spacing:inherit;
@@ -1000,7 +1005,7 @@ body{cursor:none;background:#000}
 .mv-lang button:hover{color:rgba(245,245,245,.7)}
 .mv-lang button[aria-pressed="true"]{color:#f5f5f4}
 .mv-lang .sep{opacity:.4}
-.mv-biz-cta{display:inline-flex;align-items:center;gap:.5em;margin-top:clamp(24px,2.8vw,42px);
+.mv-biz-cta{display:inline-flex;align-items:center;gap:.5em;margin-top:clamp(30px,3.4vw,52px);
   font-size:.52em;font-weight:400;color:rgba(245,245,245,.62);text-decoration:none;
   border-bottom:1px solid rgba(245,245,245,.2);padding-bottom:.3em;
   transition:color .3s,border-color .3s}
@@ -1352,11 +1357,11 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">고객은</span> <span class="mv-w">브랜드를</span> <span class="mv-w">이해하지</span> <span class="mv-w">않습니다.</span></span>
           <span class="mv-en-line"><span class="mv-w">customers</span> <span class="mv-w">do</span> <span class="mv-w">not</span> <span class="mv-w">study</span> <span class="mv-w">a</span> <span class="mv-w">brand.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">한</span> <span class="mv-w">눈에</span> <span class="mv-w">끌리는</span> <span class="mv-w">것들에</span> <span class="mv-w">몰입할</span> <span class="mv-w">뿐.</span></span>
           <span class="mv-en-line"><span class="mv-w">They</span> <span class="mv-w">fall</span> <span class="mv-w">for</span> <span class="mv-w">what</span> <span class="mv-w">catches</span> <span class="mv-w">the</span> <span class="mv-w">eye.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">우리는</span> <span class="mv-w">마음을</span> <span class="mv-w">사로잡는</span></span>
           <span class="mv-en-line"><span class="mv-w">So</span> <span class="mv-w">we</span> <span class="mv-w">carry</span> <span class="mv-w">a</span> <span class="mv-w">brand</span> <span class="mv-w">out</span></span>
         </span>
@@ -1368,7 +1373,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">세상에</span> <span class="mv-w">전달합니다.</span></span>
           <span class="mv-en-line"><span class="mv-w">who</span> <span class="mv-w">win</span> <span class="mv-w">those</span> <span class="mv-w">hearts,</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">사랑받는</span> <span class="mv-w">법을</span> <span class="mv-w">가장</span> <span class="mv-w">잘</span> <span class="mv-w">아는</span> <span class="mv-w">이들과,</span></span>
           <span class="mv-en-line"><span class="mv-w">with</span> <span class="mv-w">the</span> <span class="mv-w">people</span> <span class="mv-w">who</span> <span class="mv-w">know</span></span>
         </span>
@@ -1402,7 +1407,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">비즈니스를</span> <span class="mv-w">빌드업해보세요.</span></span>
           <span class="mv-en-line"><span class="mv-w">architecting</span> <span class="mv-w">that</span> <span class="mv-w">holds.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">IT·제조·아트·패션·뷰티를</span></span>
           <span class="mv-en-line"><span class="mv-w">On</span> <span class="mv-w">experience</span> <span class="mv-w">spanning</span> <span class="mv-w">IT,</span></span>
         </span>
@@ -1418,7 +1423,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">빠르게</span> <span class="mv-w">구조를</span> <span class="mv-w">설계합니다.</span></span>
           <span class="mv-en-line"><span class="mv-w">we</span> <span class="mv-w">design</span> <span class="mv-w">structure</span> <span class="mv-w">fast.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">근본적인</span> <span class="mv-w">페인</span> <span class="mv-w">포인트를</span></span>
           <span class="mv-en-line"><span class="mv-w">We</span> <span class="mv-w">find</span> <span class="mv-w">the</span> <span class="mv-w">root</span> <span class="mv-w">pain</span></span>
         </span>
@@ -1456,7 +1461,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">금방</span> <span class="mv-w">사라집니다.</span></span>
           <span class="mv-en-line"><span class="mv-w">almost</span> <span class="mv-w">at</span> <span class="mv-w">once.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">우리는</span> <span class="mv-w">사라지는</span> <span class="mv-w">기억보다</span> <span class="mv-w">빠르게</span></span>
           <span class="mv-en-line"><span class="mv-w">Faster</span> <span class="mv-w">than</span> <span class="mv-w">a</span> <span class="mv-w">fading</span> <span class="mv-w">memory,</span></span>
         </span>
@@ -1472,7 +1477,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
           <span class="mv-ko-line" lang="ko"><span class="mv-w">화면에</span> <span class="mv-w">감각적으로</span> <span class="mv-w">구현합니다.</span></span>
           <span class="mv-en-line"><span class="mv-w">and</span> <span class="mv-w">build</span> <span class="mv-w">it,</span> <span class="mv-w">on</span> <span class="mv-w">screen,</span> <span class="mv-w">with</span> <span class="mv-w">feel.</span></span>
         </span>
-        <span class="mv-line">
+        <span class="mv-line" data-newsent="1">
           <span class="mv-ko-line" lang="ko"><span class="mv-w">단</span> <span class="mv-w">2주</span> <span class="mv-w">만에,</span> <span class="mv-w">상상</span> <span class="mv-w">속</span> <span class="mv-w">프로덕트를</span></span>
           <span class="mv-en-line"><span class="mv-w">In</span> <span class="mv-w">just</span> <span class="mv-w">two</span> <span class="mv-w">weeks,</span> <span class="mv-w">meet</span> <span class="mv-w">the</span></span>
         </span>
