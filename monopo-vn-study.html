@@ -972,14 +972,22 @@ body{cursor:none;background:#000}
      ease is the whole effect: the object keeps arriving after the pointer has stopped, which reads as following
      rather than tracking. Max travel is 6.5px — it never leaves its own box. */   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
       column. Centring it left a slab of black on the left and pushed the whole composition inward. */
-.orb-field{position:absolute;inset:0;width:100%;height:100%;display:block;
-  transition:filter .6s cubic-bezier(.22,1,.36,1),opacity .6s cubic-bezier(.22,1,.36,1)}
-/* hover the object and it weathers: colour drains to grey and the form blurs to an impression — the
-   same indistinct, wind-worn quality as the hero's field. You get the SENSE of the result, not its
-   detail. Pointer only; a touch device keeps the object as it is. */
+.mv-biz-orb{isolation:isolate}
+/* a real creator photo sits BEHIND the abstract object. At rest it is invisible; on hover it rises,
+   drained to grey and blurred to a wind-worn haze — you get the sense of the actual work under the
+   cover, not its detail. It is a background-image (a thumbnail), so it costs nothing until painted. */
+.mv-biz-photo{position:absolute;inset:0;z-index:0;border-radius:2px;
+  background-size:cover;background-position:center;
+  filter:grayscale(1) blur(11px) contrast(.9) brightness(1.02);
+  opacity:0;transform:scale(1.04);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.orb-field{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;
+  transition:opacity .6s cubic-bezier(.22,1,.36,1)}
 @media (hover:hover){
-  .mv-biz-orb:hover .orb-field{filter:grayscale(1) blur(9px) contrast(.92) brightness(1.04);opacity:.9}
+  .mv-biz-orb:hover .mv-biz-photo{opacity:.5;transform:scale(1)}   /* impression only — held well under full */
+  .mv-biz-orb:hover .orb-field{opacity:.82}                        /* the object eases back so the photo reads through */
 }
+@media (prefers-reduced-motion:reduce){ .mv-biz-photo,.orb-field{transition:none} }
 @media (prefers-reduced-motion:reduce){ .orb-field{transition:none} }
 @media (prefers-reduced-motion:reduce){.mv-biz-orb{transition:none;transform:none!important}}
 .mv-biz-copy{position:relative;font-size:max(16px,1.98vw)}
@@ -1417,7 +1425,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <section class="mv-biz">
     <span class="mv-biz-label">Connect</span>
   <div class="mv-biz-row">
-    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="c"></canvas></div>
+    <div class="mv-biz-orb" aria-hidden="true"><div class="mv-biz-photo" style="background-image:url(&quot;assets/creator-thumb/FASHION/8DIVISION/Desert%20Editorial.jpg&quot;)"></div><canvas class="orb-field" data-set="c"></canvas></div>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">01</sup>
       <div class="mv-lens" data-lang="ko">
@@ -1467,7 +1475,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <section class="mv-biz">
     <span class="mv-biz-label">Architect</span>
   <div class="mv-biz-row">
-    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="a"></canvas></div>
+    <div class="mv-biz-orb" aria-hidden="true"><div class="mv-biz-photo" style="background-image:url(&quot;assets/creator-thumb/FASHION/8DIVISION/Store.jpg&quot;)"></div><canvas class="orb-field" data-set="a"></canvas></div>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">02</sup>
       <div class="mv-lens" data-lang="ko">
@@ -1521,7 +1529,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <section class="mv-biz">
     <span class="mv-biz-label">Build</span>
   <div class="mv-biz-row">
-    <div class="mv-biz-orb" aria-hidden="true"><canvas class="orb-field" data-set="s"></canvas></div>
+    <div class="mv-biz-orb" aria-hidden="true"><div class="mv-biz-photo" style="background-image:url(&quot;assets/creator-thumb/FASHION/8DIVISION/Knit%20Studio.jpg&quot;)"></div><canvas class="orb-field" data-set="s"></canvas></div>
     <div class="mv-biz-copy">
       <sup class="mv-biz-num">03</sup>
       <div class="mv-lens" data-lang="ko">
