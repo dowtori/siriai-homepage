@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Siriai — 세일즈 이메일 히어로 이미지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000;color:#f4f4f3;min-height:100vh;
+    font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;align-items:center;
+    padding:clamp(28px,6vw,72px) clamp(18px,5vw,48px)}
+  .wrap{width:100%;max-width:1120px}
+  .eyebrow{font-size:12.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(244,244,243,.5)}
+  h1{font-size:clamp(22px,3.2vw,34px);font-weight:600;letter-spacing:-.02em;margin:.5em 0 .3em}
+  .sub{font-size:clamp(13.5px,1.3vw,15.5px);color:rgba(244,244,243,.6);line-height:1.6;max-width:44em}
+  .frame{margin:clamp(24px,4vw,44px) 0;border-radius:14px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px -40px rgba(0,0,0,.9);background:#000}
+  .frame img{display:block;width:100%;height:auto}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:.6em;text-decoration:none;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;padding:.92em 1.5em;border-radius:100px;
+    transition:background .25s,border-color .25s,transform .2s}
+  .btn svg{width:1.05em;height:1.05em}
+  .btn.primary{background:#f4f4f3;color:#0a0a0a;border:1px solid #f4f4f3}
+  .btn.primary:hover{background:#fff;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:#f4f4f3;border:1px solid rgba(255,255,255,.28)}
+  .btn.ghost:hover{border-color:rgba(255,255,255,.7)}
+  .meta{margin-top:16px;font-size:12.5px;color:rgba(244,244,243,.42);line-height:1.7}
+  .meta code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:rgba(244,244,243,.62)}
+  footer{margin-top:auto;padding-top:48px;font-size:12px;color:rgba(244,244,243,.35)}
+  a.home{color:inherit}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Siriai · Sales asset</div>
+    <h1>세일즈 이메일 히어로 이미지</h1>
+    <p class="sub">메일 본문 상단에 넣는 히어로 배너입니다. 아래에서 원본 파일을 내려받으세요. 이메일에는 용량이 가벼운 JPG를, 인쇄·고해상도 용도로는 PNG를 권장합니다.</p>
+
+    <div class="frame">
+      <img src="assets/email/siriai-hero-email.jpg" alt="가장 감각적인 인사이트 — Siriai 히어로 이미지">
+    </div>
+
+    <div class="row">
+      <a class="btn primary" href="assets/email/siriai-hero-email.jpg" download="siriai-hero-email.jpg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>
+        JPG 다운로드 · 이메일용
+      </a>
+      <a class="btn ghost" href="assets/email/siriai-hero-email.png" download="siriai-hero-email.png">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>
+        PNG 다운로드 · 고해상도
+      </a>
+    </div>
+
+    <p class="meta">규격 <code>2400 × 1300</code> · 카피 <code>가장 감각적인 인사이트</code> · 원본 링크는 우클릭 저장도 가능합니다.</p>
+
+    <footer><a class="home" href="index.html">← Siriai</a></footer>
+  </div>
+</body>
+</html>
