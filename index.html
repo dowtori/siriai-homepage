@@ -1116,11 +1116,9 @@ body{cursor:none;background:#000}
 .mv-closing{position:relative;z-index:2;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
   background:
-    /* hero's exact resting-field recipe (amber 255,184,60 -> orange 255,120,48 -> pink 230,58,110),
-       matched in hue AND intensity so this closing reads as the same world as the hero, not a muted echo.
-       Blooms anchored just off the bottom-left / top-right corners so only their soft edge bleeds in. */
-    radial-gradient(60% 66% at 2% 114%, rgba(255,184,60,.50), rgba(255,120,48,.30) 42%, rgba(230,58,110,.14) 66%, transparent 80%),
-    radial-gradient(62% 68% at 98% -16%, rgba(255,184,60,.44), rgba(255,120,48,.26) 44%, rgba(230,58,110,.12) 68%, transparent 82%),
+    /* ONLY the bottom-left bloom (hero recipe: amber 255,184,60 -> orange 255,120,48 -> pink 230,58,110).
+       The top stays pure black so this section flows straight out of the sphere section above — no seam. */
+    radial-gradient(58% 60% at 0% 118%, rgba(255,184,60,.50), rgba(255,120,48,.30) 42%, rgba(230,58,110,.14) 66%, transparent 78%),
     #000;
   padding:clamp(150px,16vw,288px) var(--pad-x) clamp(72px,7.5vw,132px)}   /* generous open space above; moderate below so the footer follows cleanly — no stray band */
 .mv-closing-lead{margin:0;font-size:max(21px,2.76vw);font-weight:500;line-height:1.12;
