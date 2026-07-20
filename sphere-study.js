@@ -49,7 +49,7 @@
   const arand=(a,b)=> a+Math.random()*(b-a);
 
   /* ── tiles on a fibonacci sphere ── */
-  const TILE_N = reduce ? 110 : 180;
+  const TILE_N = reduce ? 90 : 150;   /* draw budget: fewer tiles = lighter per-frame drawImage load; sphere stays dense */
   const SIZE = 1.4;   // global tile-size multiplier — the sphere reads as a full-page backdrop
   const order=[]; let pool=[];
   for(let i=0;i<TILE_N;i++){ if(!pool.length) pool=shuffled(flat, i+1); order.push(pool.pop()); }
@@ -119,7 +119,7 @@
   function renderSphere(){
     const now=performance.now();
     if(!introStart){ introStart=now; ghostNext=now+1300; twNext=now+1600; }   // time ambient from first render, not page load
-    if(!reduce){ const rt=sec.getBoundingClientRect().top;                        // brighten as the section scrolls into view
+    if(!reduce){ const rt=secTop;                                                 // brighten as the section scrolls into view (rect cached in frame() — no 2nd forced layout)
       const sp=Math.max(0,Math.min(1,(innerHeight*0.82 - rt)/(innerHeight*0.55)));
       if(sp>revealMax) revealMax=sp; }
     const revealP = reduce?1:revealMax;                                           // 0 = black (as if not there) -> 1 = full night sky                                         // radius factor: point -> sphere (pop)
@@ -325,9 +325,11 @@
   /* ── lifecycle ── */
   let running=false;
   function nearView(){ const r=sec.getBoundingClientRect(); return r.bottom>-260 && r.top<innerHeight+260; }
-  let lastDraw=0; const FRAME_MS=1000/40;
+  let lastDraw=0, secTop=0; const FRAME_MS=1000/40;
   function frame(ts){
-    if(!nearView()){ running=false; return; }     // park while the section is scrolled away — frees the hero's main thread
+    const r=sec.getBoundingClientRect();           // ONE layout read per frame, shared with renderSphere's reveal calc
+    if(!(r.bottom>-260 && r.top<innerHeight+260)){ running=false; return; }   // park while the section is scrolled away — frees the hero's main thread
+    secTop=r.top;
     raf=requestAnimationFrame(frame);
     if((ts||0)-lastDraw < FRAME_MS) return;        // cap to ~40fps — the slow drift doesn't need 60
     lastDraw=ts||0;

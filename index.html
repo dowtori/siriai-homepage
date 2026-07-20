@@ -911,7 +911,7 @@ body{cursor:none;background:#000}
   -webkit-mask:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
           mask:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
   padding-right:clamp(34px,4vw,64px);white-space:nowrap;animation:mvLogoFlow 64s linear infinite;will-change:transform}
-@keyframes mvLogoFlow{to{transform:translateX(-50%)}}
+@keyframes mvLogoFlow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   color:rgba(245,245,245,.5);flex-shrink:0;cursor:default;transition:color .3s ease}
   background:linear-gradient(110deg,rgba(245,245,245,.5) 0%,rgba(245,245,245,.5) 28%,#ff8a5c 43%,#ff6a4d 50%,#b06cff 58%,rgba(245,245,245,.5) 73%,rgba(245,245,245,.5) 100%);
   background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
@@ -1104,8 +1104,11 @@ body{cursor:none;background:#000}
 .mv-closing{position:relative;z-index:2;color:#f5f5f4;
   font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
   background:
-    radial-gradient(60% 42% at 6% 66%, rgba(255,150,64,.30), rgba(255,106,52,.17) 38%, rgba(224,60,110,.09) 60%, transparent 82%),
-    radial-gradient(62% 44% at 94% 34%, rgba(255,158,68,.26), rgba(255,106,52,.15) 40%, rgba(224,60,110,.08) 62%, transparent 84%),
+    /* hero's exact resting-field recipe (amber 255,184,60 -> orange 255,120,48 -> pink 230,58,110),
+       matched in hue AND intensity so this closing reads as the same world as the hero, not a muted echo.
+       Blooms anchored just off the bottom-left / top-right corners so only their soft edge bleeds in. */
+    radial-gradient(60% 66% at 2% 114%, rgba(255,184,60,.50), rgba(255,120,48,.30) 42%, rgba(230,58,110,.14) 66%, transparent 80%),
+    radial-gradient(62% 68% at 98% -16%, rgba(255,184,60,.44), rgba(255,120,48,.26) 44%, rgba(230,58,110,.12) 68%, transparent 82%),
     #000;
   padding:clamp(150px,16vw,288px) var(--pad-x) clamp(72px,7.5vw,132px)}   /* generous open space above; moderate below so the footer follows cleanly — no stray band */
 .mv-closing-lead{margin:0;font-size:max(21px,2.76vw);font-weight:500;line-height:1.12;
@@ -1469,7 +1472,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         </div>
       </div>
       <div class="mv-lang" aria-hidden="true"><button type="button" data-set-lang="ko" aria-pressed="true">KR</button><span class="sep">·</span><button type="button" data-set-lang="en" aria-pressed="false">EN</button></div>
-      <a class="mv-biz-cta" href="https://siriai-business.vercel.app/#contact" target="_blank" rel="noopener"><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="mv-biz-cta" href="https://siriai-business.vercel.app/" target="_blank" rel="noopener"><span>비즈니스 컨설팅 문의하기</span><svg viewBox="0 0 15 15" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 11L11 4M11 4H5.5M11 4V9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
@@ -1526,7 +1529,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <section class="mv-saigonvideo">
   <div class="mv-saigonvideo-inner">
     <h2 class="mv-saigonvideo-title" data-mv-settle-x="150">Trusted by</h2>
-    <div class="mv-trust-marquee reveal">
+    <div class="mv-trust-marquee">
       <div class="mv-trust-track">
         <span>HYBE</span><span>CJ ENM</span><span>JYP</span><span>MUSINSA</span><span>COSRX</span><span>innisfree</span><span>moev</span><span>oddtype</span><span>8DIVISION</span><span>Neverust</span><span>QUADTHERA</span><span>TOOMUCHTAX</span><span>TOCOBO</span><span>HARIM</span><span>OJOS</span><span>GANGNEUNG CITY</span><span>NONGSHIM</span><span>OpenAI</span><span>Anthropic</span><span>Gemini</span><span>Vercel</span><span>Supabase</span><span>Next.js</span><span aria-hidden="true">HYBE</span><span aria-hidden="true">CJ ENM</span><span aria-hidden="true">JYP</span><span aria-hidden="true">MUSINSA</span><span aria-hidden="true">COSRX</span><span aria-hidden="true">innisfree</span><span aria-hidden="true">moev</span><span aria-hidden="true">oddtype</span><span aria-hidden="true">8DIVISION</span><span aria-hidden="true">Neverust</span><span aria-hidden="true">QUADTHERA</span><span aria-hidden="true">TOOMUCHTAX</span><span aria-hidden="true">TOCOBO</span><span aria-hidden="true">HARIM</span><span aria-hidden="true">OJOS</span><span aria-hidden="true">GANGNEUNG CITY</span><span aria-hidden="true">NONGSHIM</span><span aria-hidden="true">OpenAI</span><span aria-hidden="true">Anthropic</span><span aria-hidden="true">Gemini</span><span aria-hidden="true">Vercel</span><span aria-hidden="true">Supabase</span><span aria-hidden="true">Next.js</span>
       </div>
