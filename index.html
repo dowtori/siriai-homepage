@@ -1594,6 +1594,44 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <script src="creator-cards.js"></script>
 <script src="sphere-study.js"></script>
 <script src="legal-modal.js"></script>
+<script>
+/* Trusted-by marquee — JS-driven via native scrollLeft. The CSS transform
+   animation froze on real browsers (the doubled track is ~38000px wide, past
+   the compositor's texture limit); scrollLeft has no such limit. Right->left,
+   no pause on hover, respects reduced-motion; the amber hover-sweep stays CSS. */
+(function(){
+  var track = document.querySelector('.mv-trust-track');
+  if(!track) return;
+  var marq = track.closest('.mv-trust-marquee') || track.parentElement;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  track.style.animation = 'none';           // disable the unreliable CSS anim
+  var SPEED = 46;                            // px/sec — slow, elegant drift
+  var half = 0, last = 0, acc = 0, running = false;
+  function measure(){ half = track.scrollWidth / 2; }
+  function inView(){ var r = marq.getBoundingClientRect(); return r.bottom > -240 && r.top < (innerHeight + 240); }
+  function step(ts){
+    if(!inView()){ running = false; return; }
+    requestAnimationFrame(step);
+    if(!last) last = ts;
+    var dt = (ts - last) / 1000; last = ts;
+    if(dt > 0.1) dt = 0.1;                   // clamp after tab-away
+    if(!half) measure();
+    acc += SPEED * dt;                       // accumulate sub-pixel, apply whole px
+    var d = Math.floor(acc);
+    if(d > 0){
+      acc -= d;
+      marq.scrollLeft += d;                  // content drifts left (right->left flow)
+      if(half && marq.scrollLeft >= half) marq.scrollLeft -= half;   // seamless wrap
+    }
+  }
+  function start(){ if(running || !inView()) return; running = true; last = 0; requestAnimationFrame(step); }
+  measure();
+  addEventListener('resize', measure, {passive:true});
+  addEventListener('scroll', start, {passive:true});
+  addEventListener('load', function(){ measure(); start(); });
+  start();
+})();
+</script>
 
 <!-- FOOTER — real Siriai footer (ported from siriai-homepage index.html, dark-adapted).
      Links point at the live homepage since the study has no sub-pages. -->
