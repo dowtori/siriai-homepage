@@ -1268,6 +1268,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
      everything sized up for use as a captured image */
   .email-mode .site-head .langs,.email-mode .site-head .head-cta,.email-mode .captions,
   .email-mode .hero-cta,.email-mode .float-cta,.email-mode .scroll-hint{display:none!important}
+  html.email-mode{overflow:hidden}   /* no page scrollbar -> symmetric left/right gutters in the capture */
   .email-mode .site-head{padding-top:clamp(30px,4vh,54px)}
   .email-mode .site-head .logo .wm{height:clamp(20px,1.85vw,30px)}
   .email-mode .site-head .logo .c{font-size:clamp(15px,1.25vw,21px)}
@@ -1275,12 +1276,12 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   .email-mode .em-only{display:block}
   .em-corner{position:absolute;z-index:12;font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
     text-shadow:0 1px 14px rgba(0,0,0,.72)}
-  .em-areas{top:clamp(32px,4.2vh,56px);right:var(--pad-x);font-size:clamp(15px,1.3vw,21px);font-weight:500;
+  .em-areas{top:clamp(38px,4.9vh,60px);right:var(--pad-hero);font-size:clamp(15px,1.3vw,21px);font-weight:500;
     letter-spacing:.15em;color:rgba(244,244,243,.94);text-transform:uppercase}
-  .em-cap{bottom:clamp(36px,5.2vh,64px);max-width:42vw;font-weight:500;line-height:1.42;
+  .em-cap{bottom:clamp(30px,4.5vh,56px);max-width:42vw;font-weight:500;line-height:1.42;
     font-size:clamp(16px,1.55vw,25px);letter-spacing:-.01em}
-  .em-bl{left:var(--pad-x);text-align:left}
-  .em-br{right:var(--pad-x);text-align:right}
+  .em-bl{left:var(--pad-hero);text-align:left}
+  .em-br{right:var(--pad-hero);text-align:right}
   .em-cap b{display:block;color:#f4f4f3;font-weight:600}
   .em-cap span{display:block;color:rgba(244,244,243,.64);font-weight:400}
   .em-copy{position:absolute;left:0;right:0;top:45%;transform:translateY(-50%);z-index:12;text-align:center;
