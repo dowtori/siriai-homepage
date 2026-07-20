@@ -47,12 +47,12 @@
   .legal-modal__head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;
     gap:20px;padding:26px clamp(22px,4vw,40px) 18px;border-bottom:1px solid var(--lm-line);flex:none;
     background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0))}
-  .legal-modal__eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--lm-grotesk);
-    font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--lm-ink3);margin-bottom:9px}
+  .legal-modal__eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--lm-grotesk);font-weight:500;
+    font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--lm-ink3);margin-bottom:11px}
   .legal-modal__eyebrow::before{content:'';width:20px;height:1px;background:var(--lm-ink3)}
   .legal-modal__headtext{flex:1 1 auto;min-width:0}
   .legal-modal__title{font-family:var(--lm-display);font-weight:600;font-size:clamp(21px,3vw,28px);
-    letter-spacing:-0.02em;color:var(--lm-ink);line-height:1.12;word-break:keep-all;text-wrap:balance}
+    letter-spacing:-0.015em;color:var(--lm-ink);line-height:1.14;word-break:keep-all;text-wrap:balance}
   .legal-modal__close{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--lm-line);
     background:rgba(255,255,255,.06);color:var(--lm-ink);cursor:pointer;display:grid;place-items:center;
     transition:background .25s,border-color .25s,transform .35s var(--lm-ease)}
@@ -65,12 +65,12 @@
   .legal-modal__prose section{padding:4px 0 26px}
   .legal-modal__prose section:last-child{padding-bottom:0}
   .legal-modal__prose h2{font-family:var(--lm-display);font-weight:600;font-size:clamp(18px,2vw,23px);
-    letter-spacing:-0.02em;margin-bottom:13px;display:flex;gap:13px;align-items:baseline;color:var(--lm-ink);word-break:keep-all}
+    letter-spacing:-0.015em;margin-bottom:13px;display:flex;gap:13px;align-items:baseline;color:var(--lm-ink);word-break:keep-all}
   .legal-modal__prose h2 .no{font-family:var(--lm-mono);font-size:12px;color:var(--lm-accent);
     font-weight:500;letter-spacing:0;flex:none}
   .legal-modal__prose h3{font-family:var(--lm-grotesk);font-weight:600;font-size:16px;margin:20px 0 7px;
     letter-spacing:-0.01em;color:var(--lm-ink)}
-  .legal-modal__prose p{font-size:15px;line-height:1.72;color:var(--lm-ink2);margin-bottom:13px;letter-spacing:-0.003em;word-break:keep-all;text-wrap:pretty}
+  .legal-modal__prose p{font-size:15px;line-height:1.78;color:var(--lm-ink2);margin-bottom:14px;letter-spacing:normal;word-break:keep-all;text-wrap:pretty}
   .legal-modal__prose ul{margin:0 0 15px;padding-left:0;list-style:none}
   .legal-modal__prose li{position:relative;font-size:15px;line-height:1.7;color:var(--lm-ink2);
     padding-left:21px;margin-bottom:8px;word-break:keep-all}
