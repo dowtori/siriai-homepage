@@ -124,7 +124,7 @@ body.ready .float-cta{opacity:1}
 .float-cta .fc-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:15px}
 .float-cta .fc-txt{font-size:13.5px;font-weight:500;letter-spacing:-.005em;padding-left:12px;border-left:1px solid rgba(255,255,255,.22)}
 .float-cta svg{width:14px;height:14px;opacity:.85}
-@media (max-width:640px){ .hero-cta{top:60%;padding:13px 22px;font-size:14px} .head-cta{display:none!important} }
+@media (max-width:640px){ .hero-cta{top:53%;padding:10px 18px;font-size:12.5px} .head-cta{display:none!important} }   /* closer to the (now larger) headline, smaller so the copy leads the hierarchy */
 
 /* ---------- bottom captions (bilingual, site copy) ---------- */
 .captions{position:absolute;left:0;right:0;bottom:26px;z-index:10;pointer-events:none}
@@ -475,18 +475,22 @@ body{cursor:none;background:#000}
   color: #f5f5f4;
   overflow: hidden;
 }
+/* this section reads from the start (not on scroll): show the Korean, drop the EN overlay + fill */
+.mv-saigon-souls .mv-ko-line .mv-w{opacity:1}
+.mv-saigon-souls .mv-en-line{display:none}
 
 .mv-saigon-souls-container {
   width: 100%;
   margin: 0 auto;
-  padding: clamp(60px, 8vw, 120px) var(--pad-x);
+  padding: clamp(112px, 14vw, 200px) var(--pad-x) clamp(56px, 7vw, 104px);   /* extra top air off the Trusted-by marquee */
 }
 
 .mv-saigon-souls-grid {
   display: grid;
-  grid-template-columns: 1.75fr 1fr;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: center;
+  grid-template-columns: 1fr;   /* media removed — single text column */
+  gap: clamp(28px, 4vw, 48px);
+  align-items: start;
+  max-width: 980px;             /* readable measure */
 }
 
 .mv-saigon-souls-content {
@@ -1014,6 +1018,10 @@ body{cursor:none;background:#000}
 .mv-biz-cta svg{width:1em;height:1em;transition:transform .3s cubic-bezier(.22,1,.36,1)}
 .mv-biz-cta:hover svg{transform:translate3d(.16em,-.16em,0)}
 @media (max-width:768px){
+  /* tighten the title->object gap: no 100vh centre-spread; stack the label above the row in flow */
+  .mv-biz{min-height:auto;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+    padding-top:clamp(52px,14vw,82px);padding-bottom:clamp(46px,12vw,72px)}
+  .mv-biz-label{position:static;margin-bottom:clamp(14px,4.5vw,24px)}
   .mv-biz-row{grid-template-columns:1fr;gap:clamp(22px,4vw,34px)}
   .mv-biz-orb{max-width:210px;justify-self:start}
   .mv-biz-num{left:0;top:-1.6em}
@@ -1062,9 +1070,9 @@ body{cursor:none;background:#000}
 @keyframes mvTrustSweep{from{background-position:100% 0}to{background-position:0% 0}}   /* stays within [0,100%] so every letter is always covered */
 @media (prefers-reduced-motion:reduce){.mv-trust-track{animation:none;flex-wrap:wrap;white-space:normal;justify-content:center}
   .mv-trust-track span:hover{animation:none;background-image:linear-gradient(90deg,#f5f5f4,#f5f5f4)}}
-/* touch devices have no hover — give the brand names a subtle, always-on warm tint instead */
+/* touch devices have no hover — brand names read as clean white (no colour tint) */
 @media (hover:none){ .mv-trust-track span{
-  background-image:linear-gradient(100deg,rgba(245,245,245,.30) 0%,rgba(245,245,245,.30) 28%,rgba(255,158,72,.42) 50%,rgba(232,84,120,.34) 66%,rgba(245,245,245,.30) 88%,rgba(245,245,245,.30) 100%);background-size:100% 100%} }
+  background-image:linear-gradient(90deg,rgba(244,244,243,.92),rgba(244,244,243,.92))} }
 
 /* ===== section: TEAM — rebuilt (portrait + real bios) ===== */
   letter-spacing:-.01em;max-width:16ch;color:var(--ink);margin-top:14px}
@@ -1574,15 +1582,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">모두의</span> <span class="mv-w">시리아이로</span> <span class="mv-w">만들어보세요.</span></span>
           </span>
         </p>
-        <a href="https://siriai-business.vercel.app/" target="_blank" rel="noopener" class="mv-saigon-souls-cta reveal">
-          Discover Siriai
-          <svg class="mv-saigon-souls-cta-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 8H15M15 8L9 2M15 8L9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-      <div class="mv-saigon-souls-media reveal-clip" data-mv-speed="0.12">
-        <div class="mv-saigon-souls-media-label">siriai</div>
       </div>
     </div>
   </div>
@@ -1608,7 +1607,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   var marq = track.closest('.mv-trust-marquee') || track.parentElement;
   if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   track.style.animation = 'none';           // disable the unreliable CSS anim
-  var SPEED = 46;                            // px/sec — slow, elegant drift
+  var SPEED = 92;                            // px/sec
   var half = 0, last = 0, acc = 0, running = false;
   function measure(){ half = track.scrollWidth / 2; }
   function inView(){ var r = marq.getBoundingClientRect(); return r.bottom > -240 && r.top < (innerHeight + 240); }
@@ -2443,11 +2442,12 @@ void main(){
     txtCtx.clearRect(0, 0, w, h);
     txtCtx.textBaseline = 'middle';
     txtCtx.fillStyle = '#fff';   /* texture stores alpha only; tint in shader */
-    let size = Math.min(w * 0.033, h * 0.070);        // smaller base size
+    const narrow = w < 760;                           // mobile: width-based min made the headline tiny (~12px)
+    let size = narrow ? Math.min(w * 0.078, h * 0.056) : Math.min(w * 0.033, h * 0.070);
     if('letterSpacing' in txtCtx) txtCtx.letterSpacing = (-size * 0.010) + 'px';
     txtCtx.font = `${spec.weight} ${size}px ${spec.family}`;
     /* auto-fit: shrink until the single line sits inside the pane */
-    const maxW = w * 0.66;
+    const maxW = w * (narrow ? 0.86 : 0.66);
     let tw = txtCtx.measureText(spec.t).width;
     if(tw > maxW){
       size *= maxW / tw;
