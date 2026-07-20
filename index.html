@@ -1262,6 +1262,22 @@ body{cursor:none;background:#000}
 try{history.scrollRestoration='manual';}catch(e){}</script>
 
 <div class="hero">
+<script>if(new URLSearchParams(location.search).has('email'))document.documentElement.classList.add('email-mode');</script>
+<style>
+  /* email-capture mode (?email=1): the real amber field, chrome stripped, top-right business areas + centred copy */
+  .email-mode .site-head .langs,.email-mode .site-head .head-cta,.email-mode .captions,
+  .email-mode .hero-cta,.email-mode .float-cta,.email-mode .scroll-hint{display:none!important}
+  .em-only{display:none}
+  .email-mode .em-only{display:block}
+  .em-areas{position:absolute;top:clamp(22px,3.1vh,40px);right:var(--pad-x);z-index:12;
+    font-family:"Inter Tight",Helvetica,Arial,sans-serif;font-size:clamp(11px,.9vw,14px);font-weight:500;letter-spacing:.16em;
+    color:rgba(244,244,243,.92);text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.7)}
+  .em-copy{position:absolute;left:0;right:0;top:46%;transform:translateY(-50%);z-index:12;text-align:center;
+    font-family:"Noto Sans KR","Inter Tight",sans-serif;font-weight:500;color:#f4f4f3;
+    font-size:clamp(30px,4.5vw,62px);line-height:1.2;letter-spacing:-.02em;padding:0 6vw;text-shadow:0 2px 22px rgba(0,0,0,.45)}
+</style>
+<div class="em-areas em-only" aria-hidden="true">CONNECT&nbsp;&nbsp;|&nbsp;&nbsp;ARCHITECT&nbsp;&nbsp;|&nbsp;&nbsp;BUILD</div>
+<div class="em-copy em-only" aria-hidden="true">가장 감각적인 비주얼을<br>가장 쉽게 만나보세요</div>
 <h1 class="sr-only">Siriai — 가장 쉬운 AI 리터러시</h1>
 <canvas id="stage"></canvas>
 
@@ -2429,6 +2445,7 @@ void main(){
     { t:'가장 감각적인 인사이트',        family:KR, weight:600 },   // 4 KO2
     { t:'最も感覚的なインサイト',        family:JP, weight:500 },   // 5 JP2
   ];
+  if(new URLSearchParams(location.search).has('email')){ SPECS.forEach(function(s){ s.t=''; }); }   // email-capture mode: field only, HTML overlay carries the copy
 
   const txtCanvas = document.createElement('canvas');
   const txtCtx = txtCanvas.getContext('2d');
