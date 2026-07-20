@@ -940,7 +940,8 @@ body{cursor:none;background:#000}
 .mv-biz-label{position:absolute;top:clamp(30px,4.4vw,64px);left:var(--pad-x);z-index:3;   /* top-left index marker, not a centred element */
   display:inline-flex;align-items:center;gap:8px;font-size:max(10px,.83vw);font-weight:400;   /* uncapped for the same reason */
   letter-spacing:0;text-transform:uppercase;color:rgba(245,245,245,.5)}
-.mv-biz-label::before{content:'\2198';font-size:1.08em;opacity:.65}
+.mv-biz-label::before{content:'';width:1.25em;height:1.25em;flex:0 0 auto;   /* our SIRIAI symbol in place of the arrow */
+  background:url("assets/siriai-mark-white.png") center/contain no-repeat;opacity:.62}
 .mv-biz-row{display:grid;grid-template-columns:0.53fr 0.47fr;gap:0;align-items:center;width:100%}
 .mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start;
   transition:transform 1.15s cubic-bezier(.22,1,.36,1)}   /* hover leans it a few px toward the pointer. The long
@@ -1301,7 +1302,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   <div class="mv-manifesto-intro">
     <span class="mv-sec-eyebrow reveal">
       <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 8h13M14 8l-5-5M14 8l-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Manifesto
+      Value
     </span>
     <!-- Siriai core values — KO is the base (user copy); EN is a contextual translation shown briefly, then each
          line swaps to Korean EARLY (you read the Korean). Line-level overlay = natural spacing for BOTH languages. -->
