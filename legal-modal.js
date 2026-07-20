@@ -25,10 +25,10 @@
     --lm-ink2:rgba(244,244,243,.76);--lm-ink3:rgba(244,244,243,.52);
     --lm-line:rgba(255,255,255,.13);--lm-accent:#ffb24d;
     --lm-paper2:#181321;
-    --lm-display:var(--display,'Helvetica Neue','Arimo','Pretendard',sans-serif);
-    --lm-grotesk:var(--grotesk,'Helvetica Neue','Arimo','Pretendard',sans-serif);
-    --lm-sans:var(--sans,'Pretendard',system-ui,sans-serif);
-    --lm-mono:var(--mono,'JetBrains Mono','Arimo','Pretendard',ui-monospace,monospace);
+    --lm-display:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+    --lm-grotesk:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+    --lm-sans:"Noto Sans KR","Inter Tight",Helvetica,Arial,sans-serif;
+    --lm-mono:"Inter Tight",ui-monospace,monospace;
     --lm-ease:var(--ease,cubic-bezier(0.22,1,0.36,1))}
   @media (min-width:640px){.legal-modal{align-items:center}}
   html.legal-modal-open{overflow:hidden}
@@ -57,7 +57,7 @@
     background:rgba(255,255,255,.06);color:var(--lm-ink);cursor:pointer;display:grid;place-items:center;
     transition:background .25s,border-color .25s,transform .35s var(--lm-ease)}
   .legal-modal__close:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4);transform:rotate(90deg)}
-  .legal-modal__body{overflow-y:auto;overscroll-behavior:contain;
+  .legal-modal__body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
     padding:clamp(24px,4vw,40px) clamp(22px,4vw,40px) clamp(30px,5vw,48px);-webkit-overflow-scrolling:touch}
   .legal-modal__prose{max-width:none}
   .legal-modal__prose .meta{font-size:13px;color:var(--lm-ink3);margin-bottom:30px;
