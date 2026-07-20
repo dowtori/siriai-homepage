@@ -8,6 +8,8 @@
 <meta name="theme-color" content="#f3eee2">
 <meta name="description" content="SIRIAI — Architecture for Insight, AI. 가장 쉬운 AI 리터러시와 가장 감각적인 인사이트로 브랜드·크리에이터의 작업을 설계합니다.">
 <link rel="canonical" href="https://siriai.co.kr/">
+<link rel="icon" type="image/png" href="assets/siriai-mark-ink.png">
+<link rel="apple-touch-icon" href="assets/siriai-mark-ink.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SIRIAI">
 <meta property="og:title" content="SIRIAI — Architecture for Insight, AI">
@@ -26,21 +28,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   monopo.vn (monopo saigon) home — design training reproduction
-   with the tile/orb/swap effects ported from the london study.
-   (개인 훈련용. 원본: https://monopo.vn/)
-
-   base   : paper hero, centred headline, graphite crescent
-   ported : LIGHT MONOCHROME inversion (from the london study) +
-            full-bleed frosted glass (no pane border) that surfaces
-            where the ink crescent tints it.
-            headline = SIRIAI: "Architecture for Insight, AI" base,
-            "가장 쉬운 AI 리터러시" inside the swap lens.
-            + section 1: cathydolle.com layout study, taken as-is
-              (11px uppercase idiom, NN/ numbering, edge captions,
-              centred portrait photos) — content/photos are dummies
-   ============================================================ */
+/* SIRIAI — v2 homepage: dark editorial hero + creator content sphere. */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{min-height:100%}
 body{
@@ -52,9 +40,9 @@ body{
   cursor:default;
 }
 :root{
-  /* the CONTENT gutter. monopo.vn holds its content off the edge by 12.58% of the viewport and lets
+  /* the CONTENT gutter. the reference layout holds its content off the edge by 12.58% of the viewport and lets
      that scale (measured live at 1200px -> 151px and 1512px -> 190px). This page had it pinned at a
-     flat 40px, which is what made everything read as a prototype: the type was monopo's, the margins
+     flat 40px, which is what made everything read as a prototype: the type was the reference's, the margins
      were a wireframe's. Floors at 24px so narrow screens do not lose their content. */
   --pad-x:max(24px, 12.58vw);
   /* the HERO's chrome is not content. Its nav and captions are pinned to the frame of a full-bleed
@@ -276,7 +264,7 @@ body{cursor:none;background:#000}
   .cd-strip .l{width:82vw}
 }
 
-/* ===== shared scroll-reveal (monopo.vn sections) ===== */
+/* ===== shared scroll-reveal (the reference layout sections) ===== */
 .mv-manifesto .reveal, .mv-saigon-souls .reveal, .mv-tiles-novanish .reveal,
   transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
 .mv-manifesto .reveal.in, .mv-saigon-souls .reveal.in, .mv-tiles-novanish .reveal.in,
@@ -335,7 +323,7 @@ body{cursor:none;background:#000}
   max-width: 740px;
 }
 
-/* one uniform manifesto statement (monopo-style top-down reading highlight) */
+/* one uniform manifesto statement (the reference-style top-down reading highlight) */
 /* NB: distinct class from the legacy .mv-manifesto-statement (principles text) to avoid a cascade collision */
 .mv-manifesto-lead{
   font-size: clamp(30px, 6.56vw, 150px);   /* 6.56vw scales the type with the viewport; the 150px cap is
@@ -343,7 +331,7 @@ body{cursor:none;background:#000}
      growing while the box did not, so the longest KO token ("시리아이(しりあい)는") overflowed and wrapped
      — "는" dropped to its own line. 150px holds that token near 1340px, inside the 1500px column at every width. */
   font-weight: 400;
-  line-height: 0.95;   /* monopo runs .762; Hangul needs more room than Latin for its descenders */
+  line-height: 0.95;   /* the reference runs .762; Hangul needs more room than Latin for its descenders */
   letter-spacing: -0.02em;
   color: #f5f5f4;
   max-width: 1500px;
@@ -795,7 +783,7 @@ body{cursor:none;background:#000}
 
 /* ===== section: contact ===== */
 
-/* monopo contact closing block */
+/* the reference contact closing block */
   position: relative;
   z-index: 1;
   padding: clamp(80px, 12vw, 160px) var(--pad-x);
@@ -901,12 +889,6 @@ body{cursor:none;background:#000}
 }
 
 
-/* ============================================================
-   monopo.vn below-hero — real structure ported into the LIGHT
-   editorial system. Added: works, clients, strengths, saigon
-   video + rebuilt team (portrait + real bios). CSS placeholder
-   media; copy is monopo's real content.
-   ============================================================ */
 
 /* shared eyebrow with arrow (matches real "-> Selected project") */
 .mv-sec-eyebrow{
@@ -919,36 +901,7 @@ body{cursor:none;background:#000}
      was sized independently of its own label, so it grew relative to the text as the text shrank. The
      business labels already set their mark at 1.08em. */
 
-/* ===== section: WORKS — "Selected project" (staggered 2-col) ===== */
-.mv-works{display:none}   /* "Selected project" hidden — monopo's own works grid (Canada Goose, FreeFire): their projects, their images */
-.mv-works{position:relative;z-index:2;background:#000;color:#f5f5f4;
-  font-family:"Inter Tight",Helvetica,Arial,sans-serif;
-  padding:clamp(70px,10vw,130px) var(--pad-x)}
-.mv-works-head{max-width:none;margin:0 0 clamp(40px,5vw,72px)}
-.mv-works-grid{max-width:none;margin:0;display:grid;
-  grid-template-columns:1fr 1fr;column-gap:clamp(24px,4vw,64px);row-gap:clamp(46px,7vw,104px)}
-.mv-works-item{display:block;text-decoration:none;color:inherit}
-.mv-works-grid > .mv-works-item:nth-child(even){margin-top:clamp(40px,8vw,120px)}
-.mv-works-media{position:relative;width:100%;border-radius:4px;overflow:hidden;
-  background:linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 100%);
-  border:1px solid rgba(245,245,245,.08)}
-.mv-works-item.tall .mv-works-media{aspect-ratio:4/5}
-.mv-works-item.wide .mv-works-media{aspect-ratio:1/1}
-.mv-works-media::before{content:'';position:absolute;inset:0;
-  background-image:repeating-linear-gradient(90deg,rgba(245,245,245,.02) 0,rgba(245,245,245,.02) 1px,transparent 1px,transparent 4px);opacity:.5}
-.mv-works-media::after{content:attr(data-tag);position:absolute;left:14px;bottom:12px;
-  font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,245,.38)}
-.mv-works-item:hover .mv-works-media{border-color:rgba(245,245,245,.2)}
-.mv-works-title{margin-top:clamp(16px,2vw,22px);font-size:clamp(19px,2.3vw,26px);
-  font-weight:600;letter-spacing:-.01em;line-height:1.25;color:#f5f5f4}
-.mv-works-roles{margin-top:8px;font-size:clamp(12px,1.3vw,13.5px);font-weight:500;
-  letter-spacing:.02em;color:rgba(245,245,245,.5)}
-@media (max-width:760px){
-  .mv-works-grid{grid-template-columns:1fr;row-gap:clamp(40px,9vw,60px)}
-  .mv-works-grid > .mv-works-item:nth-child(even){margin-top:0}
-}
 
-/* Works + Team sections hidden per request (markup preserved for later) */
 
 /* ===== section: TRUSTED BY — Siriai logo marquee (ported from index.html) ===== */
   font-family:"Inter Tight",Helvetica,Arial,sans-serif;
@@ -965,7 +918,7 @@ body{cursor:none;background:#000}
   animation:mvLogoSweep 1.5s ease infinite}
 @keyframes mvLogoSweep{0%{background-position:150% 0}100%{background-position:-150% 0}}
 
-/* THE BUSINESS LINES. Three sections, one per line of work, built to the monopo.vn geometry measured
+/* THE BUSINESS LINES. Three sections, one per line of work, built to the the reference layout geometry measured
    live at 1200px AND 1512px so the figures are exact rather than eyeballed: a 1px rule across the
    content width, a 0.83vw label above it, then a 53/47 split of object and claim, and body type at
    1.98vw / weight 300 / line-height 1.581 / no tracking.
@@ -980,7 +933,7 @@ body{cursor:none;background:#000}
    Manifesto) rather than :first-of-type, which matches the first SECTION among its siblings and so
    matched nothing here: several sections come before these. */
 .mv-manifesto + .mv-biz{padding-top:clamp(110px,15vh,200px)}
-/* monopo rules every item off at the content width (section::before, 1px, gutter to gutter). This page
+/* the reference rules every item off at the content width (section::before, 1px, gutter to gutter). This page
    had nothing, which is why the sections read as floating in an empty screen. */
 .mv-biz::before{content:'';position:absolute;top:0;left:var(--pad-x);right:var(--pad-x);height:1px;
   background:rgba(245,245,244,.20)}
@@ -992,7 +945,7 @@ body{cursor:none;background:#000}
 .mv-biz-orb{position:relative;width:100%;max-width:min(430px,36vw);aspect-ratio:1/1;justify-self:start;
   transition:transform 1.15s cubic-bezier(.22,1,.36,1)}   /* hover leans it a few px toward the pointer. The long
      ease is the whole effect: the object keeps arriving after the pointer has stopped, which reads as following
-     rather than tracking. Max travel is 6.5px — it never leaves its own box. */   /* monopo sets its graphic AT the gutter, not floating in the middle of its own
+     rather than tracking. Max travel is 6.5px — it never leaves its own box. */   /* the reference sets its graphic AT the gutter, not floating in the middle of its own
       column. Centring it left a slab of black on the left and pushed the whole composition inward. */
 .mv-biz-orb{isolation:isolate}
 /* a real creator photo sits behind the abstract object. NO box: no border, no rounded corner, no
@@ -1020,13 +973,13 @@ body{cursor:none;background:#000}
 @media (prefers-reduced-motion:reduce){ .orb-field{transition:none} }
 @media (prefers-reduced-motion:reduce){.mv-biz-orb{transition:none;transform:none!important}}
 .mv-biz-copy{position:relative;font-size:max(16px,1.98vw)}
-  /* No upper cap, because monopo has none: measured live on their page at 1885px, their body is still
+  /* No upper cap, because the reference has none: measured live on their page at 1885px, their body is still
      37.32px — exactly 1.98vw. A cap stops the TYPE growing while the COLUMN keeps going, so past the cap
      the measure opens up and the copy just floats in it: 91% full at 1512px, 73% at 1885px. That gap on
      the right was not a copy problem, it was this. The 16px floor stays; it is what the 769px pinch is
      measured against. */   /* no padding: the column must stay the measured 47%, or the copy re-wraps and the lens breaks */
 .mv-biz-num{position:absolute;left:-2.3em;top:.62em;font-size:.419em;font-weight:300;line-height:1;
-  color:rgba(245,245,245,.5)}   /* .83vw / 1.98vw = .419 — monopo's index, to the same ratio. It hangs in
+  color:rgba(245,245,245,.5)}   /* .83vw / 1.98vw = .419 — the reference's index, to the same ratio. It hangs in
                                    the gutter between the object and the claim so the measure keeps its 47%. */
 /* the lens. Hovering the copy turns a BAND of lines Korean — a band and not a circle, because a circle
    cuts words in half and the point here is to be READ, not to look like a lens. The EN and KO of each
@@ -1122,7 +1075,7 @@ body{cursor:none;background:#000}
 /* manifesto now statement-only (principles moved to Strengths) */
 .mv-manifesto .mv-manifesto-intro{margin:0;max-width:none}
 
-/* ===== reinforced motion (monopo-style: word scroll-fill, clip wipe, parallax, horizontal drift) ===== */
+/* ===== reinforced motion (the reference-style: word scroll-fill, clip wipe, parallax, horizontal drift) ===== */
 .mv-word{display:inline-block;transition:opacity .3s linear,transform .35s cubic-bezier(.22,1,.36,1);will-change:opacity,transform}
 .reveal-clip{clip-path:inset(0 0 100% 0);-webkit-clip-path:inset(0 0 100% 0);
   transition:clip-path 1.05s cubic-bezier(.22,1,.36,1),-webkit-clip-path 1.05s cubic-bezier(.22,1,.36,1);will-change:clip-path}
@@ -1338,59 +1291,6 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 })();
 </script>
 
-<!-- ============ monopo.vn below-hero sections (real structure + copy; CSS placeholder media) ============ -->
-
-<!-- WORKS — Selected project (staggered 2-col) -->
-<section class="mv-works">
-  <div class="mv-works-head">
-    <span class="mv-sec-eyebrow reveal">
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 8h13M14 8l-5-5M14 8l-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Selected project
-    </span>
-  </div>
-  <div class="mv-works-grid">
-    <a href="#" class="mv-works-item tall reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Installation"></div>
-      <div class="mv-works-title">Canada Goose — Nomad Collection</div>
-      <div class="mv-works-roles">Creative Direction, Video Production, Installation</div>
-    </a>
-    <a href="#" class="mv-works-item wide reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Film"></div>
-      <div class="mv-works-title">FreeFire “SKYLER”</div>
-      <div class="mv-works-roles">Creative Direction, Character Design, Video Production</div>
-    </a>
-    <a href="#" class="mv-works-item wide reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="3D"></div>
-      <div class="mv-works-title">NIGHT GOGGLES by Mindchatter</div>
-      <div class="mv-works-roles">Motion Capture, Creative Direction, 3D, Post Production</div>
-    </a>
-    <a href="#" class="mv-works-item tall reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Film"></div>
-      <div class="mv-works-title">La Dame de Soie – Cartier x Nowness</div>
-      <div class="mv-works-roles">Creative Direction, Production, Post Production</div>
-    </a>
-    <a href="#" class="mv-works-item tall reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Museum"></div>
-      <div class="mv-works-title">BnA Alter Museum</div>
-      <div class="mv-works-roles">Art Direction, Video Production, Website</div>
-    </a>
-    <a href="#" class="mv-works-item wide reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Design"></div>
-      <div class="mv-works-title">Super Dan Origin — Digital Graphic Novel</div>
-      <div class="mv-works-roles">Concept, Creative Direction, Art Direction, Design</div>
-    </a>
-    <a href="#" class="mv-works-item wide reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="AR"></div>
-      <div class="mv-works-title">Canada Goose – The Art of Film AR Tour Berlin</div>
-      <div class="mv-works-roles">Creative Direction, AR, Video Production</div>
-    </a>
-    <a href="#" class="mv-works-item tall reveal">
-      <div class="mv-works-media" data-mv-speed="0.08" data-tag="Film"></div>
-      <div class="mv-works-title">Takashi Murakami</div>
-      <div class="mv-works-roles">Creative Direction, Video Production</div>
-    </a>
-  </div>
-</section>
 
 <!-- CLIENTS — They trust us -->
 <!-- MANIFESTO — statement -->
@@ -2102,7 +2002,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </script>
 
 <script>
-/* global smooth (inertial) scroll — the "죽 당겨지는" glide, monopo.london's
+/* global smooth (inertial) scroll — the "죽 당겨지는" glide, the reference layout's
    idiom (Lenis under the hood there; this is a compact Lenis-lite): hijack the
    wheel and ease window scroll toward an accumulated target each frame.
    native fallback for reduced-motion + touch. behaviour only — no new UI. */
@@ -2224,7 +2124,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 
 <script>
 /* ============================================================
-   WebGL stage — monopo saigon base, LIGHT MONOCHROME + single pane
+   WebGL stage — the reference layout base, LIGHT MONOCHROME + single pane
    - paper field, graphite crescent (value ramp, no hue) that
      trails the pointer: the monochrome "orb" of the study
    - ONE large frosted-glass pane surfaces where the crescent tints it
@@ -2648,7 +2548,7 @@ void main(){
 </script>
 
 <script>
-/* reinforced monopo-style scroll motion: manifesto word scroll-fill, parallax float, horizontal kinetic drift */
+/* reinforced the reference-style scroll motion: manifesto word scroll-fill, parallax float, horizontal kinetic drift */
 (function(){
   if(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   var mlead = document.querySelector('.mv-fill');
@@ -2723,7 +2623,7 @@ void main(){
 </script>
 
 <script>
-/* shared scroll-reveal for the ported monopo.vn sections */
+/* shared scroll-reveal for the ported the reference layout sections */
 (function(){
   var els = [].slice.call(document.querySelectorAll('.reveal, .reveal-clip')).filter(function(e){return !e.closest('.cd-home');});
   if(!els.length) return;
