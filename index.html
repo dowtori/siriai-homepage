@@ -2094,6 +2094,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
   function kick(){ active = true; if(!raf) raf = requestAnimationFrame(loop); }
   addEventListener('wheel', e => {
     if(e.ctrlKey) return;            // let pinch-zoom pass through
+    if(document.documentElement.classList.contains('legal-modal-open')) return;   // legal modal open: don't hijack — let it scroll natively
     e.preventDefault();
     let dy = e.deltaY;
     if(e.deltaMode === 1) dy *= 16;               // lines -> px (Firefox et al.)
