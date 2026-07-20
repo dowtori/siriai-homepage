@@ -648,7 +648,7 @@ body{cursor:none;background:#000}
 .cv-groups .cv-brand{text-align:left;font-weight:400;font-size:clamp(13px,1.05vw,18px);letter-spacing:-.005em;color:rgba(245,245,245,.4);max-width:28vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cv-groups .cv-brand:hover{color:rgba(245,245,245,.66)}
 .cv-groups .cv-brand.active{color:#f5f5f4;font-weight:500;transform:translateX(5px)}
-@media (max-width:760px){ .cv-brands{right:5vw} .cv-groups{display:none} }
+@media (max-width:760px){ .cv-brands{display:none} .cv-groups{display:none} }   /* mobile: no interactive menus — just the rotating globe */
 .mv-frames-tile{flex:0 0 auto;border-radius:3px;border:1px solid rgba(245,245,245,.14);
   background:linear-gradient(135deg,rgba(245,245,245,.17) 0%,rgba(245,245,245,.06) 100%);
   box-shadow:0 16px 46px -20px rgba(0,0,0,.55);
@@ -1062,6 +1062,9 @@ body{cursor:none;background:#000}
 @keyframes mvTrustSweep{from{background-position:100% 0}to{background-position:0% 0}}   /* stays within [0,100%] so every letter is always covered */
 @media (prefers-reduced-motion:reduce){.mv-trust-track{animation:none;flex-wrap:wrap;white-space:normal;justify-content:center}
   .mv-trust-track span:hover{animation:none;background-image:linear-gradient(90deg,#f5f5f4,#f5f5f4)}}
+/* touch devices have no hover — give the brand names a subtle, always-on warm tint instead */
+@media (hover:none){ .mv-trust-track span{
+  background-image:linear-gradient(100deg,rgba(245,245,245,.30) 0%,rgba(245,245,245,.30) 28%,rgba(255,158,72,.42) 50%,rgba(232,84,120,.34) 66%,rgba(245,245,245,.30) 88%,rgba(245,245,245,.30) 100%);background-size:100% 100%} }
 
 /* ===== section: TEAM — rebuilt (portrait + real bios) ===== */
   letter-spacing:-.01em;max-width:16ch;color:var(--ink);margin-top:14px}

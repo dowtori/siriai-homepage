@@ -49,7 +49,7 @@
   const arand=(a,b)=> a+Math.random()*(b-a);
 
   /* ── tiles on a fibonacci sphere ── */
-  const TILE_N = reduce ? 90 : 150;   /* draw budget: fewer tiles = lighter per-frame drawImage load; sphere stays dense */
+  const TILE_N = reduce ? 90 : (mqMobile.matches ? 100 : 150);   /* draw budget: mobile lighter; sphere stays a full globe */
   const SIZE = 1.4;   // global tile-size multiplier — the sphere reads as a full-page backdrop
   const order=[]; let pool=[];
   for(let i=0;i<TILE_N;i++){ if(!pool.length) pool=shuffled(flat, i+1); order.push(pool.pop()); }
@@ -127,7 +127,7 @@
     if(!locked){ ay+=velY; ax+=velX; ax=Math.max(-0.55,Math.min(0.55,ax)); }   // click freezes the sphere
     const cy=Math.cos(ay), sy=Math.sin(ay), cx=Math.cos(ax), sx=Math.sin(ax);
     // ambient idle life — ghost-hover a random brand + spawn faint twinkles while the user is away
-    if(!reduce){
+    if(!reduce && !mqMobile.matches){   // mobile: no ambient auto-enlarge — just the rotating globe
       // first appearance: fire one activation within ~0.6s of the sphere going live (don't wait for the idle gap)
       if(!liveSeen && sec.classList.contains('pb-live')){ liveSeen=true; introGhostAt=now+600; }
       if(introGhostAt && now>introGhostAt && !locked && !featured){
@@ -249,6 +249,7 @@
   /* ── pointer: steer spin + hover-activate ── */
   let lastHover=null, featBounds=null;
   canvas.addEventListener('pointermove',e=>{
+    if(mqMobile.matches) return;   // mobile: sphere is a passive rotating globe — no touch steer / hover
     userPoke();
     const r=canvas.getBoundingClientRect(); const px=e.clientX-r.left, py=e.clientY-r.top;
     if(featured && featBounds){
