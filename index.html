@@ -1264,19 +1264,32 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <div class="hero">
 <script>if(new URLSearchParams(location.search).has('email'))document.documentElement.classList.add('email-mode');</script>
 <style>
-  /* email-capture mode (?email=1): the real amber field, chrome stripped, top-right business areas + centred copy */
+  /* email-capture mode (?email=1): the real amber field, chrome stripped, all four corners filled + centred copy,
+     everything sized up for use as a captured image */
   .email-mode .site-head .langs,.email-mode .site-head .head-cta,.email-mode .captions,
   .email-mode .hero-cta,.email-mode .float-cta,.email-mode .scroll-hint{display:none!important}
+  .email-mode .site-head{padding-top:clamp(30px,4vh,54px)}
+  .email-mode .site-head .logo .wm{height:clamp(20px,1.85vw,30px)}
+  .email-mode .site-head .logo .c{font-size:clamp(15px,1.25vw,21px)}
   .em-only{display:none}
   .email-mode .em-only{display:block}
-  .em-areas{position:absolute;top:clamp(22px,3.1vh,40px);right:var(--pad-x);z-index:12;
-    font-family:"Inter Tight",Helvetica,Arial,sans-serif;font-size:clamp(11px,.9vw,14px);font-weight:500;letter-spacing:.16em;
-    color:rgba(244,244,243,.92);text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.7)}
-  .em-copy{position:absolute;left:0;right:0;top:46%;transform:translateY(-50%);z-index:12;text-align:center;
+  .em-corner{position:absolute;z-index:12;font-family:"Inter Tight","Noto Sans KR",Helvetica,Arial,sans-serif;
+    text-shadow:0 1px 14px rgba(0,0,0,.72)}
+  .em-areas{top:clamp(32px,4.2vh,56px);right:var(--pad-x);font-size:clamp(15px,1.3vw,21px);font-weight:500;
+    letter-spacing:.15em;color:rgba(244,244,243,.94);text-transform:uppercase}
+  .em-cap{bottom:clamp(36px,5.2vh,64px);max-width:42vw;font-weight:500;line-height:1.42;
+    font-size:clamp(16px,1.55vw,25px);letter-spacing:-.01em}
+  .em-bl{left:var(--pad-x);text-align:left}
+  .em-br{right:var(--pad-x);text-align:right}
+  .em-cap b{display:block;color:#f4f4f3;font-weight:600}
+  .em-cap span{display:block;color:rgba(244,244,243,.64);font-weight:400}
+  .em-copy{position:absolute;left:0;right:0;top:45%;transform:translateY(-50%);z-index:12;text-align:center;
     font-family:"Noto Sans KR","Inter Tight",sans-serif;font-weight:500;color:#f4f4f3;
-    font-size:clamp(30px,4.5vw,62px);line-height:1.2;letter-spacing:-.02em;padding:0 6vw;text-shadow:0 2px 22px rgba(0,0,0,.45)}
+    font-size:clamp(34px,5vw,70px);line-height:1.2;letter-spacing:-.02em;padding:0 6vw;text-shadow:0 2px 26px rgba(0,0,0,.5)}
 </style>
-<div class="em-areas em-only" aria-hidden="true">CONNECT&nbsp;&nbsp;|&nbsp;&nbsp;ARCHITECT&nbsp;&nbsp;|&nbsp;&nbsp;BUILD</div>
+<div class="em-corner em-areas em-only" aria-hidden="true">CONNECT&nbsp;&nbsp;|&nbsp;&nbsp;ARCHITECT&nbsp;&nbsp;|&nbsp;&nbsp;BUILD</div>
+<div class="em-corner em-cap em-bl em-only" aria-hidden="true"><b>시리아이가 모두의</b><span>“시리아이(しりあい)”가 됩니다</span></div>
+<div class="em-corner em-cap em-br em-only" aria-hidden="true"><b>가장 쉬운 방법으로</b><span>인사이트를 발견해보세요</span></div>
 <div class="em-copy em-only" aria-hidden="true">가장 감각적인 비주얼을<br>가장 쉽게 만나보세요</div>
 <h1 class="sr-only">Siriai — 가장 쉬운 AI 리터러시</h1>
 <canvas id="stage"></canvas>
