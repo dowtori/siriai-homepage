@@ -1625,18 +1625,23 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 <script src="sphere-study.js"></script>
 <script src="legal-modal.js"></script>
 <script>
-/* Trusted-by marquee — JS-driven via native scrollLeft. The CSS transform
-   animation froze on real browsers (the doubled track is ~38000px wide, past
-   the compositor's texture limit); scrollLeft has no such limit. Right->left,
-   no pause on hover, respects reduced-motion; the amber hover-sweep stays CSS. */
+/* Trusted-by marquee — JS-driven, SUB-PIXEL transform for smooth motion.
+   scrollLeft (the previous approach) is integer-quantised, so at ~1.5px/frame it
+   stuttered. A 2D translateX moves sub-pixel; with will-change:auto the browser
+   does NOT promote the ~38000px track to a single compositor layer (which is
+   what froze the CSS animation — it exceeds the max texture size), so it paints
+   the visible slice on the main thread each frame (cheap for text) and glides.
+   Right->left, no pause on hover, respects reduced-motion; hover-sweep stays CSS. */
 (function(){
   var track = document.querySelector('.mv-trust-track');
   if(!track) return;
   var marq = track.closest('.mv-trust-marquee') || track.parentElement;
   if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  track.style.animation = 'none';           // disable the unreliable CSS anim
+  track.style.animation = 'none';           // disable the CSS anim; JS owns transform
+  track.style.willChange = 'auto';          // no forced 38000px layer -> no texture drop
+  if(marq.scrollLeft) marq.scrollLeft = 0;
   var SPEED = 92;                            // px/sec
-  var half = 0, last = 0, acc = 0, running = false;
+  var half = 0, last = 0, x = 0, running = false;
   function measure(){ half = track.scrollWidth / 2; }
   function inView(){ var r = marq.getBoundingClientRect(); return r.bottom > -240 && r.top < (innerHeight + 240); }
   function step(ts){
@@ -1646,13 +1651,9 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     var dt = (ts - last) / 1000; last = ts;
     if(dt > 0.1) dt = 0.1;                   // clamp after tab-away
     if(!half) measure();
-    acc += SPEED * dt;                       // accumulate sub-pixel, apply whole px
-    var d = Math.floor(acc);
-    if(d > 0){
-      acc -= d;
-      marq.scrollLeft += d;                  // content drifts left (right->left flow)
-      if(half && marq.scrollLeft >= half) marq.scrollLeft -= half;   // seamless wrap
-    }
+    x -= SPEED * dt;                         // sub-pixel float -> smooth
+    if(half && x <= -half) x += half;        // seamless wrap at one full set
+    track.style.transform = 'translateX(' + x.toFixed(2) + 'px)';
   }
   function start(){ if(running || !inView()) return; running = true; last = 0; requestAnimationFrame(step); }
   measure();
