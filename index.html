@@ -2074,21 +2074,86 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
 </script>
 
 <script>
-/* global smooth (inertial) scroll — the "죽 당겨지는" glide, the reference layout's
-   idiom (Lenis under the hood there; this is a compact Lenis-lite): hijack the
-   wheel and ease window scroll toward an accumulated target each frame.
-   native fallback for reduced-motion + touch. behaviour only — no new UI. */
+/* global smooth (inertial) scroll + section snap-magnet — the "죽 당겨지는" glide with a
+   gentle "빨려들어가는" settle onto each business line. same lenis-lite core (hijack the
+   wheel, accumulate 'target', ease 'current' toward it each frame, window.scrollTo); the
+   magnet ONLY biases 'target' toward a .mv-biz top during the COAST after a flick — never
+   a 2nd scroll loop, never while you're actively wheeling. so each business section lands
+   as its own page with its first sentence in view, yet continued scrolling always escapes.
+   native fallback for reduced-motion + touch.
+   [synthesised from a 4-way design bake-off (continuous-magnet base, robustness 8/10);
+    reviewers' fixes folded in — explicit body.ready intro guard, coast-time snap recompute,
+    and a narrower down capture band so a centred paragraph is never tugged away.] */
 (function(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(pointer:coarse)').matches) return;
-  const EASE = 0.07;                 // glide strength (bigger = snappier, smaller = longer pull)
+
+  /* ---- core glide (unchanged house feel) ---- */
+  const EASE = 0.07;              // free-scroll ease: current -> target per frame
+
+  /* ---- magnet tuning (all safe to nudge; every pull is softer than EASE by design) ---- */
+  const MAGNET_DELAY_MS = 90;     // wheel must be quiet this long before the pull may act. THIS is the
+                                  //   anti-trap: any wheel tick re-arms it, so a steady scroll always passes through.
+  const CAPTURE_DOWN = 0.40;      // down capture band as a fraction of innerHeight (primary pull) — ~the lower 40%
+                                  //   of a 100vh section, below its centred copy, so reading doesn't get you tugged on.
+  const CAPTURE_UP   = 0.24;      // up capture band — narrower; the pull is chiefly downward.
+  const PULL_MIN = 0.014;         // blend strength at the band edge (barely-there first touch)
+  const PULL_MAX = 0.05;          // blend strength near the snap (firm-but-unhurried; < EASE, so no overshoot)
+  const UP_PULL  = 0.7;           // extra-gentle scaler when the pull is upward
+  const LAND_PX  = 1.5;           // within this of a snap, land exactly on its offsetTop
+  const DIR_EPS  = 2;             // direction-filter tolerance (px)
+  const RECALC_MS = 250;          // throttle the offsetTop recompute (layout shifts as images load)
+
   let target = scrollY, current = target, raf = 0, active = false;
+  let armed = false;              // false until the first user wheel (belt-and-braces intro guard)
+  let lastDir = 1;                // +1 down / -1 up — the magnet only ever pulls this way
+  let lastWheelTime = -1e9;
+  let snaps = [], lastCalc = -1e9;
+
+  function computeSnaps(){
+    const now = performance.now();
+    if(now - lastCalc < RECALC_MS) return;             // throttle reflow
+    lastCalc = now;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    snaps = [...document.querySelectorAll('.mv-biz')]
+      .map(s => Math.max(0, Math.min(max, s.offsetTop)));   // section top -> viewport top = first sentence in view
+  }
+
+  /* nudge 'target' toward the nearest snap ahead — in-band, in the travel direction */
+  function magnet(){
+    if(!armed || !document.body.classList.contains('ready')) return;    // never during the intro
+    if(performance.now() - lastWheelTime < MAGNET_DELAY_MS) return;      // user still driving -> hands off
+    if(!snaps.length) return;
+    const dir = lastDir;
+    let best = null, bestAbs = Infinity;
+    for(const s of snaps){
+      const d = s - target;
+      if(dir > 0 && d < -DIR_EPS) continue;            // going down: ignore snaps above
+      if(dir < 0 && d >  DIR_EPS) continue;            // going up:   ignore snaps below
+      const ad = Math.abs(d);
+      if(ad < bestAbs){ bestAbs = ad; best = s; }
+    }
+    if(best === null) return;
+    const band = (dir > 0 ? CAPTURE_DOWN : CAPTURE_UP) * innerHeight;
+    if(bestAbs > band) return;                         // outside band -> completely free scroll
+    if(bestAbs <= LAND_PX){ target = best; return; }   // clean landing exactly on offsetTop
+    const closeness = 1 - bestAbs / band;              // 0 at edge -> 1 at snap
+    let pull = PULL_MIN + (PULL_MAX - PULL_MIN) * closeness;
+    if(dir < 0) pull *= UP_PULL;
+    target += (best - target) * pull;                  // sign carried by (best - target); pull<EASE => no overshoot
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if(target < 0) target = 0; else if(target > max) target = max;
+  }
+
   function loop(){
+    computeSnaps();                                    // keep snaps fresh through a long coast (self-throttled)
+    magnet();                                          // steer target first, then ease into it
     current += (target - current) * EASE;
     if(Math.abs(target - current) < 0.4){ current = target; window.scrollTo(0, current); active = false; raf = 0; return; }
     window.scrollTo(0, current);
     raf = requestAnimationFrame(loop);
   }
   function kick(){ active = true; if(!raf) raf = requestAnimationFrame(loop); }
+
   addEventListener('wheel', e => {
     if(e.ctrlKey) return;            // let pinch-zoom pass through
     if(document.documentElement.classList.contains('legal-modal-open')) return;   // legal modal open: don't hijack — let it scroll natively
@@ -2096,12 +2161,20 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     let dy = e.deltaY;
     if(e.deltaMode === 1) dy *= 16;               // lines -> px (Firefox et al.)
     else if(e.deltaMode === 2) dy *= innerHeight; // pages -> px
+    if(dy > 0) lastDir = 1; else if(dy < 0) lastDir = -1;
+    lastWheelTime = performance.now();            // re-arm magnet suppression (this is the break-out)
+    armed = true;                                 // first real wheel arms the magnet
+    computeSnaps();
     const max = document.documentElement.scrollHeight - innerHeight;
     target = Math.max(0, Math.min(max, target + dy));
     kick();
   }, {passive:false});
+
+  /* resync only when idle; while the loop steers, active===true so this never fights it.
+     keyboard/anchor scrolls arrive here with active=false -> native, the magnet stays out. */
   addEventListener('scroll', () => { if(!active) target = current = scrollY; }, {passive:true});
-  addEventListener('resize', () => { target = current = scrollY; });
+  addEventListener('resize', () => { lastCalc = -1e9; computeSnaps(); target = current = scrollY; });
+  addEventListener('load',   () => { lastCalc = -1e9; computeSnaps(); });
 })();
 </script>
 
