@@ -20,10 +20,11 @@
   const css = `
   .legal-modal[hidden]{display:none}
   .legal-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;
-    --lm-ink:var(--ink,#211a33);--lm-paper:var(--paper,#f3eee2);
-    --lm-ink2:var(--ink-2,rgba(33,26,51,.66));--lm-ink3:var(--ink-3,rgba(33,26,51,.46));
-    --lm-line:var(--line,rgba(33,26,51,.13));--lm-accent:var(--accent,#2a6fdb);
-    --lm-paper2:var(--paper-2,#efe8d8);
+    /* dark theme — the host site is dark, so a white panel + inherited light text was unreadable */
+    --lm-ink:#f4f4f3;--lm-paper:#221c2e;
+    --lm-ink2:rgba(244,244,243,.76);--lm-ink3:rgba(244,244,243,.52);
+    --lm-line:rgba(255,255,255,.13);--lm-accent:#ffb24d;
+    --lm-paper2:#181321;
     --lm-display:var(--display,'Helvetica Neue','Arimo','Pretendard',sans-serif);
     --lm-grotesk:var(--grotesk,'Helvetica Neue','Arimo','Pretendard',sans-serif);
     --lm-sans:var(--sans,'Pretendard',system-ui,sans-serif);
@@ -36,7 +37,7 @@
     opacity:0;transition:opacity .4s var(--lm-ease)}
   .legal-modal.is-open .legal-modal__backdrop{opacity:1}
   .legal-modal__panel{position:relative;display:flex;flex-direction:column;
-    width:min(760px,100%);max-height:92vh;background:#fff;
+    width:min(760px,100%);max-height:92vh;background:#15121b;
     border-radius:26px 26px 0 0;
     box-shadow:0 -30px 80px -34px rgba(33,26,51,.55),0 24px 70px -40px rgba(33,26,51,.5);
     transform:translateY(34px);opacity:0;
@@ -45,7 +46,7 @@
   .legal-modal.is-open .legal-modal__panel{transform:none;opacity:1}
   .legal-modal__head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;
     gap:20px;padding:26px clamp(22px,4vw,40px) 18px;border-bottom:1px solid var(--lm-line);flex:none;
-    background:linear-gradient(180deg,rgba(243,238,226,.55),rgba(255,255,255,0))}
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0))}
   .legal-modal__eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--lm-grotesk);
     font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--lm-ink3);margin-bottom:9px}
   .legal-modal__eyebrow::before{content:'';width:20px;height:1px;background:var(--lm-ink3)}
@@ -53,9 +54,9 @@
   .legal-modal__title{font-family:var(--lm-display);font-weight:600;font-size:clamp(21px,3vw,28px);
     letter-spacing:-0.02em;color:var(--lm-ink);line-height:1.12;word-break:keep-all;text-wrap:balance}
   .legal-modal__close{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--lm-line);
-    background:#fff;color:var(--lm-ink);cursor:pointer;display:grid;place-items:center;
+    background:rgba(255,255,255,.06);color:var(--lm-ink);cursor:pointer;display:grid;place-items:center;
     transition:background .25s,border-color .25s,transform .35s var(--lm-ease)}
-  .legal-modal__close:hover{background:var(--lm-ink);color:#fff;border-color:var(--lm-ink);transform:rotate(90deg)}
+  .legal-modal__close:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4);transform:rotate(90deg)}
   .legal-modal__body{overflow-y:auto;overscroll-behavior:contain;
     padding:clamp(24px,4vw,40px) clamp(22px,4vw,40px) clamp(30px,5vw,48px);-webkit-overflow-scrolling:touch}
   .legal-modal__prose{max-width:none}
