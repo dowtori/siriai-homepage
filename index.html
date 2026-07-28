@@ -3,17 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIRIAI — Architecture for Insight, AI</title>
+<!-- SEO note: the KOREAN brand name must appear in the title and description. Without it, a search for
+     "시리아이" matched no Korean string here except the etymology paragraph ("…'아는 사이'…") and the footer
+     copyright, so google discarded our title/description and wrote the SERP entry out of those instead. -->
+<title>시리아이(SIRIAI) — Architecture for Insight, AI</title>
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#f3eee2">
-<meta name="description" content="SIRIAI — Architecture for Insight, AI. 가장 쉬운 AI 리터러시와 가장 감각적인 인사이트로 브랜드·크리에이터의 작업을 설계합니다.">
+<meta name="description" content="시리아이(SIRIAI)는 크리에이터 연결(Connect), 비즈니스 아키텍처링(Architect), 소프트웨어 엔지니어링(Build)으로 브랜드의 인사이트를 설계합니다. 가장 쉬운 방법으로 가장 감각적인 인사이트를 발견해보세요.">
 <link rel="canonical" href="https://siriai.co.kr/">
 <link rel="icon" type="image/png" href="assets/siriai-mark-ink.png">
 <link rel="apple-touch-icon" href="assets/siriai-mark-ink.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SIRIAI">
-<meta property="og:title" content="SIRIAI — Architecture for Insight, AI">
-<meta property="og:description" content="가장 쉬운 AI 리터러시, 가장 감각적인 인사이트. 브랜드·크리에이터와 함께하는 AI 기반 작업.">
+<meta property="og:title" content="시리아이(SIRIAI) — Architecture for Insight, AI">
+<meta property="og:description" content="크리에이터 연결(Connect), 비즈니스 아키텍처링(Architect), 소프트웨어 엔지니어링(Build). 가장 쉬운 방법으로 가장 감각적인 인사이트를 발견해보세요.">
 <meta property="og:image" content="https://siriai.co.kr/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -21,9 +24,54 @@
 <meta property="og:url" content="https://siriai.co.kr/">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SIRIAI — Architecture for Insight, AI">
-<meta name="twitter:description" content="가장 쉬운 AI 리터러시, 가장 감각적인 인사이트.">
+<meta name="twitter:title" content="시리아이(SIRIAI) — Architecture for Insight, AI">
+<meta name="twitter:description" content="크리에이터 연결, 비즈니스 아키텍처링, 소프트웨어 엔지니어링. 가장 쉬운 방법으로 가장 감각적인 인사이트를.">
 <meta name="twitter:image" content="https://siriai.co.kr/og.png">
+<!-- structured data: without this the page told search engines nothing about who it belongs to, so
+     google inferred the site's name from body text (the footer copyright) instead. states the official
+     name, the Korean/Latin aliases, the logo and the share image explicitly. only facts already public
+     in the footer are asserted here — no unverified social profiles (add sameAs once URLs are confirmed). -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://siriai.co.kr/#organization",
+      "name": "시리아이",
+      "alternateName": ["SIRIAI", "시리아이(SIRIAI)", "Siriai"],
+      "url": "https://siriai.co.kr/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://siriai.co.kr/assets/siriai-mark-ink.png",
+        "width": 1334,
+        "height": 1335
+      },
+      "image": "https://siriai.co.kr/og.png",
+      "description": "시리아이(SIRIAI)는 크리에이터 연결(Connect), 비즈니스 아키텍처링(Architect), 소프트웨어 엔지니어링(Build)으로 브랜드의 인사이트를 설계합니다.",
+      "email": "sbsiriai@gmail.com",
+      "telephone": "+82-70-7576-1944",
+      "taxID": "405-23-02027",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "한강대로 293, 4층 A호 (갈월동, 성원빌딩)",
+        "addressLocality": "용산구",
+        "addressRegion": "서울특별시",
+        "addressCountry": "KR"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://siriai.co.kr/#website",
+      "url": "https://siriai.co.kr/",
+      "name": "시리아이(SIRIAI)",
+      "description": "시리아이(SIRIAI)는 크리에이터 연결(Connect), 비즈니스 아키텍처링(Architect), 소프트웨어 엔지니어링(Build)으로 브랜드의 인사이트를 설계합니다.",
+      "inLanguage": "ko-KR",
+      "publisher": { "@id": "https://siriai.co.kr/#organization" }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1227,8 +1275,11 @@ body{cursor:none;background:#000}
 </style>
 </head>
 <body>
-<!-- CONTACT MODAL — opened by the business CTAs; no backend, composes a mailto -->
-<div class="mv-modal" id="mvContact" role="dialog" aria-modal="true" aria-labelledby="mvContactTitle">
+<!-- CONTACT MODAL — opened by the business CTAs; no backend, composes a mailto.
+     data-nosnippet: this sits first in <body>, so a crawler reads the whole form
+     ("이름 이메일 회사/브랜드 …") as the page's opening text. google's own attribute
+     keeps it out of snippet generation without affecting indexing or ranking. -->
+<div class="mv-modal" id="mvContact" role="dialog" aria-modal="true" aria-labelledby="mvContactTitle" data-nosnippet>
   <div class="mv-modal-scrim" data-close></div>
   <div class="mv-modal-card">
     <button class="mv-modal-close" type="button" data-close aria-label="Close">&times;</button>
@@ -1590,7 +1641,11 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">“시리아이(しりあい)”가</span> <span class="mv-w">됩니다.</span></span>
           </span>
         </h2>
-        <p class="mv-saigon-souls-body mv-fill mv-fill-body">
+        <!-- data-nosnippet: this etymology line WAS the google result description for "시리아이" — it is the
+             only fully-formed sentence on the page and it matches the query literally, so google used it over
+             our own <meta description>. it stays as brand copy and stays indexed; it is just no longer
+             eligible to BE the search snippet. (nosnippet affects snippet text only, not indexing/ranking.) -->
+        <p class="mv-saigon-souls-body mv-fill mv-fill-body" data-nosnippet>
           <span class="mv-line">
             <span class="mv-en-line"><span class="mv-w">Siriai</span> <span class="mv-w">(しりあい)</span> <span class="mv-w">means</span> <span class="mv-w">‘an</span> <span class="mv-w">acquaintance’,</span></span>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이(しりあい)는</span> <span class="mv-w">‘아는</span> <span class="mv-w">사이’,</span></span>
@@ -1696,7 +1751,10 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
     <p>상호 시리아이(SIRIAI) · 대표 김동현 · 사업자등록번호 405-23-02027 · 통신판매신고번호 제2024-서울용산-1589호</p>
     <p>서울특별시 용산구 한강대로 293, 4층 A호 (갈월동, 성원빌딩) · 대표전화 070-7576-1944 · 개인정보보호책임자 박슬범 (<a href="mailto:sbsiriai@gmail.com">sbsiriai@gmail.com</a>)</p>
   </div>
-  <div class="mv-foot-copy"><span>© 2026 시리아이(SIRIAI) 공식 홈페이지. All rights reserved.</span></div>
+  <!-- keep this line to the mark alone: it used to carry a Korean "official homepage" phrase, and google
+       lifted THAT as the SERP title over our own <title> (it matched the query better than anything else
+       on the page). a bare copyright gives it nothing to prefer. -->
+  <div class="mv-foot-copy"><span>© 2026 SIRIAI. All rights reserved.</span></div>
 </footer>
 
 
