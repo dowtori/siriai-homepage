@@ -7,7 +7,15 @@
      "시리아이" matched no Korean string here except the etymology paragraph ("…'아는 사이'…") and the footer
      copyright, so google discarded our title/description and wrote the SERP entry out of those instead. -->
 <title>시리아이(SIRIAI) — Architecture for Insight, AI</title>
-<meta name="robots" content="index, follow, max-image-preview:large">
+<!-- max-image-preview:none — no thumbnail beside the search result, the clean text-only entry
+     (favicon + site name + title + description). "large" was actively INVITING google to show a
+     picture, and which picture it picks is google's call, not ours: it chose the round mark, which
+     reads as a stray blob at thumbnail size. there is no directive that pins a specific image, so
+     suppressing the preview is the only deterministic way to get the clean form.
+     scope: google search results only. link-share previews (KakaoTalk / Slack / X) run off og:image
+     and are untouched; the favicon beside the site name is also unaffected.
+     to bring the thumbnail back, set this to max-image-preview:large again. -->
+<meta name="robots" content="index, follow, max-image-preview:none">
 <meta name="theme-color" content="#f3eee2">
 <meta name="description" content="시리아이(SIRIAI)는 크리에이터 연결(Connect), 비즈니스 아키텍처링(Architect), 소프트웨어 엔지니어링(Build)으로 브랜드의 인사이트를 설계합니다. 가장 쉬운 방법으로 가장 감각적인 인사이트를 발견해보세요.">
 <link rel="canonical" href="https://siriai.co.kr/">
@@ -1644,8 +1652,13 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
         <!-- data-nosnippet: this etymology line WAS the google result description for "시리아이" — it is the
              only fully-formed sentence on the page and it matches the query literally, so google used it over
              our own <meta description>. it stays as brand copy and stays indexed; it is just no longer
-             eligible to BE the search snippet. (nosnippet affects snippet text only, not indexing/ranking.) -->
-        <p class="mv-saigon-souls-body mv-fill mv-fill-body" data-nosnippet>
+             eligible to BE the search snippet. (nosnippet affects snippet text only, not indexing/ranking.)
+             NB: google honours data-nosnippet on span/div/section ONLY — it was on the <p> first and was
+             silently ignored, which is why the old snippet survived a recrawl. hence the inner <span>.
+             the <p> keeps its classes so nothing about the layout or the mv-fill effect changes
+             (mv-fill JS matches '.mv-fill .mv-line', a descendant selector, so the wrapper is transparent). -->
+        <p class="mv-saigon-souls-body mv-fill mv-fill-body">
+         <span data-nosnippet>
           <span class="mv-line">
             <span class="mv-en-line"><span class="mv-w">Siriai</span> <span class="mv-w">(しりあい)</span> <span class="mv-w">means</span> <span class="mv-w">‘an</span> <span class="mv-w">acquaintance’,</span></span>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">시리아이(しりあい)는</span> <span class="mv-w">‘아는</span> <span class="mv-w">사이’,</span></span>
@@ -1662,6 +1675,7 @@ try{history.scrollRestoration='manual';}catch(e){}</script>
             <span class="mv-en-line"><span class="mv-w">make</span> <span class="mv-w">your</span> <span class="mv-w">brand</span> <span class="mv-w">everyone's</span> <span class="mv-w">Siriai.</span></span>
             <span class="mv-ko-line" lang="ko"><span class="mv-w">브랜드를</span> <span class="mv-w">모두의</span> <span class="mv-w">시리아이로</span> <span class="mv-w">만들어보세요.</span></span>
           </span>
+         </span>
         </p>
       </div>
     </div>
