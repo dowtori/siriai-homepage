@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
-  "_comment_rewrites": "Serve the two already-built sister sites as PATHS OF THIS DOMAIN instead of separate vercel.app hosts, so their content counts toward siriai.co.kr (sitelink material) rather than toward vercel.app. No new pages were written for this — these deployments already exist and are already linked from the homepage. Paths /business, /portfolio, /media and /_next were all 404 here before, so these rules can only add routes, never shadow an existing one. The last two exist because the portfolio is a Next.js app that requests its assets from absolute roots (/media/..., /_next/...).",
   "rewrites": [
     { "source": "/business", "destination": "https://siriai-business.vercel.app/" },
     { "source": "/business/:path*", "destination": "https://siriai-business.vercel.app/:path*" },
