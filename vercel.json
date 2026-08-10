@@ -2,26 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/business", "destination": "https://siriai-business.vercel.app/" },
-    { "source": "/business/:path*", "destination": "https://siriai-business.vercel.app/:path*" },
-    { "source": "/support.js", "destination": "https://siriai-business.vercel.app/support.js" },
-    { "source": "/image-slot.js", "destination": "https://siriai-business.vercel.app/image-slot.js" },
-    { "source": "/assets/img/:path*", "destination": "https://siriai-business.vercel.app/assets/img/:path*" },
-    { "source": "/portfolio", "destination": "https://siriai-portfolio.vercel.app/" },
-    { "source": "/portfolio/:path*", "destination": "https://siriai-portfolio.vercel.app/:path*" },
-    { "source": "/media/:path*", "destination": "https://siriai-portfolio.vercel.app/media/:path*" },
-    { "source": "/_next/:path*", "destination": "https://siriai-portfolio.vercel.app/_next/:path*" }
-  ],
   "headers": [
     {
-      "source": "/assets/img/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/assets/((?!img/).*)",
+      "source": "/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
