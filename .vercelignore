@@ -1,3 +1,9 @@
 .claude
 .git
 node_modules
+
+brand-src
+scripts
+tests
+*.md
+.env*

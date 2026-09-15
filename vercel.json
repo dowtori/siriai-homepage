@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
+  "redirects": [{ "source": "/bi.html", "destination": "/bi", "permanent": true }],
+  "rewrites": [
+    { "source": "/bi", "destination": "/bi.html" },
+    { "source": "/bi-member", "destination": "/api/bi-member" },
+    { "source": "/bi-member/:path*", "destination": "/api/bi-member" }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
