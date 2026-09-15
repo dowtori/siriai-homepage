@@ -1,0 +1,7 @@
+(()=>{
+const canvas=document.querySelector('#live-field'),toggle=document.querySelector('#graphic-toggle'),status=document.querySelector('#graphic-status'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let field,paused=false,visible=false;
+function sync(){const stopped=paused||reduced.matches;document.documentElement.dataset.paused=String(stopped);field?.[stopped||!visible?'pause':'play']();toggle.textContent=stopped?'그래픽 재생':'그래픽 일시정지';toggle.setAttribute('aria-pressed',String(stopped));toggle.disabled=reduced.matches;status.textContent=reduced.matches?'동작 줄이기 설정으로 정지':paused?'일시정지':'재생 중';}
+try{field=window.SiriaiBackground(canvas);canvas.parentElement.dataset.ready='true';sync();new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;sync()},{rootMargin:'100px'}).observe(canvas);toggle.onclick=()=>{paused=!paused;sync()};reduced.addEventListener('change',sync);canvas.addEventListener('webglcontextlost',()=>{canvas.parentElement.dataset.ready='false';status.textContent='정지 이미지 미리보기';toggle.disabled=true})}catch{toggle.hidden=true;status.textContent='정지 이미지 미리보기';}
+document.querySelectorAll('.orb-field').forEach(cv=>cv.addEventListener('webglcontextlost',()=>{cv.parentElement.dataset.ready='false'}));
+})();
